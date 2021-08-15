@@ -14,3 +14,13 @@ html {
   align-items: center;
   justify-content: space-around;
 }
+
+#body {
+  text-align: center;
+}
+
+.closetMenuList li {
+  color: rgb(212, 0, 212);
+  list-style: none;
+  text-decoration: none;
+}
