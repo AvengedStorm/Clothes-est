@@ -24,8 +24,8 @@ const Body = () => {
             <h1>Welcome to your closet!</h1>
             <h2>What would you like to do?</h2>
             <ul className="closetMenuList">
-                <a href="/#"><li>View an item</li></a>
-                <a href="/#"><li>Add/Change an item</li></a>
+                <a href="/#"><li className="closetMenuListItem">View an item</li></a>
+                <a href="/#"><li className="closetMenuListItem">Add/Change an item</li></a>
             </ul>    
         </div>
     )

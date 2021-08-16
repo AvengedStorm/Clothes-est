@@ -1,5 +1,5 @@
 html {
-  background-color: rgb(185, 185, 185);
+  color: rgb(99, 0, 102)
 }
 
 .navBar {
@@ -10,7 +10,7 @@ html {
   width: 32vw;
   float: left;
   list-style: none;
-  color: rgb(168, 0, 168);
+  color: rgb(212, 0, 212);
   align-items: center;
   justify-content: space-around;
 }
@@ -19,7 +19,7 @@ html {
   text-align: center;
 }
 
-.closetMenuList li {
+.closetMenuList a {
   color: rgb(212, 0, 212);
   list-style: none;
   text-decoration: none;
