@@ -1,0 +1,25 @@
+.title {
+    float: left;
+    margin: auto;
+    width: 100%;
+    padding: 0;
+    background-color: rgb(125, 181, 253);
+}
+.menuIcon {
+    margin: auto;
+    padding: 0;
+}
+/* .navBar{
+    background: rgb(125,181,253);
+    background: linear-gradient(0deg, rgba(125,181,253,0) 0%, rgba(53,139,250,1) 50%);
+} */
+.navList {
+    list-style: none;
+    min-width: 5vw;
+    max-width: 15vw;
+    padding: 0 0 0 10px;
+}
+
+.body, .navBar, .footer {
+    font-family: 'Indie Flower', cursive;
+}

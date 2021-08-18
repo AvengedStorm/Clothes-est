@@ -23,5 +23,4 @@ const store = createStore(
     composeEnhancers(applyMiddleware(thunk))
 );
 
-// Extensions
 export default store;

@@ -1,0 +1,24 @@
+.clothCard {
+    display: inline-block;
+}
+.closetMenuList {
+    margin: auto;
+    padding: 0;
+    min-width: 10vw;
+    max-width: 10vw;
+}
+.closetMenuList a {
+    color: rgb(212, 0, 212);
+    list-style: none;
+    text-decoration: none;
+}
+.dialog1, .dialog2, .dialog3 {
+    color: rgb(212, 0, 212);
+    padding: 50px;
+    background-image: url(../../cloth.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.body {
+    text-align: center;
+}

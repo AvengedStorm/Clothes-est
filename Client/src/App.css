@@ -1,26 +1,17 @@
 html {
-  color: rgb(99, 0, 102)
+  background-color: rgb(239, 240, 241);
+  color: rgb(99, 0, 102);
+  background-image: url(./bgImage.png);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-
-.navBar {
+.clothCard {
+  color: black;
   text-align: center;
+  border: 2px solid rgb(212, 0, 212);
+  margin: 20px;
+  border-radius: 25%;
 }
-
-.navItem {
-  width: 32vw;
-  float: left;
-  list-style: none;
-  color: rgb(212, 0, 212);
-  align-items: center;
-  justify-content: space-around;
-}
-
-#body {
-  text-align: center;
-}
-
-.closetMenuList a {
-  color: rgb(212, 0, 212);
-  list-style: none;
-  text-decoration: none;
+.clothPicture {
+  max-width: 50%;
 }
