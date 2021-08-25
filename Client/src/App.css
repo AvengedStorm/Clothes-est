@@ -6,12 +6,24 @@ html {
   background-size: cover;
 }
 .clothCard {
+  display: inline-block;
+  margin: auto;
+  width: 100%;
   color: black;
   text-align: center;
-  border: 2px solid rgb(212, 0, 212);
-  margin: 20px;
   border-radius: 25%;
+  margin-bottom: 2vh;
 }
 .clothPicture {
   max-width: 50%;
+  margin: auto;
+}
+.cloth {
+  width: 100%;
+}
+.typePicker2, .typePicker3 {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin-bottom: 0;
 }

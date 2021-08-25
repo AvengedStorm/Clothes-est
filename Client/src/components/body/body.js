@@ -23,25 +23,33 @@ const Body = () => {
     const handleOpen3 = () => setOpen3(true);
     const handleClose3 = () => setOpen3(false);
 
-    const Dialog1 = () => {
+    const CustomDialog = (props) => {
         return (
-            <Dialog open={open1} onClose={handleClose1}>
-                    <div className="dialog1">
-                        {(clothes || []).map(clothes => 
-                            <div className="clothItem">
-                                <article className="clothCard">
-                                    <h3>Name: {clothes.size}</h3>
-                                    <h3>Style: {clothes.style}</h3>
-                                    {clothes.picture ? <img className="clothPicture" src={clothes.picture} /> : <></>}
-                                    {clothes.isWashed ? <p></p> : <h3>You need to wash this cloth.</h3>}
-                                </article>
-                            </div>
-                            )}
-                    </div>
+            <Dialog open={props.isOpen} onClose={props.closeFunction}>
+                {props.content || props.children}
             </Dialog>
         )
     }
-    const Dialog2 = () => {
+    // const Dialog1 = () => {
+    //     return (
+    //         <Dialog open={open1} onClose={handleClose1}>
+    //                 <div className="dialog1">
+    //                     {(clothes || []).map(clothes => 
+    //                         <div className="clothItem">
+    //                             <article className="clothCard">
+    //                                 <h3 className="clothSize">Size: {clothes.size} | Style: {clothes.style}</h3>
+    //                                 <div className="clothPicture">
+    //                                     {clothes.picture ? <img className="cloth" src={clothes.picture} /> : <></>}
+    //                                     {clothes.isWashed ? <></> : <h3 className="isWashed">You need to wash this cloth.</h3>}
+    //                                 </div>
+    //                             </article>
+    //                         </div>
+    //                         )}
+    //                 </div>
+    //         </Dialog>
+    //     )
+    // }
+    const Dialog2 = (data) => {
         return (
             <Dialog open={open2} onClose={handleClose2}>
                 <div className="dialog2">
@@ -61,20 +69,71 @@ const Body = () => {
         )
     }
     const Dialog3 = () => {
+        const [size, setSize] = useState("");
+        const [style, setStyle] = useState("");
+        const [type, setType] = useState("");
+        const [file, setFile] = useState("");
+
+        const handleFileChange = (e) => {
+            setFile({file: URL.createObjectURL(e.target.files[0])})
+        };
+        const handleChange1 = (e) => {
+            setSize(e.target.value);
+        };
+        const handleChange2 = (e) => {
+            setStyle(e.target.value);
+        };
+        const handleChange3 = (e) => {
+            setType(e.target.value);
+        };
+        const handleChange4 = (e) => {
+            setFile(e.target.value);
+        };
+
+        const handleSubmit = (evt) => {
+            evt.preventDefault();
+            alert(`Submitting Item: 
+                    Size: ${size}
+                    Type: ${type}
+                    Style: ${style}
+                    Picture: ${file}
+                    `)
+        }
         return (
             <Dialog open={open3} onClose={handleClose3}>
                 <div className="dialog3">
-                    <ul className="typePicker3">
-                        <a href="/#"><li>Shirts</li></a>
-                        <br />
-                        <br />
-                        <a href="/#"><li>Jeans</li></a>
-                        <br />
-                        <br />
-                        <a href="/#"><li>Shorts</li></a>
-                        <br />
-                        <br />
-                    </ul>
+                    <form className="form" onSubmit={handleSubmit}>
+                        <label className="formLabel">Size:</label>
+                        <select onChange={handleChange1} className="formLabel">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option value="XXS">XXS</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                        <label className="formLabel">Style:</label>
+                        <select onChange={handleChange2} className="formLabel">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option>Elegant</option>
+                            <option>Sport</option>
+                            <option>Official</option>
+                            <option>Sport Elegant</option>
+                            <option>Comfort</option>
+                        </select>
+                        <label className="formLabel">Type:</label>
+                        <select onChange={handleChange3} className="formLabel">
+                            <option value="" selected disabled hidden>Choose here</option>
+                            <option>Shirts</option>
+                            <option>Jeans</option>
+                            <option>Shorts</option>
+                        </select>
+                        <input className="formLabel" onChange={handleChange4} type="file" id="myFile" name="filename" />
+                        <img src={file} />
+                        <input className="formLabel" type="submit" value="Submit"/>
+                    </form>
                 </div>
             </Dialog>
         )
@@ -95,7 +154,6 @@ const Body = () => {
                 <br />
             </div>
             <div>
-                <Dialog1 />
                 <Dialog2 />
                 <Dialog3 />
             </div>

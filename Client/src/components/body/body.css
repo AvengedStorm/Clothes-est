@@ -1,6 +1,3 @@
-.clothCard {
-    display: inline-block;
-}
 .closetMenuList {
     margin: auto;
     padding: 0;
@@ -14,11 +11,27 @@
 }
 .dialog1, .dialog2, .dialog3 {
     color: rgb(212, 0, 212);
-    padding: 50px;
     background-image: url(../../cloth.jpeg);
     background-size: cover;
     background-repeat: no-repeat;
+    margin: auto;
+}
+.clothSize, .clothStyle {
+    text-align: center;
+    margin: auto;
+}
+.isWashed {
+    position: relative;
+    bottom: 0;
+    text-align: center;
+    margin: 0 auto;
 }
 .body {
     text-align: center;
+    width: 75%;
+    margin: auto;
+}
+.formLabel {
+    display: block;
+    margin: 2vh 5vw;
 }

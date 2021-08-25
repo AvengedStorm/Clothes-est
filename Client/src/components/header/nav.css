@@ -1,19 +1,19 @@
 .title {
-    float: left;
+    position: absolute;
+    text-align: left;
     margin: auto;
     width: 100%;
     padding: 0;
     background-color: rgb(125, 181, 253);
 }
-.menuIcon {
-    margin: auto;
-    padding: 0;
+.navItem {
+    font-size: 1.5rem;
 }
-/* .navBar{
-    background: rgb(125,181,253);
-    background: linear-gradient(0deg, rgba(125,181,253,0) 0%, rgba(53,139,250,1) 50%);
-} */
 .navList {
+    position: absolute;
+    top: 3vh;
+    background-color: rgb(125, 181, 253);
+    height: 100%;
     list-style: none;
     min-width: 5vw;
     max-width: 15vw;
