@@ -1,24 +1,66 @@
 import React, {useState} from "react";
 import clothes from "../components/clothes/clothes";
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+import { DataGrid } from '@material-ui/data-grid';
 
-const itemTemplate = (data, layout) => {
-    if (layout === 'list') {
-        return (
-            {data}
-        );
+
+// const itemTemplate = (data, layout) => {
+//     if (layout === 'list') {
+//         return (
+//             {data}
+//         );
+//     }
+//     if (layout === 'grid') {
+//         return (
+//             {data}
+//         );
+//     }
+// }
+
+const rows = clothes;
+
+const columns = [
+    { 
+        field: 'id', 
+        headerName: 'ID', 
+        width: 90 
+    },
+    {
+        field: 'type',
+        headerName: 'Type',
+        type: 'number',
+        width: 110,
+    },
+    {
+        field: 'size',
+        headerName: 'Size:',
+        width: 150,
+    },
+    {
+        field: 'style',
+        headerName: 'Style',
+        width: 150,
+    },
+    {
+        field: 'isWashed',
+        headerName: 'Is Washed',
+        width: 150,
     }
-    if (layout === 'grid') {
-        return (
-            {data}
-        );
-    }
-}
+];
 
 const Closet = (props) => {
     return(
         <div className="closetDiv">
-            <DataView value={clothes} layout="grid" itemTemplate={itemTemplate}></DataView>
+            <div style={{ height: 400, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                checkboxSelection
+                disableSelectionOnClick
+            />
+            </div>
         </div>
     )
 }

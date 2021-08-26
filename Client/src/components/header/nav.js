@@ -1,9 +1,10 @@
-import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Typography from '@material-ui/core/Typography';
 import { Drawer } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
@@ -19,21 +20,43 @@ import About from "../../pages/about";
 
 import './nav.css';
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }));
+
+
 const NavBar = (props) => {
     const [isDrawerOpen, toggleDrawer] = useState(false);
 
+    const classes = useStyles();
+
     return (
-        <div>
-            <IconButton id="menu" onClick={() => toggleDrawer(true)}>
-                <MenuIcon />
-            </IconButton>
+            <div className={classes.root}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" onClick={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    Clothes-est!
+                </Typography>
+                </Toolbar>
+            </AppBar>
             <Drawer anchor="top" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
                 <div className="drawerButton">
-                        <button type="button" class="btn btn-outline-primary">Home</button>
-                        <button type="button" class="btn btn-outline-primary">Closet</button>
-                        <button type="button" class="btn btn-outline-primary">About</button>
+                        <button type="button" class="btn btn-secondary">Home</button>
+                        <button type="button" class="btn btn-secondary">Closet</button>
+                        <button type="button" class="btn btn-secondary">About</button>
                 </div>            
-                <Button onClick={() => toggleDrawer(false)}>Close Doors</Button>
+                <Button onClick={() => toggleDrawer(false)}>Close</Button>
             </Drawer>
         </div>        
     )
@@ -85,19 +108,7 @@ export default NavBar;
 //   );
 {/* <Router>
             <div id="navbar" className="navBar">
-                <h1 className="title">Clothes-est!</h1>
-                <br />
-                <ul className="navList">
-                    <li>
-                        <Link to="../pages/home">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="../pages/closet">Closet</Link>
-                    </li>
-                    <li>
-                        <Link to="../pages/about">About</Link>
-                    </li>
-                </ul>
+                
                 <br />
                 <Switch>
                     <Route exact path="../pages/home">

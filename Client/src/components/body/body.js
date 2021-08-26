@@ -1,12 +1,49 @@
 import React, {useState} from 'react';
 import './body.css'
 import Dialog from '@material-ui/core/Dialog';
+import { DataGrid } from '@material-ui/data-grid';
+
 
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 import clothes from '../clothes/clothes';
 
+// const rows = clothes;
+
+// const columns = [
+//     { 
+//         field: 'id', 
+//         headerName: 'ID', 
+//         width: 135 
+//     },
+//     {
+//         field: 'type',
+//         headerName: 'Type',
+//         type: 'number',
+//         width: 110,
+//     },
+//     {
+//         field: 'size',
+//         headerName: 'Size:',
+//         width: 150,
+//     },
+//     {
+//         field: 'style',
+//         headerName: 'Style',
+//         width: 150,
+//     },
+//     {
+//         field: 'isWashed',
+//         headerName: 'Is Washed',
+//         width: 150,
+//     },
+//     {
+//         field: 'picture',
+//         headerName: 'Picture',
+//         width: 300,
+//     }
+// ];
 
 const Body = () => {
     const item = useSelector(state => state.item);
@@ -113,7 +150,7 @@ const Body = () => {
                         </select>
                         <input className="formLabel" onChange={handleChange4} type="file" id="myFile" name="filename" />
                         <img src={file} />
-                        <input className="formLabel" type="submit" value="Submit"/>
+                        <input class="btn btn-primary" type="submit" value="Submit" id="itemSubmit" />
                     </form>
                 </div>
             </Dialog>
@@ -121,9 +158,9 @@ const Body = () => {
     }
 
     return (
-        <div>
-            <div id="body" className="body">
-                <h1>Welcome to your closet! What would you like to do?</h1>
+        <div className="body">
+            <div id="body">
+                <h3>Welcome to your closet! What would you like to do?</h3>
                 <ul className="closetMenuList">
                     <a href="/#" className="closetMenuListItem" onClick={handleOpen1}><li>View an item</li></a>
                     <br />
@@ -134,6 +171,16 @@ const Body = () => {
                 </ul>    
                 <br />
             </div>
+            {/* <div className="closetDiv">
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                />
+                </div>
+            </div> */}
             <div>
                 <Dialog2 />
                 <Dialog3 />
