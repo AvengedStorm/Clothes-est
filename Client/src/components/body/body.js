@@ -30,25 +30,6 @@ const Body = () => {
             </Dialog>
         )
     }
-    // const Dialog1 = () => {
-    //     return (
-    //         <Dialog open={open1} onClose={handleClose1}>
-    //                 <div className="dialog1">
-    //                     {(clothes || []).map(clothes => 
-    //                         <div className="clothItem">
-    //                             <article className="clothCard">
-    //                                 <h3 className="clothSize">Size: {clothes.size} | Style: {clothes.style}</h3>
-    //                                 <div className="clothPicture">
-    //                                     {clothes.picture ? <img className="cloth" src={clothes.picture} /> : <></>}
-    //                                     {clothes.isWashed ? <></> : <h3 className="isWashed">You need to wash this cloth.</h3>}
-    //                                 </div>
-    //                             </article>
-    //                         </div>
-    //                         )}
-    //                 </div>
-    //         </Dialog>
-    //     )
-    // }
     const Dialog2 = (data) => {
         return (
             <Dialog open={open2} onClose={handleClose2}>

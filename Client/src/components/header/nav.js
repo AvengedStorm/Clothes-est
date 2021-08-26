@@ -1,4 +1,12 @@
-import React, {useState} from 'react';
+import Button from '@material-ui/core/Button'
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Typography from '@material-ui/core/Typography';
+import { Drawer } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -12,36 +20,22 @@ import About from "../../pages/about";
 import './nav.css';
 
 const NavBar = (props) => {
+    const [isDrawerOpen, toggleDrawer] = useState(false);
+
     return (
-        <Router>
-            <div id="navbar" className="navBar">
-                <h1 className="title">Clothes-est!</h1>
-                <br />
-                <ul className="navList">
-                    <li>
-                        <Link to="../pages/home">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="../pages/closet">Closet</Link>
-                    </li>
-                    <li>
-                        <Link to="../pages/about">About</Link>
-                    </li>
-                </ul>
-                <br />
-                <Switch>
-                    <Route exact path="../pages/home">
-                        <Home />
-                    </Route>
-                    <Route path="../pages/closet">
-                        <Closet />
-                    </Route>
-                    <Route path="../pages/about">
-                        <About />
-                    </Route>
-                </Switch>
-            </div>
-        </Router>
+        <div>
+            <IconButton id="menu" onClick={() => toggleDrawer(true)}>
+                <MenuIcon />
+            </IconButton>
+            <Drawer anchor="top" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
+                <div className="drawerButton">
+                        <button type="button" class="btn btn-outline-primary">Home</button>
+                        <button type="button" class="btn btn-outline-primary">Closet</button>
+                        <button type="button" class="btn btn-outline-primary">About</button>
+                </div>            
+                <Button onClick={() => toggleDrawer(false)}>Close Doors</Button>
+            </Drawer>
+        </div>        
     )
 }
 
@@ -89,3 +83,32 @@ export default NavBar;
 //       </div>
 //     </Router>
 //   );
+{/* <Router>
+            <div id="navbar" className="navBar">
+                <h1 className="title">Clothes-est!</h1>
+                <br />
+                <ul className="navList">
+                    <li>
+                        <Link to="../pages/home">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="../pages/closet">Closet</Link>
+                    </li>
+                    <li>
+                        <Link to="../pages/about">About</Link>
+                    </li>
+                </ul>
+                <br />
+                <Switch>
+                    <Route exact path="../pages/home">
+                        <Home />
+                    </Route>
+                    <Route path="../pages/closet">
+                        <Closet />
+                    </Route>
+                    <Route path="../pages/about">
+                        <About />
+                    </Route>
+                </Switch>
+            </div>
+        </Router> */}

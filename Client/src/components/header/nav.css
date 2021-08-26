@@ -23,3 +23,7 @@
 .body, .navBar, .footer {
     font-family: 'Indie Flower', cursive;
 }
+.drawerButton {
+    margin: auto;
+    justify-content: space-around;
+}
