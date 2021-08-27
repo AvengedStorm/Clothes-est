@@ -5,9 +5,9 @@ function reducer(state = {
     items: [],
   }, action){
   switch (action.type) {
-      case "updateItems":
-        state = {...state, comments: action.payload.item}
-        break;
+      case "addItem":
+        state = {...state, items: [...state.items, action.payload]}
+      break;
       default:
         console.log(action);
       }

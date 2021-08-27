@@ -1,30 +1,10 @@
 import React, {useState} from "react";
 import clothes from "../components/clothes/clothes";
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { DataGrid } from '@material-ui/data-grid';
-
-
-// const itemTemplate = (data, layout) => {
-//     if (layout === 'list') {
-//         return (
-//             {data}
-//         );
-//     }
-//     if (layout === 'grid') {
-//         return (
-//             {data}
-//         );
-//     }
-// }
 
 const rows = clothes;
 
 const columns = [
-    { 
-        field: 'id', 
-        headerName: 'ID', 
-        width: 90 
-    },
     {
         field: 'type',
         headerName: 'Type',
@@ -45,38 +25,28 @@ const columns = [
         field: 'isWashed',
         headerName: 'Is Washed',
         width: 150,
+    },
+    {
+        field: 'picture',
+        headerName: 'Picture',
+        width: 300,
+        renderCell: (params) => (<img src={params.value}/>)
     }
 ];
 
 const Closet = (props) => {
     return(
         <div className="closetDiv">
-            <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                checkboxSelection
-                disableSelectionOnClick
-            />
+                <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                />
+                </div>
             </div>
-        </div>
     )
 }
 
 export default Closet;
-
-// <div className="dialog1">
-//      {(clothes || []).map(clothes => 
-//          <div className="clothItem">
-//              <article className="clothCard">
-//                  <h3 className="clothSize">Size: {clothes.size} | Style: {clothes.style}</h3>
-//                  <div className="clothPicture">
-//                      {clothes.picture ? <img className="cloth" src={clothes.picture} /> : <></>}
-//                      {clothes.isWashed ? <></> : <h3 className="isWashed">You need to wash this cloth.</h3>}
-//                  </div>
-//              </article>
-//          </div>
-//      )}
-// </div>

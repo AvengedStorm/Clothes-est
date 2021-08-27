@@ -1,18 +1,38 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
 import Navbar from './components/header/nav';
-import Body from './components/body/body';
-import Footer from './components/footer/footer';
+
+import Closet from './pages/closet';
+import Home from './pages/home';
+import About from './pages/about'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+
 
 function App() {
-  const [curPage, setPage] = useState('/');
-
   return (
-    <div className="App">
-      <Navbar updateFunction={setPage} />
-      <Body page={curPage} />
-      <Footer />
-    </div>
+    <Router>
+      <Navbar />
+      <div>
+        <div>
+          <Switch>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/closet">
+              <Closet />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </div>
+    </Router>
   );
 }
 

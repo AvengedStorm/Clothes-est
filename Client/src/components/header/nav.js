@@ -6,17 +6,12 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Drawer } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
     BrowserRouter as Router,
-    Switch,
-    Route,
     Link
   } from "react-router-dom";
-import Closet from "../../pages/closet";
-import Home from "../../pages/home";
-import About from "../../pages/about";
 
 import './nav.css';
 
@@ -50,11 +45,13 @@ const NavBar = (props) => {
                 </Typography>
                 </Toolbar>
             </AppBar>
-            <Drawer anchor="top" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
+            <Drawer anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
                 <div className="drawerButton">
-                        <button type="button" class="btn btn-secondary">Home</button>
-                        <button type="button" class="btn btn-secondary">Closet</button>
-                        <button type="button" class="btn btn-secondary">About</button>
+                        <div className="App">
+                            <Link to="/"><button type="button" class="btn btn-primary">Home</button></Link>
+                            <Link to="/closet"><button type="button" class="btn btn-primary">Closet</button></Link>
+                            <Link to="/about"><button type="button" class="btn btn-primary">About</button></Link>
+                        </div>
                 </div>            
                 <Button onClick={() => toggleDrawer(false)}>Close</Button>
             </Drawer>
@@ -63,63 +60,3 @@ const NavBar = (props) => {
 }
 
 export default NavBar;
-
-{/* <a href="/" onClick={() => props.updateFunction('/home')}><li className="navItem">Home</li></a>
-                  <a href="/#" onClick={() => props.updateFunction('/closet')}><li className="navItem">Closet</li></a>
-                  <a href="/#" onClick={() => props.updateFunction('/about')}><li className="navItem">About</li></a> */}
-
-// return (
-//     <Router>
-//       <div>
-//         <ul>
-//           <li>
-//             <Link to="/">Home</Link>
-//           </li>
-//           <li>
-//             <Link to="/about">About</Link>
-//           </li>
-//           <li>
-//             <Link to="/dashboard">Dashboard</Link>
-//           </li>
-//         </ul>
-// 
-// {/* <hr /> */}
-// 
-//         {/*
-//           A <Switch> looks through all its children <Route>
-//           elements and renders the first one whose path
-//           matches the current URL. Use a <Switch> any time
-//           you have multiple routes, but you want only one
-//           of them to render at a time
-//         */}
-        // <Switch>
-        //   <Route exact path="/">
-        //     <Home />
-        //   </Route>
-        //   <Route path="/about">
-        //     <About />
-        //   </Route>
-        //   <Route path="/dashboard">
-        //     <Dashboard />
-        //   </Route>
-        // </Switch>
-//       </div>
-//     </Router>
-//   );
-{/* <Router>
-            <div id="navbar" className="navBar">
-                
-                <br />
-                <Switch>
-                    <Route exact path="../pages/home">
-                        <Home />
-                    </Route>
-                    <Route path="../pages/closet">
-                        <Closet />
-                    </Route>
-                    <Route path="../pages/about">
-                        <About />
-                    </Route>
-                </Switch>
-            </div>
-        </Router> */}
