@@ -1,9 +1,5 @@
 html {
-  background-color: rgb(186, 189, 192);
   color: rgb(99, 0, 102);
-  background-image: url(./bgImage.png);
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 .clothCard {
   display: inline-block;

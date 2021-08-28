@@ -26,9 +26,17 @@
 }
 .homeTitle {
     font-weight: bold;
+    margin-top: 5vh;
 }
 .drawerButton button {
     margin: 1vh auto;
     display: block;
     width: 100%;
+}
+.closetMenuList {
+    margin-bottom: 0;
+    padding-left: 0;
+}
+.formLabel {
+    margin-right: 2vw;
 }

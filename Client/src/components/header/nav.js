@@ -7,11 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Drawer } from '@material-ui/core';
 import React, { useState } from 'react';
-
-import {
-    BrowserRouter as Router,
-    Link
-  } from "react-router-dom";
+import { connect } from 'react-redux';
+import DarkModeIcon from '@material-ui/icons/Brightness2TwoTone';
+import LightModeIcon from '@material-ui/icons/BrightnessHighTwoTone';
+import { Link } from "react-router-dom";
 
 import './nav.css';
 
@@ -29,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
 
 
 const NavBar = (props) => {
+  console.log(props);
     const [isDrawerOpen, toggleDrawer] = useState(false);
 
     const classes = useStyles();
 
     return (
             <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="static" color="primary">
                 <Toolbar>
                     <IconButton edge="start" onClick={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -43,6 +43,9 @@ const NavBar = (props) => {
                 <Typography variant="h6" className={classes.title}>
                     Clothes-est!
                 </Typography>
+                <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => props.dispatch({type: 'togglestyle'})}>
+                    {props.darkmode ? <LightModeIcon/> : <DarkModeIcon/>}
+                </IconButton>
                 </Toolbar>
             </AppBar>
             <Drawer anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
@@ -57,6 +60,9 @@ const NavBar = (props) => {
             </Drawer>
         </div>        
     )
-}
+};
 
-export default NavBar;
+const mapperFunction = (state) => {
+  return {darkmode: state.darkmode};
+};
+export default connect(mapperFunction)(NavBar);

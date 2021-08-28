@@ -5,9 +5,13 @@
     max-width: 10vw;
 }
 .closetMenuList a {
-    color: rgb(212, 0, 212);
     list-style: none;
     text-decoration: none;
+}
+.closetMenuListItem {
+    color: rgb(212, 0, 212);
+    max-width: max-content;
+    min-width: min-content;
 }
 .dialog1, .dialog2, .dialog3 {
     color: rgb(212, 0, 212);
@@ -27,6 +31,7 @@
     text-align: center;
     width: 75%;
     margin: auto;
+    background-color: transparent !important;
 }
 .formLabel {
     display: block;

@@ -3,16 +3,23 @@ import thunk from 'redux-thunk';
 
 function reducer(state = {
     items: [],
+    darkmode: false,
   }, action){
   switch (action.type) {
-      case "addItem":
-        state = {...state, items: [...state.items, action.payload]}
+    case 'openAccordion':
+      state = {...state, openAccordion: action.payload};
       break;
-      default:
-        console.log(action);
-      }
-      return state;
+    case 'togglestyle':
+      state = {...state, darkmode: !state.darkmode};
+    break;
+    case "addItem":
+      state = {...state, items: [...state.items, action.payload]}
+    break;
+    default:
+      console.log(action);
     }
+    return state;
+  }
 
 const middlewares = [];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

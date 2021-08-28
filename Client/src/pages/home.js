@@ -1,127 +1,195 @@
 import { connect } from 'react-redux';
 import React, {useState} from 'react';
-import Dialog from '@material-ui/core/Dialog';
+import { makeStyles } from '@material-ui/core/styles';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {useDispatch} from 'react-redux';
+import { DataGrid } from '@material-ui/data-grid';
+import clothes from "../components/clothes/clothes";
+
 import {
-    BrowserRouter as Router,
     Link
   } from "react-router-dom";
 
 const Home = (props) => {
 
-    const Dialog2 = () => {
-        return (
-            <Dialog open={open2} onClose={handleClose2}>
-                <div className="dialog2">
-                    <ul className="typePicker2">
-                        <a href="/#"><li>Shirts</li></a>
-                        <br />
-                        <br />
-                        <a href="/#"><li>Jeans</li></a>
-                        <br />
-                        <br />
-                        <a href="/#"><li>Shorts</li></a>
-                        <br />
-                        <br />
-                    </ul>
-                </div>
-            </Dialog>
-        )
-    }
-    const Dialog3 = () => {
-        const dispatch = useDispatch();
-        
-        const [size, setSize] = useState("");
-        const [style, setStyle] = useState("");
-        const [type, setType] = useState("");
-        const [file, setFile] = useState("");
-    
-        const handleFileChange = (e) => {
-            setFile({file: URL.createObjectURL(e.target.files[0])})
-        };
-        const handleChange1 = (e) => setSize(e.target.value);
-        const handleChange2 = (e) => setStyle(e.target.value);
-        const handleChange3 = (e) => setType(e.target.value);
-        const handleChange4 = (e) => setFile(e.target.value);
-    
-        const handleSubmit = (evt) => {
-            evt.preventDefault();
-            dispatch({type: "addItem", payload:{
-                size,
-                style,
-                type,
-                file
-            }});
-            handleClose3();
+    const rows = clothes;
+
+    const columns = [
+        {
+            field: 'type',
+            headerName: 'Type',
+            type: 'number',
+            width: 110,
+        },
+        {
+            field: 'size',
+            headerName: 'Size:',
+            width: 150,
+        },
+        {
+            field: 'style',
+            headerName: 'Style',
+            width: 150,
+        },
+        {
+            field: 'isWashed',
+            headerName: 'Is Washed',
+            width: 150,
+        },
+        {
+            field: 'picture',
+            headerName: 'Picture',
+            width: 300,
+            renderCell: (params) => (<img src={params.value}/>)
         }
-        return (
-            <Dialog open={open3} onClose={handleClose3}>
-                <div className="dialog3">
-                    <form className="form" onSubmit={handleSubmit}>
-                        <label className="formLabel">Size:</label>
-                        <select onChange={handleChange1} className="formLabel" defaultValue="Choose Size">
-                            <option value="Choose Size" disabled>Choose Size</option>
-                            <option value="XXS">XXS</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">Style:</label>
-                        <select onChange={handleChange2} className="formLabel" defaultValue="Choose Style">
-                            <option value="Choose Style" disabled>Choose Style</option>
-                            <option>Elegant</option>
-                            <option>Sport</option>
-                            <option>Official</option>
-                            <option>Sport Elegant</option>
-                            <option>Comfort</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">Type:</label>
-                        <select onChange={handleChange3} className="formLabel" defaultValue="Choose a type">
-                            <option value="Choose a type" disabled>Choose a type</option>
-                            <option>Shirts</option>
-                            <option>Jeans</option>
-                            <option>Shorts</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">File:</label>
-                        <input className="formLabel" onChange={handleChange4} type="file" id="myFile" name="filename" />
-                        <img src={file} />
-                        <input className="btn btn-primary" type="submit" value="Submit" id="itemSubmit" />
-                    </form>
-                </div>
-            </Dialog>
-        )
-    }
+    ];
+
+    const dispatch = useDispatch();
     
-    const [open2, setOpen2] = useState(false);
-    const [open3, setOpen3] = useState(false);
+    const [size, setSize] = useState("");
+    const [style, setStyle] = useState("");
+    const [type, setType] = useState("");
+    const [file, setFile] = useState("");
 
-    const handleOpen2 = () => setOpen2(true);
-    const handleClose2 = () => setOpen2(false);
-    const handleOpen3 = () => setOpen3(true);
-    const handleClose3 = () => setOpen3(false);
+    const handleFileChange = (e) => {
+        setFile({file: URL.createObjectURL(e.target.files[0])})
+    };
+    const handleChange1 = (e) => setSize(e.target.value);
+    const handleChange2 = (e) => setStyle(e.target.value);
+    const handleChange3 = (e) => setType(e.target.value);
 
+    const handleSubmit = (evt) => {
+        evt.preventDefault();
+        dispatch({type: "addItem", payload:{
+            size,
+            style,
+            type,
+            file
+        }});
+    }
 
+    const useStyles = makeStyles((theme) => (
+        {
+            root: {
+                width: '100%',
+            },
+            heading: {
+                fontSize: theme.typography.pxToRem(15),
+                fontWeight: theme.typography.fontWeightRegular,
+            },
+        }));
+    
+    const classes = useStyles();
+        
     return (
         <div className="body" id="body">
                 <h3 className="homeTitle">Welcome to your closet! What would you like to do?</h3>
                 <ul className="closetMenuList">
-                    <Link to="/closet"><li>View an item</li></Link>
+                    <Accordion id="1" expanded={props.openAccordion === '1'} onClick={e => props.dispatch({type: 'openAccordion', payload: '1'})}>
+                            <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                            >
+                            <Typography className={classes.heading}>View an item</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Typography>
+                                <div style={{ height: 400, width: '1640px' }}>
+                                    <DataGrid
+                                        rows={rows}
+                                        columns={columns}
+                                        pageSize={5}
+                                        rowsPerPageOptions={[5]}
+                                    />
+                                </div>
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
                     <br />
-                    <a href="/#" className="closetMenuListItem" onClick={handleOpen2}><li>Change an item</li></a>
+                    <Accordion id="2" expanded={props.openAccordion === '2'} onClick={e => props.dispatch({type: 'openAccordion', payload: '2'})}>
+                        <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        >
+                            <Typography className={classes.heading}>Change an item</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                            <div className="dialog2">
+                                <ul className="typePicker2">
+                                    <a href="/#"><li>Shirts</li></a>
+                                    <br />
+                                    <a href="/#"><li>Jeans</li></a>
+                                    <br />
+                                    <a href="/#"><li>Shorts</li></a>
+                                    <br />
+                                </ul>
+                            </div>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
                     <br />
-                    <a href="/#" className="closetMenuListItem" onClick={handleOpen3}><li>Add an item</li></a>
+                    <Accordion id="3" expanded={props.openAccordion === '3'} onClick={e => props.dispatch({type: 'openAccordion', payload: '3'})}>
+                        <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        >
+                            <Typography className={classes.heading}>Add an item</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                            <div className="dialog3">
+                                <form className="form" onSubmit={handleSubmit}>
+                                    <label className="formLabel">Size:</label>
+                                    <select onChange={handleChange1} className="formLabel" defaultValue="Choose Size">
+                                        <option value="Choose Size" disabled>Choose Size</option>
+                                        <option value="XXS">XXS</option>
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                    </select>
+                                    <br />
+                                    <label className="formLabel">Style:</label>
+                                    <select onChange={handleChange2} className="formLabel" defaultValue="Choose Style">
+                                        <option value="Choose Style" disabled>Choose Style</option>
+                                        <option>Elegant</option>
+                                        <option>Sport</option>
+                                        <option>Official</option>
+                                        <option>Sport Elegant</option>
+                                        <option>Comfort</option>
+                                    </select>
+                                    <br />
+                                    <label className="formLabel">Type:</label>
+                                    <select onChange={handleChange3} className="formLabel" defaultValue="Choose a type">
+                                        <option value="Choose a type" disabled>Choose a type</option>
+                                        <option>Shirts</option>
+                                        <option>Jeans</option>
+                                        <option>Shorts</option>
+                                    </select>
+                                    <br />
+                                    <label className="formLabel">File:</label>
+                                    <input className="formLabel" onChange={handleFileChange} type="file" id="myFile" name="filename" />
+                                    <img src={file} />
+                                    <input className="btn btn-primary" type="submit" value="Submit" id="itemSubmit" />
+                                </form>
+                            </div>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
                     <br />
                 </ul>    
                 <br />
-                <Dialog2 />
-                <Dialog3 />
             </div>
     )
 }
-export default connect(state => {return {items: state.items}})(Home)
+export default connect(state => {return {items: state.items, openAccordion: state.openAccordion}})(Home)
