@@ -89,30 +89,32 @@ const Home = (props) => {
         <div className="body" id="body">
                 <h3 className="homeTitle">Welcome to your closet! What would you like to do?</h3>
                 <ul className="closetMenuList">
-                    <Accordion id="1" expanded={props.openAccordion === '1'} onClick={e => props.dispatch({type: 'openAccordion', payload: '1'})}>
-                            <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                            >
-                            <Typography className={classes.heading}>View an item</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                <div style={{ height: 400, width: '1640px' }}>
-                                    <DataGrid
-                                        rows={rows}
-                                        columns={columns}
-                                        pageSize={5}
-                                        rowsPerPageOptions={[5]}
-                                    />
-                                </div>
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    <br />
-                    <Accordion id="2" expanded={props.openAccordion === '2'} onClick={e => props.dispatch({type: 'openAccordion', payload: '2'})}>
+                    <Accordion id="1" expanded={props.openAccordion === '1'}>
                         <AccordionSummary
+                        onClick={e => props.dispatch({type: 'openAccordion', payload: '1'})}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                        >
+                        <Typography className={classes.heading}>View an item</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                            <div style={{ height: 400, width: '1640px' }}>
+                                <DataGrid
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                />
+                            </div>
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                    <br />
+                    <Accordion id="2" expanded={props.openAccordion === '2'}>
+                        <AccordionSummary
+                        onClick={e => props.dispatch({type: 'openAccordion', payload: '2'})}
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
@@ -135,9 +137,10 @@ const Home = (props) => {
                         </AccordionDetails>
                     </Accordion>
                     <br />
-                    <Accordion id="3" expanded={props.openAccordion === '3'} onClick={e => props.dispatch({type: 'openAccordion', payload: '3'})}>
+                    <Accordion id="3" expanded={props.openAccordion === '3'}>
                         <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
+                        onClick={e => props.dispatch({type: 'openAccordion', payload: '3'})}
+                        expandIcon={<ExpandMoreIcon/>}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                         >

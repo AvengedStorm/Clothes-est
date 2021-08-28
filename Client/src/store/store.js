@@ -7,8 +7,13 @@ function reducer(state = {
   }, action){
   switch (action.type) {
     case 'openAccordion':
-      state = {...state, openAccordion: action.payload};
-      break;
+      // open the accordion and check if value is different
+      if(action.payload == state.openAccordion) {
+        state = {...state, openAccordion: null};
+      } else {
+        state = {...state, openAccordion: action.payload}
+      }
+    break;
     case 'togglestyle':
       state = {...state, darkmode: !state.darkmode};
     break;
