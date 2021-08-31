@@ -28,14 +28,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 const NavBar = (props) => {
-  console.log(props);
     const [isDrawerOpen, toggleDrawer] = useState(false);
 
     const classes = useStyles();
 
     return (
             <div className={classes.root}>
-            <AppBar position="static" color="primary">
+            <AppBar position="fixed" color="primary">
                 <Toolbar>
                     <IconButton edge="start" onClick={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import clothes from "../components/clothes/clothes";
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -30,7 +30,7 @@ const columns = [
         field: 'picture',
         headerName: 'Picture',
         width: 300,
-        renderCell: (params) => (<img src={params.value}/>)
+        renderCell: (params) => (<img src={params.value} alt=""/>)
     }
 ];
 

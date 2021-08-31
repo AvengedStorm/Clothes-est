@@ -4,11 +4,12 @@ import thunk from 'redux-thunk';
 function reducer(state = {
     items: [],
     darkmode: false,
+    favorites: [],
   }, action){
   switch (action.type) {
     case 'openAccordion':
       // open the accordion and check if value is different
-      if(action.payload == state.openAccordion) {
+      if(action.payload === state.openAccordion) {
         state = {...state, openAccordion: null};
       } else {
         state = {...state, openAccordion: action.payload}
@@ -19,6 +20,11 @@ function reducer(state = {
     break;
     case "addItem":
       state = {...state, items: [...state.items, action.payload]}
+      console.log(state.items);
+    break;
+    case 'addFavorite':
+      state = {...state, favorites: [...state.favorites, state.favorites.push(action.payload)]}
+      console.log(state.favorites);
     break;
     default:
       console.log(action);

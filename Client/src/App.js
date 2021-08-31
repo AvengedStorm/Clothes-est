@@ -8,7 +8,6 @@ import Home from './pages/home';
 import About from './pages/about'
 import { useMediaQuery } from '@material-ui/core';
 import {
-  BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
@@ -19,7 +18,6 @@ import blue from '@material-ui/core/colors/blue';
 
 
 function App(props) {
-  console.log(props);
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = React.useMemo(
     () =>
