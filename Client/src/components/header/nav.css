@@ -38,5 +38,5 @@
     padding-left: 0;
 }
 .formLabel {
-    margin-right: 2vw;
+    max-width: 100px;
 }

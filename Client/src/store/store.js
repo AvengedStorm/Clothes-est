@@ -5,6 +5,7 @@ function reducer(state = {
     items: [],
     darkmode: false,
     favorites: [],
+    checkedOut: [],
   }, action){
   switch (action.type) {
     case 'openAccordion':
@@ -22,9 +23,33 @@ function reducer(state = {
       state = {...state, items: [...state.items, action.payload]}
       console.log(state.items);
     break;
-    case 'addFavorite':
-      state = {...state, favorites: [...state.favorites, state.favorites.push(action.payload)]}
-      console.log(state.favorites);
+    case 'toggleFavorite':
+      // console.log(action.payload);
+      if(state.favorites.includes(action.payload)) {
+        state = {
+          ...state, 
+          favorites: 
+            [...state.favorites.filter(el => el !== action.payload)]}
+      } else {
+          state = 
+          {...state, 
+            favorites: 
+              [...state.favorites, action.payload]}
+      }
+    break;
+    case 'checkedOut':
+      // console.log(action.payload);
+      if(state.checkedOut.includes(action.payload)) {
+        state = {
+          ...state, 
+          checkedOut: 
+            [...state.checkedOut.filter(el => el !== action.payload)]}
+      } else {
+          state = 
+          {...state, 
+            checkedOut: 
+              [...state.checkedOut, action.payload]}
+      }
     break;
     default:
       console.log(action);

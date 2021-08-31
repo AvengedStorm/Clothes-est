@@ -40,7 +40,7 @@ const NavBar = (props) => {
                         <MenuIcon />
                     </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    Clothes-est!
+                    Cloth-est!
                 </Typography>
                 <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => props.dispatch({type: 'togglestyle'})}>
                     {props.darkmode ? <LightModeIcon/> : <DarkModeIcon/>}

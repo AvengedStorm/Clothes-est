@@ -23,10 +23,10 @@ import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import IconButton from '@material-ui/core/IconButton';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-
 
 const shirtsArray = clothes.filter(el => el.type === "shirt");
 const jeansArray = clothes.filter(el => el.type === "jeans");
@@ -47,7 +47,7 @@ function TabPanel(props) {
         >
         {value === index && (
             <Box p={3}>
-            <Typography>{children}</Typography>
+                <Typography>{children}</Typography>
             </Box>
         )}
         </div>
@@ -72,15 +72,15 @@ const Home = (props) => {
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const items = useSelector(state => state.items);
+    const checkedOut = useSelector(state => state.checkedOut);
     const dispatch = useDispatch();
     
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
     const [type, setType] = useState("");
     const [file, setFile] = useState("");
-
     const [value, setValue] = React.useState(0);
-
+    
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -132,9 +132,17 @@ const Home = (props) => {
             'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
         },
         }));
-    
+    const useStyles3 = makeStyles((theme) => ({
+        root: {
+            '& > *': {
+            margin: theme.spacing(1),
+            width: '25ch',
+            },
+        },
+        }));
     const classes1 = useStyles1();
     const classes2 = useStyles2();
+    const classes3 = useStyles3();
         
     return (
         <div className="body" id="body">
@@ -166,7 +174,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shirtsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -175,7 +183,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -193,7 +201,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jeansArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -202,7 +210,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -220,7 +228,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shortsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -229,7 +237,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -247,7 +255,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shoesArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -256,7 +264,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -274,7 +282,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jacketsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -283,7 +291,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -327,7 +335,24 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shirtsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                                {checkedOut.includes(item.id) ? (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                  />
+                                                ) : (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                />
+                                                )}
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -336,7 +361,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -354,7 +379,24 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jeansArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                                {checkedOut.includes(item.id) ? (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                  />
+                                                ) : (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                />
+                                                )}
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -363,7 +405,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -381,7 +423,24 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shortsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                                {checkedOut.includes(item.id) ? (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                  />
+                                                ) : (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                />
+                                                )}
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -390,7 +449,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -408,7 +467,24 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shoesArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                                {checkedOut.includes(item.id) ? (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                  />
+                                                ) : (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                />
+                                                )}
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -417,7 +493,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -435,7 +511,24 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jacketsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px"}}>
+                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                                {checkedOut.includes(item.id) ? (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                  />
+                                                ) : (
+                                                    <Checkbox
+                                                    onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+                                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                                    color="primary"
+                                                    z-index="9999"
+                                                    position="absolute"
+                                                />
+                                                )}
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -444,7 +537,7 @@ const Home = (props) => {
                                                     title: classes2.title,
                                                 }}
                                                 actionIcon={
-                                                    <IconButton onClick={(item) => dispatch({type: "addFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
                                                         {favorites.includes(item.id) ? (
                                                         <StarIcon />
                                                         ) : (
@@ -475,9 +568,9 @@ const Home = (props) => {
                     <AccordionDetails>
                         <Typography>
                         <div className="dialog3">
-                            <form className="form" onSubmit={handleSubmit}>
+                            <form className={classes3.root} onSubmit={handleSubmit}>
                                 <label className="formLabel">Size:</label>
-                                <select className="formLabel" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size}>
+                                <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size}>
                                     <option value="Choose Size" disabled>Choose Size</option>
                                     <option value="XXS">XXS</option>
                                     <option value="XS">XS</option>
@@ -486,28 +579,39 @@ const Home = (props) => {
                                     <option value="L">L</option>
                                     <option value="XL">XL</option>
                                     <option value="XXL">XXL</option>
+                                    <option value="XXXL">XXXL</option>
                                 </select>
                                 <br />
                                 <label className="formLabel">Style:</label>
-                                <select className="formLabel" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style}>
+                                <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style}>
                                     <option value="Choose Style" disabled>Choose Style</option>
-                                    <option>Elegant</option>
-                                    <option>Sport</option>
-                                    <option>Official</option>
-                                    <option>Sport Elegant</option>
-                                    <option>Comfort</option>
+                                    <option value="casual">Casual</option>
+                                    <option value="elegant">Elegant</option>
+                                    <option value="sport">Sport</option>
+                                    <option value="formal">Formal</option>
+                                    <option value="sport elegant">Sport Elegant</option>
+                                    <option value="comfort">Comfort</option>
+                                    <option value="maternity">Maternity</option>
+                                    <option value="hip hop">Hip Hop</option>
+                                    <option value="military">Military</option>
+                                    <option value="exotic">Exotic</option>
+                                    <option value="trendy">Trendy</option>
+                                    <option value="ethnic">Ethnic</option>
+                                    <option value="gothic">Gothic</option>
                                 </select>
                                 <br />
                                 <label className="formLabel">Type:</label>
-                                <select className="formLabel" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type}>
+                                <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type}>
                                     <option value="Choose a type" disabled>Choose a type</option>
-                                    <option>Shirts</option>
-                                    <option>Jeans</option>
-                                    <option>Shorts</option>
+                                    <option value="shirts">Shirts</option>
+                                    <option value="jeans">Jeans</option>
+                                    <option value="shorts">Shorts</option>
+                                    <option value="shoes">Shoes</option>
+                                    <option value="jackets">Jackets</option>
                                 </select>
                                 <br />
                                 <label className="formLabel">File:</label>
-                                <input className="formLabel" onChange={(e) => {setFile(e.target.files[0])}} type="file" id="myFile" name="filename" value={itemObj.img}/>
+                                <input className="formLabel1" onChange={(e) => {setFile(e.target.files[0])}} type="file" id="myFile" name="filename" value={itemObj.img}/>
                                 <label>{file ? <div>{Math.round((file.size) / 1024)} KBs</div> : <></>}</label>
                                 <img src={file} alt=""/>
                                 <br />
