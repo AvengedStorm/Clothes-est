@@ -12,10 +12,8 @@ import {
   Route
 } from "react-router-dom";
 import { connect } from 'react-redux';
-import red from '@material-ui/core/colors/red';
-import blue from '@material-ui/core/colors/blue';
-
-
+import cyan from '@material-ui/core/colors/cyan';
+import blueGrey from '@material-ui/core/colors/blueGrey';
 
 function App(props) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -24,7 +22,7 @@ function App(props) {
       createTheme({
         palette: {
           type: props.darkmode ? 'dark' : 'light',
-          primary: props.darkmode ? red : blue,
+          primary: props.darkmode ? blueGrey : cyan,
         },
       }),
     [prefersDarkMode,props.darkmode],
