@@ -9,7 +9,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {useSelector, useDispatch} from 'react-redux'
-import clothes from "../components/clothes/clothes";
+import clothes from "../components/db/clothes";
 import PropTypes from 'prop-types';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -95,7 +95,13 @@ const Home = (props) => {
             file: file,
         }});
     }
-
+    const imageListItemStyle = {
+        maxWidth: "200px", 
+        minWidth: "100px", 
+        maxHeight: "200px", 
+        minHeight: "100px", 
+        zIndex: "100",
+    }
     const useStyles1 = makeStyles((theme) => (
         {
             root: {
@@ -174,7 +180,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shirtsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -201,7 +207,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jeansArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -228,7 +234,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shortsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -255,7 +261,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shoesArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -282,7 +288,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jacketsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 <img src={item.img} alt={item.size} />
                                                 <ImageListItemBar
                                                 title={item.size}
@@ -335,7 +341,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shirtsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 {checkedOut.includes(item.id) ? (
                                                     <Checkbox
                                                     onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
@@ -379,7 +385,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jeansArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 {checkedOut.includes(item.id) ? (
                                                     <Checkbox
                                                     onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
@@ -423,7 +429,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shortsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 {checkedOut.includes(item.id) ? (
                                                     <Checkbox
                                                     onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
@@ -467,7 +473,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {shoesArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 {checkedOut.includes(item.id) ? (
                                                     <Checkbox
                                                     onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
@@ -511,7 +517,7 @@ const Home = (props) => {
                                     <div className={classes2.root}>
                                         <ImageList className={classes2.imageList} cols={2.5}>
                                             {jacketsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={{maxWidth: "200px", minWidth: "100px", maxHeight: "200px", minHeight: "100px", zIndex: "100"}}>
+                                            <ImageListItem key={item.img} style={imageListItemStyle}>
                                                 {checkedOut.includes(item.id) ? (
                                                     <Checkbox
                                                     onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}

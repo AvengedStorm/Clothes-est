@@ -14,8 +14,12 @@ import {
 import { connect } from 'react-redux';
 import cyan from '@material-ui/core/colors/cyan';
 import blueGrey from '@material-ui/core/colors/blueGrey';
+import Login from './pages/login';
 
 function App(props) {
+  if(window.location.pathname != '/login' && !props.currentUser) {
+    window.location = '/login';
+  }
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = React.useMemo(
     () =>
@@ -39,6 +43,9 @@ function App(props) {
                 </Route>
                 <Route path="/closet">
                   <Closet />
+                </Route>
+                <Route path="/login">
+                  <Login />
                 </Route>
                 <Route path="/">
                   <Home />

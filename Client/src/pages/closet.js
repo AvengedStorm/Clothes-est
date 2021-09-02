@@ -1,5 +1,5 @@
 import React from "react";
-import clothes from "../components/clothes/clothes";
+import clothes from "../components/db/clothes";
 import { DataGrid } from '@material-ui/data-grid';
 
 const rows = clothes;
@@ -37,7 +37,7 @@ const columns = [
 const Closet = (props) => {
     return(
         <div className="closetDiv">
-                <div style={{ height: 400, width: '100%' }}>
+                <div style={{ height: 400, width: '100%', marginTop: "10vh" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}

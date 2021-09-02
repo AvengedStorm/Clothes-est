@@ -6,6 +6,8 @@ function reducer(state = {
     darkmode: false,
     favorites: [],
     checkedOut: [],
+    setSetter: [],
+    currentUser: null
   }, action){
   switch (action.type) {
     case 'openAccordion':
@@ -51,8 +53,15 @@ function reducer(state = {
               [...state.checkedOut, action.payload]}
       }
     break;
+    case 'login':
+      state = {...state, currentUser: [...state.currentUser, action.payload]}
+      break;
+    case 'logout':
+      state = {...state, currentUser: null}
+      break;
     default:
       console.log(action);
+    break;
     }
     return state;
   }
