@@ -3,20 +3,26 @@ const router = express.Router(); // subLibrary of express, allowing to defaranti
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
-        message: 'Handling GET requests for /favorites'
+        message: 'Handling GET requests for /favorites/'
     });
 });
 
 router.post('/', (req, res, next) => {
     res.status(200).json({
-        message: 'Handling POST requests for /favorites'
+        message: 'Handling POST requests for /favorites/'
+    });
+});
+
+router.patch('/', (req, res, next) => {
+    res.status(200).json({
+        message: 'Handling PATCH requests for /favorites/'
     });
 });
 
 router.delete('/', (req, res, next) => {
     res.status(200).json({
-        message: 'Handling DELETE requests for /favorites'
-    });
-});
+        message: 'Handling DELETE requests for /favorites/'
+    })
+})
 
 module.exports = router;
