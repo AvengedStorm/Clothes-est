@@ -1,28 +1,84 @@
 const express = require('express');
 const router = express.Router(); // subLibrary of express, allowing to defarantiet between routes.
+const { MongoClient, ObjectId } = require('mongodb');
+const url = 'mongodb://10.0.0.101:27017';
+const client = new MongoClient(url);
 
-router.get('/', (req, res, next) => {
+
+const stringToObjectId = str => new ObjectId.createFromHexString(str);
+const fetchItems = async () => {
+    await client.connect();
+    const db = client.db('clothest');
+    const collection = db.collection('favorites');
+    return await collection.find().toArray();
+};
+const fetchItem = async (itemId) => {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('favorites');
+        return await collection.findOne({_id: stringToObjectId(itemId)});
+    } catch {
+        return null;   
+    }
+};
+const deleteItem = async (itemId) => {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('favorites');
+        if (await fetchItem(itemId)) {
+            return await collection.deleteOne({_id: stringToObjectId(itemId)})
+        }
+        return null;
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
+};
+const postItem = async (ClothObj) => {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('favorites');
+        return await collection.insertOne(ClothObj);
+    } catch {
+        return null;
+    }
+};
+
+router.get('/', async (req, res, next) => {
     res.status(200).json({
-        message: 'Handling GET requests for /favorites/'
+        items: await fetchItems(req.params.itemId),
     });
 });
 
-router.post('/', (req, res, next) => {
+router.get('/:itemId', async (req, res, next) => {
     res.status(200).json({
-        message: 'Handling POST requests for /favorites/'
+        item: await fetchItem(req.params.itemId),
     });
 });
 
-router.patch('/', (req, res, next) => {
-    res.status(200).json({
-        message: 'Handling PATCH requests for /favorites/'
+router.post('/', async (req, res, next) => {
+    const ClothObj = {
+        _id: req.params.itemId
+    };
+    res.status(201).json({
+        item: await postItem(ClothObj),
     });
 });
 
-router.delete('/', (req, res, next) => {
-    res.status(200).json({
-        message: 'Handling DELETE requests for /favorites/'
-    })
-})
+router.delete('/:itemId', async (req, res, next) => {
+    const itemId = req.params.itemId;
+     if (await deleteItem(itemId)) {
+         res.status(202).json({
+             message: 'Handled DELETE request succesfully'
+         });
+     } else {
+        res.status(404).json({
+            message: 'Item not found.'
+        });
+     }
+});
 
 module.exports = router;
