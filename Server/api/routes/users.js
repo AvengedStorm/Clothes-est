@@ -5,6 +5,7 @@ const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
+
 const fetchUsers = async () => {
     await client.connect();
     const db = client.db('clothest');
@@ -26,7 +27,7 @@ const deleteUser = async (userId) => {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
-        if (await fetchItem(userId)) {
+        if (await fetchUser(userId)) {
             return await collection.deleteOne({_id: stringToObjectId(userId)})
         }
         return null;
@@ -74,7 +75,7 @@ router.delete('/:userId', async (req, res, next) => {
     const userId = req.params.userId;
      if (await deleteUser(userId)) {
          res.status(202).json({
-             message: 'Handled DELETE request succesfully'
+             message: 'User deleted successfully!'
          });
      } else {
         res.status(404).json({

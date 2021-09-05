@@ -3,7 +3,7 @@ const router = express.Router(); // subLibrary of express, allowing to defaranti
 const { MongoClient, ObjectId } = require('mongodb');
 const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
-
+const items = require('./items');
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
 const fetchFavorites = async () => {
