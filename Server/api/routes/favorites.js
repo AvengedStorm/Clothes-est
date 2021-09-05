@@ -6,13 +6,13 @@ const client = new MongoClient(url);
 
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
-const fetchItems = async () => {
+const fetchFavorites = async () => {
     await client.connect();
     const db = client.db('clothest');
     const collection = db.collection('favorites');
     return await collection.find().toArray();
 };
-const fetchItem = async (itemId) => {
+const fetchFavorite = async (itemId) => {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -22,12 +22,12 @@ const fetchItem = async (itemId) => {
         return null;   
     }
 };
-const deleteItem = async (itemId) => {
+const deleteFavorite = async (itemId) => {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('favorites');
-        if (await fetchItem(itemId)) {
+        if (await fetchFavorite(itemId)) {
             return await collection.deleteOne({_id: stringToObjectId(itemId)})
         }
         return null;
@@ -36,7 +36,7 @@ const deleteItem = async (itemId) => {
         return null;
     }
 };
-const postItem = async (ClothObj) => {
+const postFavorite = async (ClothObj) => {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -49,28 +49,28 @@ const postItem = async (ClothObj) => {
 
 router.get('/', async (req, res, next) => {
     res.status(200).json({
-        items: await fetchItems(req.params.itemId),
+        items: await fetchFavorites(req.params.itemId),
     });
 });
 
 router.get('/:itemId', async (req, res, next) => {
     res.status(200).json({
-        item: await fetchItem(req.params.itemId),
+        item: await fetchFavorite(req.params.itemId),
     });
 });
 
 router.post('/', async (req, res, next) => {
     const ClothObj = {
-        _id: req.params.itemId
+        _id: req.body.itemId
     };
     res.status(201).json({
-        item: await postItem(ClothObj),
+        item: await postFavorite(ClothObj),
     });
 });
 
 router.delete('/:itemId', async (req, res, next) => {
     const itemId = req.params.itemId;
-     if (await deleteItem(itemId)) {
+     if (await deleteFavorite(itemId)) {
          res.status(202).json({
              message: 'Handled DELETE request succesfully'
          });
