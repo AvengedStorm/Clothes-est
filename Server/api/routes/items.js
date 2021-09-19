@@ -22,12 +22,12 @@ const fetchItem = async (itemId) => {
         return null;   
     }
 };
-const updateItem = async (itemObject) => {
+const updateItem = async (itemId, itemObject) => {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('clothes');
-        return await collection.updateOne({_id: itemObject['_id']},{'$set':itemObject});
+        return await collection.updateOne({_id: stringToObjectId(itemId)},{'$set': itemObject});
     } catch(e) {
         console.log(e);
         return null;
@@ -84,14 +84,18 @@ router.post('/', async (req, res, next) => {
 router.patch('/:itemId', async (req, res, next) => {
     const itemId = req.params.itemId;
     const cloth = {
-            _id: stringToObjectId(itemId),
             type: req.body.type,
             size: req.body.size,
             style: req.body.style,
             isWashed: req.body.isWashed,
             img: req.body.img,
         };
-    await updateItem(cloth);
+    Object.keys(cloth).forEach(key => {
+        if(!cloth[key]) {
+            delete cloth[key];
+        }
+    });
+    console.log(await updateItem(itemId, cloth));
     res.status(202).json({
         updated: cloth
     });

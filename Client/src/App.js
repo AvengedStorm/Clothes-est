@@ -17,9 +17,9 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import Login from './pages/login';
 
 function App(props) {
-  if(window.location.pathname != '/login' && !props.currentUser) {
-    window.location = '/login';
-  }
+  // if(window.location.pathname != '/login' && !props.currentUser) {
+  //   window.location = '/login';
+  // }
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = React.useMemo(
     () =>

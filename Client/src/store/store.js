@@ -53,12 +53,12 @@ function reducer(state = {
               [...state.checkedOut, action.payload]}
       }
     break;
-    case 'login':
-      state = {...state, currentUser: [...state.currentUser, action.payload]}
-      break;
-    case 'logout':
-      state = {...state, currentUser: null}
-      break;
+    // case 'login':
+    //   state = {...state, currentUser: [...state.currentUser, action.payload]}
+    //   break;
+    // case 'logout':
+    //   state = {...state, currentUser: null}
+    //   break;
     default:
       console.log(action);
     break;
