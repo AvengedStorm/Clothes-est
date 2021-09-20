@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router(); // subLibrary of express, allowing to defarantiet between routes.
-const { MongoClient, ObjectId } = require('mongodb');
+import { Router } from 'express';
+const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
+import { MongoClient, ObjectId } from 'mongodb';
 const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
-const items = require('./items');
+import items from './items';
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
 const fetchFavorites = async () => {
@@ -81,4 +81,4 @@ router.delete('/:itemId', async (req, res, next) => {
      }
 });
 
-module.exports = router;
+export default router;

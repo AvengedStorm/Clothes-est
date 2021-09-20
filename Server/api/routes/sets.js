@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router(); // subLibrary of express, allowing to defarantiet between routes.
+import { Router } from 'express';
+const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
@@ -25,4 +25,4 @@ router.delete('/', (req, res, next) => {
     });
 });
 
-module.exports = router;
+export default router;

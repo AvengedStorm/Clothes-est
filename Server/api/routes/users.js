@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router(); // subLibrary of express, allowing to defarantiet between routes.
-const { MongoClient, ObjectId } = require('mongodb');
+import { Router } from 'express';
+const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
+import { MongoClient, ObjectId } from 'mongodb';
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
@@ -124,4 +124,4 @@ router.delete('/:userId', async (req, res, next) => {
      }
 });
 
-module.exports = router;
+export default router;
