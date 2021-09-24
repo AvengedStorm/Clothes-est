@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-
+let drawerWidth = 240;
 const NavBar = (props) => {
     const [isDrawerOpen, toggleDrawer] = useState(false);
 
@@ -47,11 +47,20 @@ const NavBar = (props) => {
                 </IconButton>
                 </Toolbar>
             </AppBar>
-            <Drawer anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
+            <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+              },
+            }}
+            anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)} variant="persistent">
                 <div className="drawerButton">
                         <div className="App">
                             <Link to="/"><button type="button" class="btn btn-primary">Home</button></Link>
-                            <Link to="/closet"><button type="button" class="btn btn-primary">Closet</button></Link>
+                            {/* <Link to="/closet"><button type="button" class="btn btn-primary">Closet</button></Link> */}
                             <Link to="/about"><button type="button" class="btn btn-primary">About</button></Link>
                             <Link to="/login"><button type="button" class="btn btn-primary">Login</button></Link>
                         </div>

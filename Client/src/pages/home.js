@@ -24,9 +24,13 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import { Drawer } from '@material-ui/core';
 
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
+
+let drawerWidth = 240;
 
 const shirtsArray = clothes.filter(el => el.type === "shirt");
 const jeansArray = clothes.filter(el => el.type === "jeans");
@@ -138,6 +142,9 @@ const Home = (props) => {
             'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
         },
         }));
+
+    const [isDrawerOpen, toggleDrawer] = useState(true);
+    
     const useStyles3 = makeStyles((theme) => ({
         root: {
             '& > *': {
@@ -152,28 +159,16 @@ const Home = (props) => {
         
     return (
         <div className="body" id="body">
-            <h3 className="homeTitle" style={{marginTop: "10vh"}}>Welcome to your closet! What would you like to do?</h3>
+            <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
             <br />
-            <ul className="closetMenuList">
-                <Accordion id="1" expanded={props.openAccordion === '1'}>
-                    <AccordionSummary
-                    onClick={e => props.dispatch({type: 'openAccordion', payload: '1'})}
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    >
-                    <Typography className={classes1.heading}>View an item</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                    <Typography>
-                            <div className={classes1.root}>
+            <div className={classes1.root}>
                                 <AppBar position="static">
-                                    <Tabs value={value} onChange={handleChange} aria-label="type tabs">
-                                    <Tab label="Shirts" {...a11yProps(0)} />
-                                    <Tab label="Jeans" {...a11yProps(1)} />
-                                    <Tab label="Shorts" {...a11yProps(2)} />
-                                    <Tab label="Shoes" {...a11yProps(3)} />
-                                    <Tab label="Jackets" {...a11yProps(4)} />
+                                    <Tabs value={value} onChange={handleChange} aria-label="type tabs" variant="fullWidth">
+                                    <Tab label="Shirts" {...a11yProps(0)} disabled={!shirtsArray} />
+                                    <Tab label="Jeans" {...a11yProps(1)} disabled={!jeansArray}/>
+                                    <Tab label="Shorts" {...a11yProps(2)} disabled={!shortsArray}/>
+                                    <Tab label="Shoes" {...a11yProps(3)} disabled={!shoesArray}/>
+                                    <Tab label="Jackets" {...a11yProps(4)} disabled={!jacketsArray}/>
                                     </Tabs>
                                 </AppBar>
                                 <TabPanel value={value} index={0}>
@@ -312,11 +307,8 @@ const Home = (props) => {
                                     </div>
                                 </TabPanel>
                             </div>
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
                 <br />
-                <Accordion id="2" expanded={props.openAccordion === '2'}>
+                <>{/* <Accordion id="2" expanded={props.openAccordion === '2'}>
                     <AccordionSummary
                     onClick={e => props.dispatch({type: 'openAccordion', payload: '2'})}
                     expandIcon={<ExpandMoreIcon />}
@@ -561,7 +553,7 @@ const Home = (props) => {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
-                <br />
+                <br /> */}</>
                 <Accordion id="3" expanded={props.openAccordion === '3'}>
                     <AccordionSummary
                     onClick={e => props.dispatch({type: 'openAccordion', payload: '3'})}
@@ -627,8 +619,26 @@ const Home = (props) => {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
-                <br />
-            </ul>    
+                <Drawer
+                    sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                    }}
+                    anchor="right" open={isDrawerOpen} onClose={() => toggleDrawer(false)} variant="persistent">
+                        <div className="drawerButton">
+                                <div className="App">
+                                    <button type="button" class="btn btn-primary">Home</button>
+                                    {/* <Link to="/closet"><button type="button" class="btn btn-primary">Closet</button></Link> */}
+                                    <button type="button" class="btn btn-primary">About</button>
+                                    <button type="button" class="btn btn-primary">Login</button>
+                                </div>
+                        </div>            
+                    <Button onClick={() => toggleDrawer(false)}>Close</Button>
+            </Drawer>
             <br />
         </div>
     )
