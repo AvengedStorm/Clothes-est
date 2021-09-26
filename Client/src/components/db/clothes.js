@@ -45,7 +45,7 @@ const clothes = [
         size: "XXL",
         style: "Elegant",
         isWashed: true,
-        img: "https://m.media-amazon.com/images/I/618Q5m1RM+L._AC_UX342_.jpg",
+        img: "https://cdn-images.farfetch-contents.com/14/38/55/26/14385526_22537572_600.jpg",
     },
     {
         id: "7",

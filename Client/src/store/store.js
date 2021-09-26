@@ -7,6 +7,7 @@ function reducer(state = {
     favorites: [],
     checkedOut: [],
     setSetter: [],
+    drawerContent: [],
     currentUser: null
   }, action){
   switch (action.type) {
@@ -47,18 +48,39 @@ function reducer(state = {
           checkedOut: 
             [...state.checkedOut.filter(el => el !== action.payload)]}
       } else {
-          state = 
-          {...state, 
+          state ={
+            ...state, 
             checkedOut: 
               [...state.checkedOut, action.payload]}
       }
+      // console.log(state.checkedOut);
     break;
-    // case 'login':
-    //   state = {...state, currentUser: [...state.currentUser, action.payload]}
-    //   break;
-    // case 'logout':
-    //   state = {...state, currentUser: null}
-    //   break;
+    case 'addToDrawer':
+      if(state.drawerContent.includes(action.payload)) {
+        state = {
+            ...state,
+            drawerContent: 
+              [...state.drawerContent.filter(el => el !== action.payload)]}
+      } else {
+        state = {
+          ...state,
+          drawerContent:
+            [...state.drawerContent, action.payload]}
+      };
+      console.log(state.drawerContent);
+    break;
+    case 'clearDrawer':
+      state = {
+        ...state,
+        checkedOut: []
+      }
+    break;
+    case 'login':
+      state = {...state, currentUser: [...state.currentUser, action.payload]}
+      break;
+    case 'logout':
+      state = {...state, currentUser: null}
+      break;
     default:
       console.log(action);
     break;

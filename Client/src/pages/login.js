@@ -14,8 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import {useSelector, useDispatch} from 'react-redux'
 
-import users from '../components/db/users';
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
