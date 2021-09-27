@@ -161,7 +161,20 @@ const Home = (props) => {
     const classes1 = useStyles1();
     const classes2 = useStyles2();
     const classes3 = useStyles3();
-        
+    const renderCheckbox = (item) => {
+        let isCheckedOut = checkedOut.includes(item.id);
+        return (
+            <Checkbox
+            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
+            inputProps={{ 'aria-label': 'primary checkbox' }}
+            color="primary"
+            z-index="9999"
+            position="absolute"
+            label={isCheckedOut ? "Remove me from set" : "Add me to the set"}
+            checked={isCheckedOut} 
+            />
+        )
+    }
     return (
         <div className="body" id="body">
             <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
@@ -181,25 +194,7 @@ const Home = (props) => {
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shirtsArray.map((item) => (
                             <ImageListItem key={item.img} style={imageListItemStyle}>
-                                {checkedOut.includes(item.id) ? (
-                                <Checkbox
-                                onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                                inputProps={{ 'aria-label': 'primary checkbox' }}
-                                color="primary"
-                                z-index="9999"
-                                position="absolute"
-                                label="Add me to the set"
-                                />
-                            ) : (
-                                <Checkbox
-                                onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                                inputProps={{ 'aria-label': 'primary checkbox' }}
-                                color="primary"
-                                z-index="9999"
-                                position="absolute"
-                                label="Remove me from the set"
-                            />
-                            )}
+                                {renderCheckbox(item)}
                                 <img src={item.img} onClick={(e) => console.log(checkedOut)} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
                                 title={item.size}
@@ -227,25 +222,7 @@ const Home = (props) => {
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {jeansArray.map((item) => (
                             <ImageListItem key={item.img} style={imageListItemStyle}>
-                            {checkedOut.includes(item.id) ? (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Add me to the set"
-                            />
-                        ) : (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Remove me from the set"
-                        />
-                        )}
+                            {renderCheckbox(item)}
                             <img src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                             <ImageListItemBar
                             title={item.size}
@@ -273,25 +250,7 @@ const Home = (props) => {
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shortsArray.map((item) => (
                             <ImageListItem key={item.img} style={imageListItemStyle}>
-                            {checkedOut.includes(item.id) ? (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Add me to the set"
-                            />
-                        ) : (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Remove me from the set"
-                        />
-                        )}
+                            {renderCheckbox(item)}
                             <img src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                             <ImageListItemBar
                             title={item.size}
@@ -319,25 +278,7 @@ const Home = (props) => {
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shoesArray.map((item) => (
                             <ImageListItem key={item.img} style={imageListItemStyle}>
-                            {checkedOut.includes(item.id) ? (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Add me to the set"
-                            />
-                        ) : (
-                            <Checkbox
-                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                            color="primary"
-                            z-index="9999"
-                            position="absolute"
-                            label="Remove me from the set"
-                        />
-                        )}
+                            {renderCheckbox(item)}
                             <img src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                             <ImageListItemBar
                             title={item.size}
@@ -361,51 +302,33 @@ const Home = (props) => {
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
-                                    <div className={classes2.root}>
-                                        <ImageList className={classes2.imageList} cols={2.5}>
-                                            {jacketsArray.map((item) => (
-                                            <ImageListItem key={item.img} style={imageListItemStyle}>
-                                            {checkedOut.includes(item.id) ? (
-                                            <Checkbox
-                                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                            color="primary"
-                                            z-index="9999"
-                                            position="absolute"
-                                            label="Add me to the set"
-                                            />
-                                        ) : (
-                                            <Checkbox
-                                            onClick={(e) => dispatch({type: "checkedOut", payload: item.id})}
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                            color="primary"
-                                            z-index="9999"
-                                            position="absolute"
-                                            label="Remove me from the set"
-                                        />
-                                        )}
-                                            <img src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                            <ImageListItemBar
-                                            title={item.size}
-                                            classes={{
-                                                root: classes2.titleBar,
-                                                title: classes2.title,
-                                            }}
-                                            actionIcon={
-                                                <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                                    {favorites.includes(item.id) ? (
-                                                        <StarIcon />
-                                                        ) : (
-                                                            <StarBorderIcon />
-                                                            )}
-                                                </IconButton>
-                                            }
-                                            />
-                                        </ImageListItem>
-                                            ))}
-                                        </ImageList>
-                                    </div>
-                                </TabPanel>
+                    <div className={classes2.root}>
+                        <ImageList className={classes2.imageList} cols={2.5}>
+                            {jacketsArray.map((item) => (
+                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                {renderCheckbox(item)}
+                                <img src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
+                                <ImageListItemBar
+                                title={item.size}
+                                classes={{
+                                    root: classes2.titleBar,
+                                    title: classes2.title,
+                                }}
+                                actionIcon={
+                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                        {favorites.includes(item.id) ? (
+                                            <StarIcon />
+                                            ) : (
+                                                <StarBorderIcon />
+                                                )}
+                                    </IconButton>
+                                }
+                                />
+                                </ImageListItem>
+                            ))}
+                        </ImageList>
+                    </div>
+                </TabPanel>
             </div>
                 <br />
                 <Accordion id="3" expanded={props.openAccordion === '3'}>
