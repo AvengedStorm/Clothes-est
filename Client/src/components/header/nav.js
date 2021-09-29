@@ -59,10 +59,9 @@ const NavBar = (props) => {
             anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)} variant="persistent">
                 <div className="drawerButton">
                         <div className="App">
-                            <Link to="/"><button type="button" class="btn btn-primary">Home</button></Link>
-                            {/* <Link to="/closet"><button type="button" class="btn btn-primary">Closet</button></Link> */}
-                            <Link to="/about"><button type="button" class="btn btn-primary">About</button></Link>
-                            <Link to="/login"><button type="button" class="btn btn-primary">Login</button></Link>
+                            <Link to="/"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>Home</button></Link>
+                            <Link to="/about"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>About</button></Link>
+                            <Link to="/login"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>Login</button></Link>
                         </div>
                 </div>            
                 <Button onClick={() => toggleDrawer(false)}>Close</Button>

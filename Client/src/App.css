@@ -23,6 +23,9 @@ html {
   padding: 0;
   margin-bottom: 0;
 }
-#myFile {
-  margin-right: 0;
+/* #myFile {
+  min-width: 190px;
+} */
+.formLabel1 {
+  min-width: 190px;
 }

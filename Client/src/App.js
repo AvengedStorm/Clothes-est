@@ -36,22 +36,20 @@ function App(props) {
         <CssBaseline />
           <Navbar />
           <div>
-            <div>
-              <Switch>
-                <Route path="/about">
-                  <About />
-                </Route>
-                <Route path="/closet">
-                  <Closet />
-                </Route>
-                <Route path="/login">
-                  <Login />
-                </Route>
-                <Route path="/">
-                  <Home />
-                </Route>
-              </Switch>
-            </div>
+            <Switch>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route path="/closet">
+                <Closet />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
           </div>
     </ThemeProvider>
   );
