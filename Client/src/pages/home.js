@@ -48,6 +48,7 @@ import Button from '@mui/material/Button';
 const hatsArray = clothes.filter(el => el.type === "hat");
 const shirtsArray = clothes.filter(el => el.type === "shirt");
 const jeansArray = clothes.filter(el => el.type === "jeans");
+const footersArray = clothes.filter(el => el.type === "footer");
 const shortsArray = clothes.filter(el => el.type === "shorts");
 const shoesArray = clothes.filter(el => el.type === "shoes");
 const jacketsArray = clothes.filter(el => el.type === "jackets");
@@ -92,6 +93,7 @@ const Home = (props) => {
     const checkedOut = useSelector(state => state.checkedOut);
     const dispatch = useDispatch();
     
+    const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
     const [type, setType] = useState("");
@@ -107,22 +109,23 @@ const Home = (props) => {
     };
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };  
+    };
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        dispatch({type: "addItem", payload:{
+        const sizeDecider = size === "other" ? text : size;
+        let item = {
             id: items.length+1,
-            size: size,
+            size: sizeDecider,
             style: style,
             type: type,
             file: file,
-        }});
+        }
+        // alert(`${item.size}, ${item.style}, ${item.type}`);
+        dispatch({type: "addItem", payload: item});
     }
     const imageListItemStyle = {
-        maxWidth: "200px", 
-        minWidth: "100px", 
-        maxHeight: "200px", 
-        minHeight: "100px", 
+        width: "200px", 
+        height: "200px", 
         zIndex: "100",
     }
     const useStyles = makeStyles((theme) => ({
@@ -257,8 +260,9 @@ const Home = (props) => {
                     <Tab label="Jackets" {...a11yProps(1)} />
                     <Tab label="Shirts" {...a11yProps(2)} />
                     <Tab label="Jeans" {...a11yProps(3)} />
-                    <Tab label="Shorts" {...a11yProps(4)} />
-                    <Tab label="Shoes" {...a11yProps(5)} />
+                    <Tab label="Footers" {...a11yProps(4)} />
+                    <Tab label="Shorts" {...a11yProps(5)} />
+                    <Tab label="Shoes" {...a11yProps(6)} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0} disabled={hatsArray.length > 0}>
@@ -373,7 +377,35 @@ const Home = (props) => {
                         </ImageList>
                     </div>
                 </TabPanel>
-                <TabPanel value={value} index={4} disabled={shortsArray.length > 0}>
+                <TabPanel value={value} index={4} disabled={footersArray.length > 0}>
+                    <div className={classes2.root}>
+                        <ImageList className={classes2.imageList} cols={2.5}>
+                            {footersArray.map((item) => (
+                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                {renderCheckbox(item)}
+                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
+                                <ImageListItemBar
+                                title={item.size}
+                                classes={{
+                                    root: classes2.titleBar,
+                                    title: classes2.title,
+                                }}
+                                actionIcon={
+                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
+                                        {favorites.includes(item.id) ? (
+                                            <StarIcon />
+                                            ) : (
+                                                <StarBorderIcon />
+                                                )}
+                                    </IconButton>
+                                }
+                                />
+                            </ImageListItem>
+                            ))}
+                        </ImageList>
+                    </div>
+                </TabPanel>
+                <TabPanel value={value} index={5} disabled={shortsArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shortsArray.map((item) => (
@@ -401,7 +433,7 @@ const Home = (props) => {
                         </ImageList>
                     </div>
                 </TabPanel>
-                <TabPanel value={value} index={5} disabled={shoesArray.length > 0}>
+                <TabPanel value={value} index={6} disabled={shoesArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shoesArray.map((item) => (
@@ -453,7 +485,9 @@ const Home = (props) => {
                             <option value="XL">XL</option>
                             <option value="XXL">XXL</option>
                             <option value="XXXL">XXXL</option>
+                            <option value="other">Other...</option>
                         </select>
+                        {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
                         <br />
                         <label className="formLabel">Style:</label>
                         <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style}>
@@ -479,6 +513,7 @@ const Home = (props) => {
                             <option value="shirts">Hat</option>
                             <option value="shirts">Shirt</option>
                             <option value="jackets">Jacket</option>
+                            <option value="footers">Footers</option>
                             <option value="jeans">Jeans</option>
                             <option value="shorts">Shorts</option>
                             <option value="shoes">Shoes</option>
@@ -495,34 +530,36 @@ const Home = (props) => {
             </Accordion>
             <br />
             <Drawer
-                anchor="right" 
+                anchor="bottom" 
                 open={drawerOpen || checkedOut.lenght > 0}
                 onClose={() => toggleDrawer(false)} 
                 variant="persistent"
-            >
+                >
                 <div>
+                <br />
+                <Divider />
                     {(checkedOut || []).map(item => {
                         return (
-                            <div key={item.id}>
+                            <div key={item.id} style={{display: 'inline-block'}}>
                                 <br />
-                                <Card sx={{ maxWidth: 345 }}>
+                                <Card sx={{ maxWidth: 345, display: 'inline-block' }}>
                                     <CardMedia
                                     component="img"
                                     height="196"
                                     width="196"
                                     image={item.img}
-                                    alt="green iguana"
+                                    onClick={() => console.log(item)}
                                     />
                                     <CardContent>
                                         <Typography variant="body2" color="text.secondary">
-                                            It's an {item.size} {item.isWashed ? "clean" : "dirty"} {item.style} {item.type}.
+                                            It's a size {item.size}, {item.isWashed ? "clean" : "dirty"}, {item.style} {item.type}.
                                             <br />
                                             {item.isWashed ? "Ready to use!" : "Needs to be cleand."}
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size="small" alt="Add to Favorites" onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})}>{favorites.includes(item.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
-                                        <Button size="small" alt="Remove from Set" onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>Remove from Set</Button>
+                                        <Button style={{float: "left"}} size="small" alt="Add to Favorites" onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})}>{favorites.includes(item.id) ? "Remove from Favorites" : "Add to Favorites"}</Button>
+                                        <Button style={{float: "right"}} size="small" alt="Remove from Set" onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>Remove from Set</Button>
                                     </CardActions>
                                 </Card>
                                 <br />

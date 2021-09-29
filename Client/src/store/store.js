@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 function reducer(state = {
     items: [],
+    openAccordion: "",
     darkmode: false,
     favorites: [],
     checkedOut: [],
@@ -74,9 +75,7 @@ function reducer(state = {
     return state;
   }
 
-const middlewares = [];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const enhancers = [applyMiddleware(...middlewares), ];
 
 const store = createStore(
     reducer,
