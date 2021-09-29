@@ -55,20 +55,6 @@ function reducer(state = {
       }
       // console.log(state.checkedOut);
     break;
-    case 'addToDrawer':
-      if(state.drawerContent.includes(action.payload)) {
-        state = {
-            ...state,
-            drawerContent: 
-              [...state.drawerContent.filter(el => el !== action.payload)]}
-      } else {
-        state = {
-          ...state,
-          drawerContent:
-            [...state.drawerContent, action.payload]}
-      };
-      console.log(state.drawerContent);
-    break;
     case 'clearDrawer':
       state = {
         ...state,
