@@ -56,6 +56,8 @@ function reducer(state = {
       }
       // console.log(state.checkedOut);
     break;
+    // case 'saveSet':
+    // break;
     case 'clearDrawer':
       state = {
         ...state,
