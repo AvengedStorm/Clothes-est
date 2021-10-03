@@ -154,5 +154,3 @@ const clothes = [
 ];
 
 export default clothes;
-
-// shirts, jeans, shorts, shoes, jackets

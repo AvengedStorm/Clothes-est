@@ -3,21 +3,20 @@ import thunk from 'redux-thunk';
 
 function reducer(state = {
     items: [],
-    openAccordion: "",
+    openAccordion: false,
     darkmode: false,
     favorites: [],
     checkedOut: [],
+    clothesDrawer: true,
     setSetter: [],
     drawerContent: [],
     currentUser: null
   }, action){
   switch (action.type) {
     case 'openAccordion':
-      // open the accordion and check if value is different
-      if(action.payload === state.openAccordion) {
-        state = {...state, openAccordion: null};
-      } else {
-        state = {...state, openAccordion: action.payload}
+      state = {
+        ...state,
+        openAccordion: !state.openAccordion
       }
     break;
     case 'togglestyle':
@@ -56,12 +55,29 @@ function reducer(state = {
       }
       // console.log(state.checkedOut);
     break;
-    // case 'saveSet':
-    // break;
+    case 'saveSet':
+      state = {
+        ...state,
+        setSetter: 
+          [...state.setSetter, action.payload]
+      }
+    break;
     case 'clearDrawer':
       state = {
         ...state,
         checkedOut: []
+      }
+    break;
+    case 'clothesDrawer':
+      if(!action.payload) {
+        state = {
+          ...state, clothesDrawer: !state.clothesDrawer
+        }
+      } else {
+        state = {
+          ...state,
+          clothesDrawer: action.payload
+        }
       }
     break;
     case 'login':
@@ -71,7 +87,7 @@ function reducer(state = {
       state = {...state, currentUser: null}
       break;
     default:
-      console.log(action);
+      // console.log(action);
     break;
     }
     return state;

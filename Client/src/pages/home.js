@@ -1,34 +1,25 @@
-import { connect } from 'react-redux';
 import React, {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux'
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
+
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {useSelector, useDispatch} from 'react-redux'
 import clothes from "../components/db/clothes";
-// import sets from "../components/db/sets";
-import PropTypes from 'prop-types';
+import { HomeSpeedDial } from "../components/speeddials/speeddials";
 
+import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
-
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
 import Box from '@material-ui/core/Box';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import SaveIcon from '@material-ui/icons/Save';
-import BallotIcon from '@material-ui/icons/Ballot';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-import ClearIcon from '@material-ui/icons/Clear';
-// import RemoveIcon from '@material-ui/icons/Remove';
 
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
@@ -43,14 +34,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
-
-const hatsArray = clothes.filter(el => el.type === "hat");
-const shirtsArray = clothes.filter(el => el.type === "shirt");
-const jeansArray = clothes.filter(el => el.type === "jeans");
-const footersArray = clothes.filter(el => el.type === "footer");
-const shortsArray = clothes.filter(el => el.type === "shorts");
-const shoesArray = clothes.filter(el => el.type === "shoes");
-const jacketsArray = clothes.filter(el => el.type === "jackets");
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -71,13 +54,11 @@ function TabPanel(props) {
         </div>
     );
 }
-
 TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.any.isRequired,
     value: PropTypes.any.isRequired,
 };
-
 function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -86,11 +67,22 @@ function a11yProps(index) {
 }
 
 const Home = (props) => {
+    console.log("hi from home");
+    const dispatch = useDispatch();
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const items = useSelector(state => state.items);
     const checkedOut = useSelector(state => state.checkedOut);
-    const dispatch = useDispatch();
+    const clothesDrawer = useSelector(state => state.clothesDrawer);
+    const openAccordion = useSelector(state => state.openAccordion);
+
+    const hatsArray = clothes.filter(el => el.type === "hat");
+    const shirtsArray = clothes.filter(el => el.type === "shirt");
+    const jeansArray = clothes.filter(el => el.type === "jeans");
+    const footersArray = clothes.filter(el => el.type === "footer");
+    const shortsArray = clothes.filter(el => el.type === "shorts");
+    const shoesArray = clothes.filter(el => el.type === "shoes");
+    const jacketsArray = clothes.filter(el => el.type === "jackets");
     
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
@@ -98,14 +90,7 @@ const Home = (props) => {
     const [type, setType] = useState("");
     const [file, setFile] = useState("");
     const [value, setValue] = React.useState(0);
-    const [open, setOpen] = React.useState(false);
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -119,30 +104,13 @@ const Home = (props) => {
             type: type,
             file: file,
         }
-        // alert(`${item.size}, ${item.style}, ${item.type}`);
         dispatch({type: "addItem", payload: item});
     };
-    const handleSetSubmit = (set) => {
-        const submittedSet = checkedOut;
-        dispatch({type: "saveSet", payload: submittedSet});
-    };
-
     const imageListItemStyle = {
         width: "200px", 
         height: "200px", 
         zIndex: "100",
     };
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            transform: 'translateZ(0px)',
-            flexGrow: 1,
-        },
-        speedDial: {
-            position: 'fixed',
-            top: "7vh",
-            right: "1vw",
-        },
-    }));
     const useStyles1 = makeStyles((theme) => (
         {
             root: {
@@ -156,8 +124,8 @@ const Home = (props) => {
             media: {
                 height: 150,
                 width: 150,
-              },
-    }));
+            },
+        }));
     const useStyles2 = makeStyles((theme) => ({
         root: {
             display: 'flex',
@@ -186,47 +154,20 @@ const Home = (props) => {
     const useStyles3 = makeStyles((theme) => ({
         root: {
             '& > *': {
-            margin: theme.spacing(1),
-            width: '25ch',
+                margin: theme.spacing(1),
+                width: '25ch',
             },
         },
     }));
 
-    const drawerToggeler = () => {
-        if(drawerOpen) {
-            toggleDrawer(false);
-        } else {
-            toggleDrawer(true);
-        };
-    };
-    const clearCurrentSet = () => {
-        dispatch({ type:'clearDrawer' })
-    };
-    const [drawerOpen, toggleDrawer] = useState(true);
+    const handleDrawerClose = () => {
+        dispatch({type: "clothesDrawer", payload: false });
+    }
 
-    const actions = [
-        {
-            icon: <SaveIcon />,
-            name: 'Save current set',
-            func: handleSetSubmit
-        },
-        {
-            icon: <BallotIcon />, 
-            name: 'Drawer', 
-            func: drawerToggeler
-        },
-        {
-            icon: <ClearIcon />, 
-            name: "Clear All",
-            func: clearCurrentSet
-        }
-    ];  
-    
-    const classes = useStyles();
     const classes1 = useStyles1();
     const classes2 = useStyles2();
     const classes3 = useStyles3();
-
+    
     const renderCheckbox = (item) => {
         let isCheckedOut = checkedOut.includes(item);
         return (
@@ -239,35 +180,15 @@ const Home = (props) => {
             label={isCheckedOut ? "Remove me from set" : "Add me to the set"}
             checked={isCheckedOut} 
             />
-        )
-    }
-    const SpeedDials = () => {
-        return (
-            <SpeedDial
-                ariaLabel="SpeedDial example"
-                className={classes.speedDial}
-                icon={<SpeedDialIcon />}
-                onClose={handleClose}
-                onOpen={handleOpen}
-                open={open}
-                direction="down"
-                z-index="9999"
-            >
-                {actions.map((action) => (
-                    <SpeedDialAction
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    onClick={action.func}
-                    />
-                ))}
-            </SpeedDial>
-        );
-    };
+            )
+        }
 
     return (
         <div className="body" id="body">
-            <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
+            <div>
+                <HomeSpeedDial />
+                <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
+            </div>
             <br />
             <div className={classes1.root}>
                 <AppBar position="static" style={{marginLeft: "3vw"}}>
@@ -479,9 +400,9 @@ const Home = (props) => {
                 </TabPanel>
             </div>
             <br />
-            <Accordion id="3" expanded={props.openAccordion === '3'}>
+            <Accordion id="3" expanded={openAccordion}>
                 <AccordionSummary
-                onClick={e => props.dispatch({type: 'openAccordion', payload: '3'})}
+                onClick={() => dispatch({type: 'openAccordion'})}
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -547,64 +468,63 @@ const Home = (props) => {
             <br />
             <Drawer
                 anchor="bottom" 
-                open={drawerOpen || checkedOut.lenght > 0}
-                onClose={() => toggleDrawer(false)} 
+                open={clothesDrawer || checkedOut.lenght > 0}
+                onClose={handleDrawerClose} 
                 variant="persistent"
                 >
                 <div>
                     <br />
                     <Divider />
                     {(checkedOut || []).map(item => {
-                            return (
-                                <div key={item.id} style={{display: 'inline-block'}}>
-                                    <br />
-                                    <Card sx={{ maxWidth: 345, display: 'inline-block' }}>
-                                        <CardMedia
-                                        component="img"
-                                        height="196"
-                                        width="196"
-                                        image={item.img}
-                                        onClick={() => console.log(item)}
-                                        />
-                                        <CardContent>
-                                            <Typography variant="body2" color="text.secondary">
-                                                It's a size {item.size}, {item.isWashed ? "clean" : "dirty"}, {item.style} {item.type}.
-                                                <br />
-                                                {item.isWashed ? "Ready to use!" : "Needs to be cleand."}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button 
-                                            style={{float: "left"}} 
-                                            size="small" 
-                                            alt="Add to Favorites" 
-                                            onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})}>
-                                                {favorites.includes(item.id) 
-                                                ?
-                                                "Remove from Favorites" 
-                                                : 
-                                                "Add to Favorites"
-                                                }
-                                            </Button>
-                                            <Button 
-                                            style={{float: "right"}} 
-                                            size="small" 
-                                            alt="Remove from Set" 
-                                            onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>
-                                                Remove from Set
-                                            </Button>
-                                        </CardActions>
-                                    </Card>
-                                    <br />
-                                    <Divider />
-                                </div>
-                            )
+                        return (
+                            <div key={item.id} style={{display: 'inline-block'}}>
+                                <br />
+                                <Card sx={{ maxWidth: 345, display: 'inline-block' }}>
+                                    <CardMedia
+                                    component="img"
+                                    height="196"
+                                    width="196"
+                                    image={item.img}
+                                    onClick={() => console.log(item)}
+                                    />
+                                    <CardContent>
+                                        <Typography variant="body2">
+                                            It's a size {item.size}, {item.isWashed ? "clean" : "dirty"}, {item.style} {item.type}.
+                                            <br />
+                                            {item.isWashed ? "Ready to use!" : "Needs to be cleand."}
+                                        </Typography>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button 
+                                        style={{float: "left"}} 
+                                        size="small" 
+                                        alt="Add to Favorites" 
+                                        onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})}>
+                                            {favorites.includes(item.id) 
+                                            ?
+                                            "Remove from Favorites" 
+                                            : 
+                                            "Add to Favorites"
+                                            }
+                                        </Button>
+                                        <Button 
+                                        style={{float: "right"}} 
+                                        size="small" 
+                                        alt="Remove from Set" 
+                                        onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>
+                                            Remove from Set
+                                        </Button>
+                                    </CardActions>
+                                </Card>
+                                <br />
+                                <Divider />
+                            </div>
+                        )
                     })}
                 </div>
             </Drawer>
-            <SpeedDials />
         </div>
     )
 }
 
-export default connect(state => {return {items: state.items, openAccordion: state.openAccordion}})(Home)
+export default Home;
