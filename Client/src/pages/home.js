@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux'
 import PropTypes from 'prop-types';
 
@@ -7,8 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-
-import clothes from "../components/db/clothes";
+import fetcher from '../components/db/fetcher';
 import { HomeSpeedDial } from "../components/speeddials/speeddials";
 
 import Typography from '@material-ui/core/Typography';
@@ -67,8 +66,8 @@ function a11yProps(index) {
 }
 
 const Home = (props) => {
-    console.log("hi from home");
     const dispatch = useDispatch();
+
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const items = useSelector(state => state.items);
@@ -76,20 +75,32 @@ const Home = (props) => {
     const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
 
-    const hatsArray = clothes.filter(el => el.type === "hat");
-    const shirtsArray = clothes.filter(el => el.type === "shirt");
-    const jeansArray = clothes.filter(el => el.type === "jeans");
-    const footersArray = clothes.filter(el => el.type === "footer");
-    const shortsArray = clothes.filter(el => el.type === "shorts");
-    const shoesArray = clothes.filter(el => el.type === "shoes");
-    const jacketsArray = clothes.filter(el => el.type === "jackets");
-    
+    const [hatsArray, setHatsArray] =  useState([]);
+    const [jacketsArray, setJacketsArray] = useState([]);
+    const [shirtsArray, setShirtsArray] = useState([]);
+    const [jeansArray, setJeansArray] = useState([]);
+    const [footersArray, setFootersArray] = useState([]);
+    const [shortsArray, setShortsArray] = useState([]);
+    const [shoesArray, setShoesArray] = useState([]);
+
+    useEffect(() => {
+        fetcher.getClothes((data) => {
+            setHatsArray(data.items.filter(el => el.type === "hat"));
+            setJacketsArray(data.items.filter(el => el.type === "jacket"));
+            setShirtsArray(data.items.filter(el => el.type === "shirt"));
+            setJeansArray(data.items.filter(el => el.type === "jeans"));
+            setFootersArray(data.items.filter(el => el.type === "footer"));
+            setShortsArray(data.items.filter(el => el.type === "shorts"));
+            setShoesArray(data.items.filter(el => el.type === "shoes"));
+        });
+    }, []);
+
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
     const [type, setType] = useState("");
     const [file, setFile] = useState("");
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
     
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -105,6 +116,13 @@ const Home = (props) => {
             file: file,
         }
         dispatch({type: "addItem", payload: item});
+        fetch("http://localhost:9001/items", {
+            method: "POST",
+            headers: "Content-Type: application/json",
+            body: JSON.stringify(item),
+        }).then(() => {
+            console.log("New item has been added!")
+        })
     };
     const imageListItemStyle = {
         width: "200px", 
@@ -181,7 +199,7 @@ const Home = (props) => {
             checked={isCheckedOut} 
             />
             )
-        }
+    }
 
     return (
         <div className="body" id="body">
@@ -206,9 +224,9 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {hatsArray.map((item) => (
-                            <ImageListItem key={item.img} style={imageListItemStyle}>
+                            <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} onClick={(e) => console.log(checkedOut)} alt={item.size} style={{width: "196px", height: "196px"}} />
+                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
                                 title={item.size}
                                 classes={{
@@ -234,7 +252,7 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {jacketsArray.map((item) => (
-                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
                                 <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
@@ -262,9 +280,9 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shirtsArray.map((item) => (
-                            <ImageListItem key={item.img} style={imageListItemStyle}>
+                            <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} onClick={(e) => console.log(checkedOut)} alt={item.size} style={{width: "196px", height: "196px"}} />
+                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
                                 title={item.size}
                                 classes={{
@@ -290,7 +308,7 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {jeansArray.map((item) => (
-                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
                                 <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
@@ -318,7 +336,7 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {footersArray.map((item) => (
-                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
                                 <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
@@ -346,7 +364,7 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shortsArray.map((item) => (
-                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
                                 <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
@@ -374,7 +392,7 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shoesArray.map((item) => (
-                                <ImageListItem key={item.img} style={imageListItemStyle}>
+                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
                                 <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
@@ -410,7 +428,7 @@ const Home = (props) => {
                     <Typography className={classes1.heading}>Add an item</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <form className={classes3.root} onSubmit={handleItemSubmit}>
+                    <form className={classes3.root} onSubmit={handleItemSubmit} action="http://localhost:9001/items/" method="POST">
                         <label className="formLabel">Size:</label>
                         <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size}>
                             <option value="Choose Size" disabled>Choose Size</option>

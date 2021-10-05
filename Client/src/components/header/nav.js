@@ -8,7 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Drawer } from '@material-ui/core';
 
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
 
 import DarkModeIcon from '@material-ui/icons/Brightness2TwoTone';
@@ -16,9 +16,10 @@ import LightModeIcon from '@material-ui/icons/BrightnessHighTwoTone';
 
 import './nav.css';
 
-let drawerWidth = 240;
+let drawerWidth = "240px";
 const NavBar = (props) => {
   const [isDrawerOpen, toggleDrawer] = useState(false);
+  const darkmode = useSelector(state => state.darkmode);
   const useStyles = makeStyles((theme) => ({
       root: {
         flexGrow: 1,
@@ -43,7 +44,7 @@ const NavBar = (props) => {
                   Cloth-est!
               </Typography>
               <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => props.dispatch({type: 'togglestyle'})}>
-                  {props.darkmode ? <LightModeIcon/> : <DarkModeIcon/>}
+                  {darkmode ? <LightModeIcon/> : <DarkModeIcon/>}
               </IconButton>
               </Toolbar>
           </AppBar>
@@ -58,11 +59,11 @@ const NavBar = (props) => {
           }}
           anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
               <div className="drawerButton">
-                      <div className="App">
-                          <Link to="/"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>Home</button></Link>
-                          <Link to="/closet"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>Closet</button></Link>
-                          <Link to="/about"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>About</button></Link>
-                          <Link to="/login"><button type="button" className="btn btn-primary" onClick={() => toggleDrawer(false)}>Login</button></Link>
+                      <div className="App" style={{ width: drawerWidth }}>
+                          <Link to="/"><Button onClick={() => toggleDrawer(false)}>Home</Button></Link>
+                          <Link to="/closet"><Button onClick={() => toggleDrawer(false)}>Closet</Button></Link>
+                          <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
+                          <Link to="/login"><Button onClick={() => toggleDrawer(false)}>Login</Button></Link>
                       </div>
               </div>            
               <Button onClick={() => toggleDrawer(false)}>Close</Button>

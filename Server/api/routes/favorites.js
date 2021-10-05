@@ -1,9 +1,8 @@
-import { Router } from 'express';
-const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
-import { MongoClient, ObjectId } from 'mongodb';
+const Router = require('express');
+const router = Router();
+const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
-import items from './items';
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
 const fetchFavorites = async () => {
@@ -81,4 +80,4 @@ router.delete('/:itemId', async (req, res, next) => {
      }
 });
 
-export default router;
+module.exports = router;

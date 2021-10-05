@@ -1,18 +1,18 @@
-import { Router } from 'express';
-const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
-import { MongoClient, ObjectId } from 'mongodb';
+const Router = require('express');
+const router = Router();
+const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
 
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
-const fetchItems = async () => {
+const fetchItems = async function() {
     await client.connect();
     const db = client.db('clothest');
     const collection = db.collection('clothes');
     return await collection.find().toArray();
 };
-const fetchItem = async (itemId) => {
+const fetchItem = async function(itemId) {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -22,7 +22,7 @@ const fetchItem = async (itemId) => {
         return null;   
     }
 };
-const updateItem = async (itemId, itemObject) => {
+const updateItem = async function(itemId, itemObject) {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -33,7 +33,7 @@ const updateItem = async (itemId, itemObject) => {
         return null;
     }
 };
-const deleteItem = async (itemId) => {
+const deleteItem = async function(itemId) {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -47,7 +47,7 @@ const deleteItem = async (itemId) => {
         return null;
     }
 };
-const postItem = async (ClothObj) => {
+const postItem = async function(ClothObj) {
     try {
         await client.connect();
         const db = client.db('clothest');
@@ -58,17 +58,17 @@ const postItem = async (ClothObj) => {
     }
 };
 
-router.get('/', async (req, res, next) => {
+router.get('/', async function(req, res, next) {
     res.status(200).json({
         items: await fetchItems(req.params.itemId),
     });
 });
-router.get('/:itemId', async (req, res, next) => {
+router.get('/:itemId', async function(req, res, next) {
     res.status(200).json({
         item: await fetchItem(req.params.itemId),
     });
 });
-router.post('/', async (req, res, next) => {
+router.post('/', async function(req, res, next) {
     const ClothObj = {
         type: req.body.type,
         size: req.body.size,
@@ -81,7 +81,7 @@ router.post('/', async (req, res, next) => {
         item: await postItem(ClothObj),
     });
 });
-router.patch('/:itemId', async (req, res, next) => {
+router.patch('/:itemId', async function(req, res, next) {
     const itemId = req.params.itemId;
     const cloth = {
             type: req.body.type,
@@ -100,7 +100,7 @@ router.patch('/:itemId', async (req, res, next) => {
         updated: cloth
     });
 });
-router.delete('/:itemId', async (req, res, next) => {
+router.delete('/:itemId', async function(req, res, next) {
     const itemId = req.params.itemId;
      if (await deleteItem(itemId)) {
          res.status(202).json({
@@ -113,4 +113,4 @@ router.delete('/:itemId', async (req, res, next) => {
      }
 });
 
-export default router;
+module.exports = router;

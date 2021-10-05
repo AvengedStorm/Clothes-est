@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 // import {useSelector, useDispatch} from 'react-redux'
 
-import clothes from "../components/db/clothes";
+import fetcher from "../components/db/fetcher";
 // import sets from '../components/db/sets'
 import {ClosetSpeedDial} from "../components/speeddials/speeddials";
 
@@ -25,12 +25,17 @@ import Typography from '@material-ui/core/Typography';
 // import StarIcon from '@material-ui/icons/Star';
 
 const Closet = (props) => {
+    // return <>FIX ME</>
     // const dispatch = useDispatch();
     // const favorites = useSelector(state => state.favorites);
-
+    useEffect(() => {
+        fetcher.getClothes((data) => {
+            setRows(data.items);
+        });
+    }, []);
     const [open, setOpen] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
-    const rows = clothes;
+    const [rows, setRows] = useState([]);
     const columns = [
         {
             field: 'type',
@@ -115,13 +120,13 @@ const Closet = (props) => {
                     rows={rows}
                     columns={columns}
                     pageSize={5}
-                    rowsPerPageOptions={[5]}
+                    rowsPerPageOptions={[5]}ת
+                    getRowId={(row) => row['_id']}
                     disableSelectionOnClick
                 />
             </div>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle onClick={(el) => {
-                    }}>Image & Info</DialogTitle>
+                <DialogTitle onClick={() => console.log(currentObj)}>Image & Info</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
                     <img src={currentObj.img} alt="" style={{maxWidth: "250px", maxHeight: "250px"}} />
                     <br />

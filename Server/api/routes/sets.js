@@ -1,5 +1,8 @@
-import { Router } from 'express';
-const router = Router(); // subLibrary of express, allowing to defarantiet between routes.
+const Router = require('express');
+const router = Router();
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://10.0.0.101:27017';
+const client = new MongoClient(url);
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
@@ -25,4 +28,4 @@ router.delete('/', (req, res, next) => {
     });
 });
 
-export default router;
+module.exports = router;

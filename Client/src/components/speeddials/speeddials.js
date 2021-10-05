@@ -43,7 +43,6 @@ const HomeSpeedDial = () => {
         const submittedSet = checkedOut;
         dispatch({type: "saveSet", payload: submittedSet});
         sets.push(submittedSet);
-        console.log(sets);
     };
     const drawerToggle = () => {
         dispatch({ type: 'clothesDrawer' })
