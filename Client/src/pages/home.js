@@ -34,6 +34,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 
+// import axios from 'axios';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -70,7 +72,6 @@ const Home = (props) => {
 
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
-    const items = useSelector(state => state.items);
     const checkedOut = useSelector(state => state.checkedOut);
     const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
@@ -85,44 +86,48 @@ const Home = (props) => {
 
     useEffect(() => {
         fetcher.getClothes((data) => {
-            setHatsArray(data.items.filter(el => el.type === "hat"));
-            setJacketsArray(data.items.filter(el => el.type === "jacket"));
-            setShirtsArray(data.items.filter(el => el.type === "shirt"));
+            setHatsArray(data.items.filter(el => el.type === "hats"));
+            setJacketsArray(data.items.filter(el => el.type === "jackets"));
+            setShirtsArray(data.items.filter(el => el.type === "shirts"));
             setJeansArray(data.items.filter(el => el.type === "jeans"));
-            setFootersArray(data.items.filter(el => el.type === "footer"));
+            setFootersArray(data.items.filter(el => el.type === "footers"));
             setShortsArray(data.items.filter(el => el.type === "shorts"));
             setShoesArray(data.items.filter(el => el.type === "shoes"));
-        });
+            });
     }, []);
-
+    
+    
+    
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
     const [type, setType] = useState("");
-    const [file, setFile] = useState("");
+    const [isWashed, setIsWashed] = useState("")
+    const [image, setImage] = useState("");
     const [value, setValue] = useState(0);
     
+    const itemObject = {
+        type,
+        style,
+        size: (size === "other" ? text : size),
+        isWashed,
+        image,
+    }
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const handleItemSubmit = (evt) => {
-        evt.preventDefault();
+        // evt.preventDefault();
         const sizeDecider = size === "other" ? text : size;
         let item = {
-            id: items.length+1,
             size: sizeDecider,
             style: style,
             type: type,
-            file: file,
+            isWashed: isWashed,
+            image,
         }
         dispatch({type: "addItem", payload: item});
-        fetch("http://localhost:9001/items", {
-            method: "POST",
-            headers: "Content-Type: application/json",
-            body: JSON.stringify(item),
-        }).then(() => {
-            console.log("New item has been added!")
-        })
     };
     const imageListItemStyle = {
         width: "200px", 
@@ -200,7 +205,16 @@ const Home = (props) => {
             />
             )
     }
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
 
+    const handleFileSelection = (file) => {
+        toBase64(file).then(setImage);
+    }
     return (
         <div className="body" id="body">
             <div>
@@ -224,18 +238,19 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {hatsArray.map((item) => (
-                            <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
+                            <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
                                 {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
+                                <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
                                 <ImageListItemBar
-                                title={item.size}
+                                title={item.size + " | " + item.style}
+                            
                                 classes={{
                                     root: classes2.titleBar,
                                     title: classes2.title,
                                 }}
                                 actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
+                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                        {favorites.filter((e) => item._id) ? (
                                             <StarIcon />
                                             ) : (
                                             <StarBorderIcon />
@@ -252,26 +267,27 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {jacketsArray.map((item) => (
-                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
+                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
                                                 <StarBorderIcon />
                                                 )}
-                                    </IconButton>
-                                }
-                                />
-                                </ImageListItem>
+                                        </IconButton>
+                                    }
+                                    />
+                            </ImageListItem>
                             ))}
                         </ImageList>
                     </div>
@@ -280,25 +296,26 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shirtsArray.map((item) => (
-                            <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
-                                            <StarBorderIcon />
-                                            )}
-                                    </IconButton>
-                                }
-                                />
+                            <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
+                                                <StarBorderIcon />
+                                                )}
+                                        </IconButton>
+                                    }
+                                    />
                             </ImageListItem>
                             ))}
                         </ImageList>
@@ -308,25 +325,26 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {jeansArray.map((item) => (
-                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
+                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
                                                 <StarBorderIcon />
                                                 )}
-                                    </IconButton>
-                                }
-                                />
+                                        </IconButton>
+                                    }
+                                    />
                             </ImageListItem>
                             ))}
                         </ImageList>
@@ -336,25 +354,26 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {footersArray.map((item) => (
-                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
+                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
                                                 <StarBorderIcon />
                                                 )}
-                                    </IconButton>
-                                }
-                                />
+                                        </IconButton>
+                                    }
+                                    />
                             </ImageListItem>
                             ))}
                         </ImageList>
@@ -364,25 +383,26 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shortsArray.map((item) => (
-                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
+                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
                                                 <StarBorderIcon />
                                                 )}
-                                    </IconButton>
-                                }
-                                />
+                                        </IconButton>
+                                    }
+                                    />
                             </ImageListItem>
                             ))}
                         </ImageList>
@@ -392,25 +412,26 @@ const Home = (props) => {
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
                             {shoesArray.map((item) => (
-                                <ImageListItem id={item.id} key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img key={item.id} src={item.img} alt={item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size}
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})} aria-label={`star ${item.size}`}>
-                                        {favorites.includes(item.id) ? (
-                                            <StarIcon />
-                                            ) : (
+                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                                    {renderCheckbox(item)}
+                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                                    <ImageListItemBar
+                                    title={item.size + " | " + item.style}
+                                
+                                    classes={{
+                                        root: classes2.titleBar,
+                                        title: classes2.title,
+                                    }}
+                                    actionIcon={
+                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
+                                            {favorites.filter((e) => item._id) ? (
+                                                <StarIcon />
+                                                ) : (
                                                 <StarBorderIcon />
                                                 )}
-                                    </IconButton>
-                                }
-                                />
+                                        </IconButton>
+                                    }
+                                    />
                             </ImageListItem>
                             ))}
                         </ImageList>
@@ -428,9 +449,9 @@ const Home = (props) => {
                     <Typography className={classes1.heading}>Add an item</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <form className={classes3.root} onSubmit={handleItemSubmit} action="http://localhost:9001/items/" method="POST">
+                    <form className={classes3.root} onSubmit={handleItemSubmit}>
                         <label className="formLabel">Size:</label>
-                        <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size}>
+                        <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size} required>
                             <option value="Choose Size" disabled>Choose Size</option>
                             <option value="XXS">XXS</option>
                             <option value="XS">XS</option>
@@ -445,9 +466,10 @@ const Home = (props) => {
                         {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
                         <br />
                         <label className="formLabel">Style:</label>
-                        <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style}>
+                        <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style} required>
                             <option value="Choose Style" disabled>Choose Style</option>
                             <option value="casual">Casual</option>
+                            <option value="geeky">Geeky</option>
                             <option value="elegant">Elegant</option>
                             <option value="sport">Sport</option>
                             <option value="formal">Formal</option>
@@ -463,7 +485,7 @@ const Home = (props) => {
                         </select>
                         <br />
                         <label className="formLabel">Type:</label>
-                        <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type}>
+                        <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type} required>
                             <option value="Choose a type" disabled>Choose a type</option>
                             <option value="shirts">Hat</option>
                             <option value="shirts">Shirt</option>
@@ -474,12 +496,27 @@ const Home = (props) => {
                             <option value="shoes">Shoes</option>
                         </select>
                         <br />
-                        <label className="formLabel">File:</label>
-                        <input className="formLabel1" onChange={(e) => {setFile(e.target.files[0])}} type="file" id="myFile" name="filename" value={itemObj.img}/>
-                        <label>{file ? <p>{Math.round((file.size) / 1024)} KBs</p> : <></>}</label>
-                        <img src={file} alt=""/>
+                        <label>Is it clean ?</label>
+                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="yes" value={itemObj.isWashed} required>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
                         <br />
-                        <input className="btn btn-primary" type="submit" value="Submit" id="itemSubmit" />
+                        <label className="formLabel">File:</label>
+                        <input className="formLabel1" onChange={(e) => {handleFileSelection(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj.image} required/>
+                        <label>{image ? <p>{Math.round((image.size) / 1024)} KBs</p> : <></>}</label>
+                        <br />
+                        <img src={image} alt=""/>
+                        <br />
+                        <Button 
+                        color="secondary" 
+                        style={{width: "340px"}}
+                        onClick={(e) => {
+                            fetcher.postClothes(itemObject);
+                            window.location.reload();
+                            }}>
+                            Save Item
+                        </Button>
                     </form>
                 </AccordionDetails>
             </Accordion>
@@ -495,15 +532,14 @@ const Home = (props) => {
                     <Divider />
                     {(checkedOut || []).map(item => {
                         return (
-                            <div key={item.id} style={{display: 'inline-block'}}>
+                            <div key={item._id} style={{display: 'inline-block'}}>
                                 <br />
                                 <Card sx={{ maxWidth: 345, display: 'inline-block' }}>
                                     <CardMedia
                                     component="img"
                                     height="196"
                                     width="196"
-                                    image={item.img}
-                                    onClick={() => console.log(item)}
+                                    image={item.image}
                                     />
                                     <CardContent>
                                         <Typography variant="body2">

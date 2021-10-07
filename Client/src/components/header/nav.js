@@ -18,6 +18,7 @@ import './nav.css';
 
 let drawerWidth = "240px";
 const NavBar = (props) => {
+  const currentUser = useSelector(state => state.currentUser);
   const [isDrawerOpen, toggleDrawer] = useState(false);
   const darkmode = useSelector(state => state.darkmode);
   const useStyles = makeStyles((theme) => ({
@@ -37,7 +38,7 @@ const NavBar = (props) => {
           <div className={classes.root}>
           <AppBar position="fixed" style={{top: "0px"}} color="primary">
               <Toolbar>
-                  <IconButton edge="start" onClick={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
+                  <IconButton edge="start" onClick={() => toggleDrawer(true)} onMouseOver={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
                       <MenuIcon />
                   </IconButton>
               <Typography variant="h6" className={classes.title}>
@@ -57,13 +58,16 @@ const NavBar = (props) => {
               boxSizing: 'border-box',
             },
           }}
-          anchor="left" open={isDrawerOpen} onClose={() => toggleDrawer(false)}>
+          anchor="left" 
+          open={isDrawerOpen} 
+          onClose={() => toggleDrawer(false)}
+          >
               <div className="drawerButton">
                       <div className="App" style={{ width: drawerWidth }}>
                           <Link to="/"><Button onClick={() => toggleDrawer(false)}>Home</Button></Link>
                           <Link to="/closet"><Button onClick={() => toggleDrawer(false)}>Closet</Button></Link>
                           <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
-                          <Link to="/login"><Button onClick={() => toggleDrawer(false)}>Login</Button></Link>
+                          <Link to="/login"><Button onClick={() => toggleDrawer(false)}>{currentUser ? "Logout" : "Login"}</Button></Link>
                       </div>
               </div>            
               <Button onClick={() => toggleDrawer(false)}>Close</Button>

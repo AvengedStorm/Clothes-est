@@ -6,9 +6,15 @@ const favoritesRouter = require('./api/routes/favorites');
 const setsRouter = require('./api/routes/sets');
 const usersRouter = require('./api/routes/users');
 
-
-app.use(express.urlencoded({extended: true}));
+app.use(express.json({
+    limit: "2mb"
+}));
+app.use(express.urlencoded({
+    extended: true,
+    limit: "2mb"
+}));
 app.use(cors());
+app.use(express.static('uploads/'));
 app.use('/items', itemRouter);
 app.use('/favorites', favoritesRouter);
 app.use('/sets', setsRouter);

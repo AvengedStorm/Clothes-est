@@ -128,11 +128,11 @@ const Closet = (props) => {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle onClick={() => console.log(currentObj)}>Image & Info</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
-                    <img src={currentObj.img} alt="" style={{maxWidth: "250px", maxHeight: "250px"}} />
+                    <img src={currentObj.image} alt="" style={{maxWidth: "250px", maxHeight: "250px"}} />
                     <br />
                     <Typography>Item Style: {currentObj.style}</Typography>
                     <Typography>Item Size: {currentObj.size}</Typography>
-                    <Typography>Is it Clean ? {currentObj.style ? "Yes" : "No"}</Typography>
+                    <Typography>Is it Clean ? {currentObj.isWashed ? "Yes" : "No"}</Typography>
                 </DialogContent>
             </Dialog>
         </div>

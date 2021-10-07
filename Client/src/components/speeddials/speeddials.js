@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 
 import {useSelector, useDispatch} from 'react-redux'
-
-import sets from '../db/sets';
-
 import { makeStyles } from '@material-ui/core/styles';
+import fetcher from '../db/fetcher';
 
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
@@ -13,6 +11,7 @@ import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SaveIcon from '@material-ui/icons/Save';
 import BallotIcon from '@material-ui/icons/Ballot';
 import ClearIcon from '@material-ui/icons/Clear';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const HomeSpeedDial = () => {
     const dispatch = useDispatch();
@@ -42,15 +41,18 @@ const HomeSpeedDial = () => {
     const handleSetSubmit = () => {
         const submittedSet = checkedOut;
         dispatch({type: "saveSet", payload: submittedSet});
-        sets.push(submittedSet);
     };
     const drawerToggle = () => {
         dispatch({ type: 'clothesDrawer' })
     }
     const actions1 = [
-        {icon: <SaveIcon />, name: 'Save to Sets', func: handleSetSubmit },
+        {icon: <SaveIcon />, name: 'Save Selected to Sets', func: handleSetSubmit },
         {icon: <BallotIcon />, name: 'Toggle Drawer', func: drawerToggle },
         {icon: <ClearIcon />, name: "Clear All", func: clearCurrentSet },
+        {icon: <DeleteIcon />, name: "Delete Selected Items", func: () => {
+            fetcher.deleteClothes(checkedOut);
+            window.location.reload();
+        } },
     ];
 
     return (
