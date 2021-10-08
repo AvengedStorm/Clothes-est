@@ -10,7 +10,7 @@ function reducer(state = {
     clothesDrawer: true,
     setSetter: [],
     drawerContent: [],
-    currentUser: null
+    currentUser: undefined,
   }, action){
   switch (action.type) {
     case 'openAccordion':
@@ -81,10 +81,10 @@ function reducer(state = {
       }
     break;
     case 'login':
-      state = {...state, currentUser: [...state.currentUser, action.payload]}
+      state = {...state, currentUser: action.payload};
       break;
     case 'logout':
-      state = {...state, currentUser: null}
+      state = {...state, currentUser: undefined};
       break;
     default:
       // console.log(action);

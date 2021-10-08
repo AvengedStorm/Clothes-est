@@ -1,28 +1,35 @@
 import React, {useState} from 'react';
+import fetcher from '../components/db/fetcher';
+// import md5 from "md5";
+
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
+import Typography from '@material-ui/core/Typography';
+
+import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
+
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  // useSelector, 
-  useDispatch
-} from 'react-redux'
+
+import { useDispatch } from 'react-redux'
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://clothest.com/">
-        Your Website
+        Clothest
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -66,10 +73,84 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-  // const currentUser = useSelector(state => state.currentUser);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const userData = { email: email, password: password }
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const useStyles3 = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+        width: '25ch',
+      },
+      // label: {
+
+      // },
+      // input: {
+
+      // }
+    },
+  }));
+  const classes3 = useStyles3();
+  const SignUpForm = () => {
+    const [emailField, setEmailField] = useState("");
+    const [passwordField, setPasswordField] = useState("");
+    const [passwordVerificationField, setPasswordVerificationField] = useState("");
+    const [display, setDisplay] = useState("none");
+    const userFieldData = { email: emailField, password: passwordField};
+    const handleUserPost = () => {
+      fetcher.postUser(userData);
+    }
+    return (
+      <div>
+        <form className={classes3.root} onSubmit={handleUserPost}>
+          <label>Email:</label>
+          <br />
+          <input type="email" onChange={(e) => setEmailField(e.target.value)} placeholder="Enter your email" required />
+          <br />
+          <label>Password:</label>
+          <br />
+          <input type="password" onChange={(e) => setPasswordField(e.target.value)} placeholder="Enter a password" required />
+          <br />
+          <label>Password verification:</label>
+          <br />
+          <input type="password" onChange={(e) => setPasswordVerificationField(e.target.value)} placeholder="Verify your password" required />
+          <br />
+          <label style={{display: display, color: "red", fontSize: "0.75rem"}}>You have to confirm your password</label>
+          <br />
+          <Button
+          fullWidth 
+          color="secondary" 
+          style={{width: "340px", marginLeft: "auto", marginRight: "auto"}}
+          onClick={(e) => {
+            if(passwordVerificationField === passwordField) {
+              fetcher.postUser(userFieldData);
+              setOpen(false);
+            } else {
+              setDisplay(true)
+            }
+          }}>
+            sign up
+          </Button>
+        </form>
+      </div>
+    )
+  }
+  const Signup = () => {
+    return (
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle style={{textAlign: 'center'}} >LET US START</DialogTitle>
+        <DialogContent>
+          <SignUpForm />
+        </DialogContent>
+      </Dialog>
+    )
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -83,55 +164,34 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              onChange={setEmail}
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              onChange={setPassword}
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+          <form className={classes.form} >
+            <TextField variant="outlined" margin="normal" onChange={setEmail} required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
+            <TextField variant="outlined" margin="normal" onChange={setPassword} required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={(e) => dispatch({type: "login", payload: {email: email, password: password,}})}
+              onClick={(e) => {
+                const User = fetcher.loginUser(userData);
+                console.log(`User ${User}`)
+                dispatch({type: "login", payload: User});
+            }}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Button href="#">
                   Forgot password?
-                </Link>
+                </Button>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Button href="#" onClick={handleOpen}>
+                  Don't have an account? Sign Up!
+                </Button>
               </Grid>
             </Grid>
             <Box mt={5}>
@@ -139,6 +199,7 @@ const Login = () => {
             </Box>
           </form>
         </div>
+        <Signup />
       </Grid>
     </Grid>
   );

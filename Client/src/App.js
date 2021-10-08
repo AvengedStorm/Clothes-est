@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux'
 
 import './App.css';
 
@@ -17,9 +18,10 @@ import {
 import Login from './pages/login';
 
 function App(props) {
-  // if(window.location.pathname != '/login' && !state.currentUser) {
-  //   window.location = '/login';
-  // }
+  const currentUser = useSelector(state => state.currentUser);
+  if(window.location.pathname !== '/login' && !currentUser) {
+    window.location = '/login';
+  }
 
   return (
     <div>

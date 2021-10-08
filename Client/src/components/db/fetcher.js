@@ -21,13 +21,18 @@ const fetcher = {
 
     getUsers(callback) {
         fetch(`http://localhost:9001/users/`)
-        .then(response => {
-            return response.json();
-        }).then(callback)
+        .then(response => response.json())
+        .then(callback)
     },
     postUser(userData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(userData) }
         fetch(`http://localhost:9001/users/`, requestOptions)
+        .then(response => response.json())
+        .then(callback)
+    },
+    loginUser(userData, callback) {
+        const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(userData) };
+        fetch(`http://localhost:9001/login/` , requestOptions)
         .then(response => response.json())
         .then(callback)
     },

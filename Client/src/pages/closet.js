@@ -126,7 +126,7 @@ const Closet = (props) => {
                 />
             </div>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle onClick={() => console.log(currentObj)}>Image & Info</DialogTitle>
+                <DialogTitle>Image & Info</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
                     <img src={currentObj.image} alt="" style={{maxWidth: "250px", maxHeight: "250px"}} />
                     <br />

@@ -4,23 +4,22 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import Drawer from '@material-ui/core/Drawer';
+
 import MenuIcon from '@material-ui/icons/Menu';
-import { Drawer } from '@material-ui/core';
+// import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import React, { useState } from 'react';
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
-
-import DarkModeIcon from '@material-ui/icons/Brightness2TwoTone';
-import LightModeIcon from '@material-ui/icons/BrightnessHighTwoTone';
 
 import './nav.css';
 
 let drawerWidth = "240px";
 const NavBar = (props) => {
+  const dispatch = useDispatch();
   const currentUser = useSelector(state => state.currentUser);
   const [isDrawerOpen, toggleDrawer] = useState(false);
-  const darkmode = useSelector(state => state.darkmode);
   const useStyles = makeStyles((theme) => ({
       root: {
         flexGrow: 1,
@@ -44,9 +43,9 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => props.dispatch({type: 'togglestyle'})}>
-                  {darkmode ? <LightModeIcon/> : <DarkModeIcon/>}
-              </IconButton>
+              {/* <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle">
+                  {currentUser ? <LogoutRoundedIcon/> : <></>}
+              </IconButton> */}
               </Toolbar>
           </AppBar>
           <Drawer
@@ -67,7 +66,12 @@ const NavBar = (props) => {
                           <Link to="/"><Button onClick={() => toggleDrawer(false)}>Home</Button></Link>
                           <Link to="/closet"><Button onClick={() => toggleDrawer(false)}>Closet</Button></Link>
                           <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
-                          <Link to="/login"><Button onClick={() => toggleDrawer(false)}>{currentUser ? "Logout" : "Login"}</Button></Link>
+                          <Link to="/login"><Button onClick={() => {
+                            toggleDrawer(false);
+                            if(currentUser) {
+                              dispatch({type: "logout"});
+                            }
+                            }}>{currentUser ? "Logout" : "Login"}</Button></Link>
                       </div>
               </div>            
               <Button onClick={() => toggleDrawer(false)}>Close</Button>

@@ -29,15 +29,6 @@ const upload = multer({
     fileFilter: fileFilter,
 });
 
-// class Item {
-//     constructor(type, size, style, isWashed) {
-//         this.type = type;
-//         this.size = size;
-//         this.style = style;
-//         this.isWashed = isWashed;
-//     }
-// }
-
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
 const fetchItems = async function() {
     await client.connect();
@@ -99,7 +90,6 @@ router.get('/:itemId', async function(req, res, next) {
     });
 });
 router.post('/', async function(req, res, next) {
-    console.log(req.body);
     try {
         const newDate = () => new Date().getTime().toString();
         const addedOn = newDate();
