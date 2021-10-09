@@ -7,7 +7,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Drawer from '@material-ui/core/Drawer';
 
 import MenuIcon from '@material-ui/icons/Menu';
-// import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+// import LoginIcon from '@mui/icons-material/Login';
 
 import React, { useState } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
@@ -19,6 +20,7 @@ let drawerWidth = "240px";
 const NavBar = (props) => {
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.currentUser);
+  const belongsTo = useSelector(state => state.belongsTo);
   const [isDrawerOpen, toggleDrawer] = useState(false);
   const useStyles = makeStyles((theme) => ({
       root: {
@@ -43,9 +45,13 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-              {/* <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle">
-                  {currentUser ? <LogoutRoundedIcon/> : <></>}
-              </IconButton> */}
+              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => {
+                if(currentUser || belongsTo) {
+                  dispatch({type:"logout", payload: {currentUser: undefined, belongsTo: undefined}})
+                }
+              }}>
+                  {currentUser ? <LogoutRoundedIcon /> : <></>}
+              </IconButton>
               </Toolbar>
           </AppBar>
           <Drawer
@@ -68,7 +74,7 @@ const NavBar = (props) => {
                           <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
                           <Link to="/login"><Button onClick={() => {
                             toggleDrawer(false);
-                            if(currentUser) {
+                            if(currentUser || belongsTo) {
                               dispatch({type: "logout"});
                             }
                             }}>{currentUser ? "Logout" : "Login"}</Button></Link>

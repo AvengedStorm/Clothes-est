@@ -1,10 +1,9 @@
 const fetcher = {
 
-    getClothes(callback) {
-        fetch(`http://localhost:9001/items/`)
-        .then(response => {
-            return response.json();
-        }).then(callback)
+    getClothes(userId, callback) {
+        fetch(`http://localhost:9001/items/${userId}`, { headers: { "Content-Type" : "application/json"}, method: "GET"})
+        .then(response => response.json())
+        .then(callback)
     },
     postClothes(itemData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemData) }

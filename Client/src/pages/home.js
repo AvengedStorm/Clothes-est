@@ -73,6 +73,7 @@ const Home = (props) => {
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const checkedOut = useSelector(state => state.checkedOut);
+    const belongsTo = useSelector(state => state.belongsTo);
     const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
 
@@ -85,7 +86,7 @@ const Home = (props) => {
     const [shoesArray, setShoesArray] = useState([]);
 
     useEffect(() => {
-        fetcher.getClothes((data) => {
+        fetcher.getClothes(belongsTo, (data) => {
             setHatsArray(data.items.filter(el => el.type === "hats"));
             setJacketsArray(data.items.filter(el => el.type === "jackets"));
             setShirtsArray(data.items.filter(el => el.type === "shirts"));
@@ -94,10 +95,8 @@ const Home = (props) => {
             setShortsArray(data.items.filter(el => el.type === "shorts"));
             setShoesArray(data.items.filter(el => el.type === "shoes"));
             });
-    }, []);
-    
-    
-    
+    });
+
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
@@ -112,8 +111,8 @@ const Home = (props) => {
         size: (size === "other" ? text : size),
         isWashed,
         image,
-    }
-
+        belongsTo: belongsTo
+    };
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -182,11 +181,10 @@ const Home = (props) => {
             },
         },
     }));
-
     const handleDrawerClose = () => {
         dispatch({type: "clothesDrawer", payload: false });
-    }
-
+    };
+    
     const classes1 = useStyles1();
     const classes2 = useStyles2();
     const classes3 = useStyles3();
@@ -504,7 +502,6 @@ const Home = (props) => {
                         <br />
                         <label className="formLabel">File:</label>
                         <input className="formLabel1" onChange={(e) => {handleFileSelection(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj.image} required/>
-                        <label>{image ? <p>{Math.round((image.size) / 1024)} KBs</p> : <></>}</label>
                         <br />
                         <img src={image} alt=""/>
                         <br />

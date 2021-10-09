@@ -21,7 +21,9 @@ function App(props) {
   const currentUser = useSelector(state => state.currentUser);
   if(window.location.pathname !== '/login' && !currentUser) {
     window.location = '/login';
-  }
+  } else if(window.location.pathname === "/login" && currentUser) {
+    window.location = '/home';
+  };
 
   return (
     <div>

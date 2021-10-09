@@ -6,15 +6,38 @@ const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
 const md5 = require('md5');
 
+const fetchUser = async (userCredentials) => {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('users');
+        const res = collection.findOne({email: userCredentials});
+        const res1 = await res;
+        return res1;
+    } catch(e) {
+        console.log(e)
+    }
+};
 
 router.post('/', async (req, res, next) => {
-    console.log(`${md5(req.body.password).toString()}${Math.random() * 1000000000000000}`);
-    const userData = { email, password, token };
-    userData.email = req.body.email;
-    userData.password = req.body.password;
-    userData.token = `${md5(req.body.password).toString()}${Math.random() * 1000000000000000}`;
-    console.log(userData.token);
-    res.status(200).send({ message: "User Verified", data: userData }).redirect('/home');
+    try {
+        const token = md5(req.body.password).toString() + Math.round(Math.random() * 1000000000000000);
+        // console.log(token);
+        const userEmail = req.body.email;
+        // console.log(userEmail);
+        // const userPassword = req.body.password;
+        // console.log(userPassword);
+        const USER_ID = await fetchUser(req.body.email.toLowerCase())
+        // console.log(USER_ID);
+        const userData = { email: userEmail, token: token, userID: USER_ID._id.toString() };
+        console.log(userData);
+        res.status(200).send({ 
+            message: "User Verified", 
+            userCredentials: userData 
+        });
+    } catch (err) {
+        console.log(err);
+    }
 });
 
 module.exports = router;

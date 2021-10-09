@@ -6,7 +6,7 @@ const url = 'mongodb://10.0.0.101:27017';
 const client = new MongoClient(url);
 const md5 = require('md5');
 /*
-  // https://source.unsplash.com/random
+  https://source.unsplash.com/random
 */
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
 
@@ -20,20 +20,12 @@ const fetchUsers = async () => {
         console.log(err)
     }
 };
-const handleUserLogin = (email, pwd) => {
-    let tempuser = fetchUser(email);
-    if(tempuser && tempuser.password === md5(pwd)) {
-        console.log("Hurray we logged in");
-    } else {
-        console.log("no hekkerz plz");
-    }
-}
 const fetchUser = async (userO) => {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
-        const userInput = await collection.findOne({email: userO.email});
+        const userInput = await collection.findOne({email: userO});
         return userInput
     } catch(e) {
         console.log(e)
@@ -69,7 +61,6 @@ const deleteUser = async (userId) => {
 };
 const postUser = async (ClothObj) => {
     try {
-        console.log(ClothObj.toString() + "located");
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
@@ -80,7 +71,6 @@ const postUser = async (ClothObj) => {
     }
 };
 
-
 router.get('/', async (req, res, next) => {
     try {
         res.status(200).json({
@@ -90,47 +80,37 @@ router.get('/', async (req, res, next) => {
         console.log(err)
     }
 });
-
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userEmail', async (req, res, next) => {
     try {
         res.status(200).json({
-            user: await fetchUser(req.params.userId),
+            user: await fetchUser(req.params.userEmail),
         });
     } catch (err) {
         console.log(err)
     }
 });
-
 router.post('/', async (req, res, next) => {
-    console.log(`Starting with ${req.body.email.toLowerCase()} and ${req.body.password} for good measure.`);
-    const emailField = req.body.email.toLowerCase();
-    const userObj = {
-        email: emailField,
-        password: req.body.password,
-    };
-    console.log(`So now we have ${userObj.email} and ${userObj.password} and we hash the shit out of the password`);
-    const userData = { 
-        email: req.body.email.toLowerCase(), 
-        password: md5(req.body.password)
-    }
-    console.log(`after that, we have an email and a hash-ed password: ${userData.password}`);
-    const fetchedUser = await fetchUser(userObj);
-    console.log(`Now we are attempting at fetching a user from a db, and if we don't succeed, we can print it to the DB.`);
-    console.log(`Our fetched user is: ${fetchedUser}.`);
-    console.log(`Our printed user is ${JSON.stringify(userData)}`);
-    
     try {
+        const emailField = req.body.email.toLowerCase();
+        const userObj = {
+            email: emailField,
+        };
+        const userData = {
+            firstName: req.body.firstName.toLowerCase(),
+            lastName: req.body.lastName.toLowerCase(),
+            email: req.body.email.toLowerCase(), 
+            password: md5(req.body.password),
+        }
+        const fetchedUser = await fetchUser(userObj);
         if (!fetchedUser) {
-            console.log("Printing to the DB");
             postUser(userData);
         } else {
-            console.log("Account Found!");
+            console.log("Existing account Found!");
         }
     } catch (err) {
         console.log(err);
     }
 });
-
 router.patch('/:userId', async (req, res, next) => {
     try {
         const userId = req.params.userId;
@@ -154,7 +134,6 @@ router.patch('/:userId', async (req, res, next) => {
         console.log(err)
     }
 });
-
 router.delete('/:userId', async (req, res, next) => {
     try {
         const userId = req.params.userId;

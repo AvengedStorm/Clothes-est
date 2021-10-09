@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import fetcher from '../components/db/fetcher';
 // import md5 from "md5";
 
@@ -22,7 +22,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { useDispatch } from 'react-redux'
+import { 
+  useDispatch, 
+} from 'react-redux'
 
 function Copyright() {
   return (
@@ -76,7 +78,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const userData = { email: email, password: password }
+  const userData = { email: email, password: password };
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -88,27 +90,31 @@ const Login = () => {
         margin: theme.spacing(1),
         width: '25ch',
       },
-      // label: {
-
-      // },
-      // input: {
-
-      // }
     },
   }));
   const classes3 = useStyles3();
   const SignUpForm = () => {
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
+    const [firstNameField, setFirstNameField] = useState("");
+    const [lastNameField, setLastNameField] = useState("");
     const [passwordVerificationField, setPasswordVerificationField] = useState("");
     const [display, setDisplay] = useState("none");
-    const userFieldData = { email: emailField, password: passwordField};
+    const userFieldData = { firstName: firstNameField, lastName: lastNameField, email: emailField, password: passwordField };
     const handleUserPost = () => {
       fetcher.postUser(userData);
     }
     return (
       <div>
         <form className={classes3.root} onSubmit={handleUserPost}>
+          <label>First Name:</label>
+          <br />
+          <input type="text" onChange={(e) => setFirstNameField(e.target.value)} placeholder="Enter your first name" required />
+          <br />
+          <label>Last Name:</label>
+          <br />
+          <input type="text" onChange={(e) => setLastNameField(e.target.value)} placeholder="Enter your last name" required />
+          <br />
           <label>Email:</label>
           <br />
           <input type="email" onChange={(e) => setEmailField(e.target.value)} placeholder="Enter your email" required />
@@ -140,7 +146,7 @@ const Login = () => {
         </form>
       </div>
     )
-  }
+  };
   const Signup = () => {
     return (
       <Dialog open={open} onClose={handleClose}>
@@ -150,7 +156,7 @@ const Login = () => {
         </DialogContent>
       </Dialog>
     )
-  }
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -165,8 +171,8 @@ const Login = () => {
             Sign in
           </Typography>
           <form className={classes.form} >
-            <TextField variant="outlined" margin="normal" onChange={setEmail} required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
-            <TextField variant="outlined" margin="normal" onChange={setPassword} required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+            <TextField variant="outlined" margin="normal" onChange={(e) => setEmail(e.target.value)} required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
+            <TextField variant="outlined" margin="normal" onChange={(e) => setPassword(e.target.value)} required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
             <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
             <Button
               type="submit"
@@ -175,9 +181,13 @@ const Login = () => {
               color="primary"
               className={classes.submit}
               onClick={(e) => {
-                const User = fetcher.loginUser(userData);
-                console.log(`User ${User}`)
-                dispatch({type: "login", payload: User});
+                e.preventDefault();
+                fetcher.loginUser(userData, (data) => {
+                  const ID = data.userCredentials.userID;
+                  const token = data.userCredentials.token;
+                  console.log(data);
+                  dispatch({type: "login", payload: {ID: ID, token: token}});
+                });
             }}
             >
               Sign In
