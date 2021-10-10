@@ -8,7 +8,7 @@ import Drawer from '@material-ui/core/Drawer';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-// import LoginIcon from '@mui/icons-material/Login';
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 
 import React, { useState } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
@@ -45,12 +45,8 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => {
-                if(currentUser || belongsTo) {
-                  dispatch({type:"logout", payload: {currentUser: undefined, belongsTo: undefined}})
-                }
-              }}>
-                  {currentUser ? <LogoutRoundedIcon /> : <></>}
+              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle">
+                  {currentUser ? <LogoutRoundedIcon onClick={() => dispatch({type: "logout"})} /> : <LoginRoundedIcon onClick={() => window.location = "/login"} />}
               </IconButton>
               </Toolbar>
           </AppBar>

@@ -7,7 +7,7 @@ const persistConfig = {
   storage,
 }
 function reducer(state = {
-    items: [],
+    items: {},
     openAccordion: false,
     darkmode: false,
     favorites: [],
@@ -93,8 +93,18 @@ function reducer(state = {
               };
           break;
         case 'logout':
-          state = {...state, currentUser: action.payload.currentUser, belongsTo: action.payload.belongsTo};
-          console.log(state);
+          state = {
+            items: [],
+            openAccordion: false,
+            darkmode: false,
+            favorites: [],
+            checkedOut: [],
+            clothesDrawer: true,
+            setSetter: [],
+            drawerContent: [],
+            currentUser: "",
+            belongsTo: "",
+          };
           break;
         default:
         break;

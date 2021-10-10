@@ -78,6 +78,10 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [error, setError] = useState(false);
+  const handleErrorOpen = () => setError(true);
+  const handleErrorClose = () => setError(false);
+
   const userData = { email: email, password: password };
 
   const [open, setOpen] = useState(false);
@@ -157,6 +161,14 @@ const Login = () => {
       </Dialog>
     )
   };
+  const UserFoundDialog = () => {
+    return (
+      <Dialog open={error} style={{textAlign: 'center'}} onClose={handleErrorClose}>
+        <DialogTitle>Error!</DialogTitle>
+        <DialogContent>A user containing this email does not exist.</DialogContent>
+      </Dialog>
+    )
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -185,8 +197,13 @@ const Login = () => {
                 fetcher.loginUser(userData, (data) => {
                   const ID = data.userCredentials.userID;
                   const token = data.userCredentials.token;
-                  console.log(data);
-                  dispatch({type: "login", payload: {ID: ID, token: token}});
+                  // console.log(data);
+                  if(data.message === "User Verified.") {
+                    dispatch({type: "login", payload: {ID: ID, token: token}})
+                    window.location = "/home";
+                  } else {
+                    handleErrorOpen()
+                  }
                 });
             }}
             >
@@ -211,6 +228,7 @@ const Login = () => {
         </div>
         <Signup />
       </Grid>
+      <UserFoundDialog />
     </Grid>
   );
 }

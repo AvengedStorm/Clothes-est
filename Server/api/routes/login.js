@@ -2,7 +2,7 @@ const Router = require('express');
 const router = Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const url = 'mongodb://10.0.0.101:27017';
+const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const md5 = require('md5');
 
@@ -30,11 +30,17 @@ router.post('/', async (req, res, next) => {
         const USER_ID = await fetchUser(req.body.email.toLowerCase())
         // console.log(USER_ID);
         const userData = { email: userEmail, token: token, userID: USER_ID._id.toString() };
-        console.log(userData);
-        res.status(200).send({ 
-            message: "User Verified", 
-            userCredentials: userData 
-        });
+        // console.log(userData);
+        if (USER_ID) {
+            res.status(200).send({ 
+                message: "User Verified.", 
+                userCredentials: userData 
+            }).redirect("/home");
+        } else {
+            res.status(200).send({
+                message: "User Not Found.",
+            })
+        }
     } catch (err) {
         console.log(err);
     }

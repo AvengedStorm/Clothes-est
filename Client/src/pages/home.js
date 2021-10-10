@@ -95,7 +95,7 @@ const Home = (props) => {
             setShortsArray(data.items.filter(el => el.type === "shorts"));
             setShoesArray(data.items.filter(el => el.type === "shoes"));
             });
-    });
+    },[belongsTo]);
 
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
@@ -437,7 +437,10 @@ const Home = (props) => {
                 </TabPanel>
             </div>
             <br />
-            <Accordion id="3" expanded={openAccordion}>
+            <Accordion 
+                id="3" 
+                expanded={openAccordion}
+                >
                 <AccordionSummary
                 onClick={() => dispatch({type: 'openAccordion'})}
                 expandIcon={<ExpandMoreIcon/>}

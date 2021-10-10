@@ -2,15 +2,15 @@ const Router = require('express');
 const router = Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const url = 'mongodb://10.0.0.101:27017';
+const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
-const stringToObjectId = str => new ObjectId.createFromHexString(str);
+const stringToObjectId = str => ObjectId.createFromHexString(str);
 const fetchItemsByUser = async function(USER_ID) {
     await client.connect();
     const db = client.db('clothest');
     const collection = db.collection('clothes');
-    return await collection.find({email: USER_ID}).toArray();
+    return await collection.find({belongsTo: USER_ID}).toArray();
 };
 const fetchItems = async function() {
     try {
@@ -41,7 +41,6 @@ const deleteItem = async function(itemId) {
         return await collection.deleteOne({_id: stringToObjectId(itemId)});
     } catch(e) {
         console.log(e);
-        return null;
     }
 };
 const postItem = async function(ClothObj) {
@@ -51,6 +50,7 @@ const postItem = async function(ClothObj) {
         const collection = db.collection('clothes');
         return await collection.insertOne(ClothObj);
     } catch (error) {
+        console.log(error);
         return error.response.data;
     }
 };
@@ -64,35 +64,22 @@ router.get('/', async function(req, res, next) {
         console.log(e);
     }
 });
-router.get('/:userId', async function(req, res, next) {
+router.get('/:userID', async function(req, res, next) {
     try {
+        const userID = req.params.userID
+        console.log(userID);
         res.status(200).json({
-            items: await fetchItemsByUser(req.params.userId),
+            items: await fetchItemsByUser(userID)
         });
     } catch (e) {
         console.log(e);
     }
 });
-// router.post('/:userId', async function(req, res, next) {
-//     res.status(200).json({
-//         items: await fetchItemsByUser(req.params.userId)
-//     });
-// });
-// router.post('/:userEmail', async function(req, res, next) {
-//     try {
-//         const userEmail = req.params.userEmail;
-//         const items = fetchItems(userEmail);
-//         res.status(200).json({
-//             item: items
-//         });
-//     } catch (err) {
-//         console.log(err);
-//     }
-// })
 router.post('/', async function(req, res, next) {
     try {
-        const newDate = () => new Date().getTime().toString();
-        const addedOn = newDate();
+        const today = new Date();
+        const newDate = { year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate() }
+        const addedOn = `${newDate.day}/${newDate.month}/${newDate.year}`
         const itemType = req.body.type;
         const itemSize = req.body.size;
         const itemStyle = req.body.style;
@@ -102,20 +89,20 @@ router.post('/', async function(req, res, next) {
 
         const ClothObj = {
             _id: new ObjectId(),
+            belongsTo: belongsTo,
             type: itemType,
             size: itemSize,
             style: itemStyle,
             isWashed: itemWashed,
-            image: itemImage,
             addedOn: addedOn,
-            belongsTo: belongsTo,
+            image: itemImage,
         };
         Object.keys(ClothObj).forEach(key => {
             if(!ClothObj[key]) {
                 delete ClothObj[key];
             }
         });
-        console.log(ClothObj);
+        // console.log(ClothObj);
         res.status(201).json({
             item: await postItem(ClothObj),
             message: console.log("Item Added!"),

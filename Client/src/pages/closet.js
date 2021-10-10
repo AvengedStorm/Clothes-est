@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react';
-// import {useSelector, useDispatch} from 'react-redux'
-
+import {useSelector} from 'react-redux';
 import fetcher from "../components/db/fetcher";
-// import sets from '../components/db/sets'
 import {ClosetSpeedDial} from "../components/speeddials/speeddials";
 
 import { DataGrid } from '@material-ui/data-grid';
-// import { makeStyles } from '@material-ui/core/styles';
-
-// import AppBar from '@material-ui/core/AppBar';
-// import ImageList from '@material-ui/core/ImageList';
-// import ImageListItem from '@material-ui/core/ImageListItem';
-// import ImageListItemBar from '@material-ui/core/ImageListItemBar';
-// import IconButton from '@material-ui/core/IconButton';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
@@ -21,18 +12,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@mui/material/Button';
 import Typography from '@material-ui/core/Typography';
 
-// import StarBorderIcon from '@material-ui/icons/StarBorder';
-// import StarIcon from '@material-ui/icons/Star';
 
 const Closet = (props) => {
-    // return <>FIX ME</>
-    // const dispatch = useDispatch();
-    // const favorites = useSelector(state => state.favorites);
+    const belongsTo = useSelector(state => state.belongsTo);
     useEffect(() => {
-        fetcher.getClothes((data) => {
+        fetcher.getClothes(belongsTo, (data) => {
             setRows(data.items);
         });
-    }, []);
+    }, [belongsTo]);
     const [open, setOpen] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
     const [rows, setRows] = useState([]);
@@ -133,6 +120,8 @@ const Closet = (props) => {
                     <Typography>Item Style: {currentObj.style}</Typography>
                     <Typography>Item Size: {currentObj.size}</Typography>
                     <Typography>Is it Clean ? {currentObj.isWashed ? "Yes" : "No"}</Typography>
+                    <br />
+                    <Typography>Item Added on: {currentObj.addedOn}</Typography>
                 </DialogContent>
             </Dialog>
         </div>
