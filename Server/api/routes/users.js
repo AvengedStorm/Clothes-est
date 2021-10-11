@@ -15,7 +15,7 @@ const fetchUsers = async () => {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
-        return await collection.find().toArray().then(() => client.close());
+        return await collection.find().toArray();
     } catch (err) {
         console.log(err)
     }

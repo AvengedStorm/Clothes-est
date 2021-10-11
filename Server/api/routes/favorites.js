@@ -5,22 +5,22 @@ const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
 const stringToObjectId = str => new ObjectId.createFromHexString(str);
-const fetchFavorites = async () => {
+const fetchFavoritesByUser = async (userId) => {
     await client.connect();
     const db = client.db('clothest');
     const collection = db.collection('favorites');
-    return await collection.find().toArray();
+    return await collection.find({belongsTo: userId}).toArray();
 };
-const fetchFavorite = async (itemId) => {
-    try {
-        await client.connect();
-        const db = client.db('clothest');
-        const collection = db.collection('favorites');
-        return await collection.findOne({_id: stringToObjectId(itemId)});
-    } catch {
-        return null;   
-    }
-};
+// const fetchFavorite = async (itemId) => {
+//     try {
+//         await client.connect();
+//         const db = client.db('clothest');
+//         const collection = db.collection('favorites');
+//         return await collection.findOne({_id: stringToObjectId(itemId)});
+//     } catch {
+//         return null;   
+//     }
+// };
 const deleteFavorite = async (itemId) => {
     try {
         await client.connect();
@@ -46,15 +46,10 @@ const postFavorite = async (ClothObj) => {
     }
 };
 
-router.get('/', async (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
+    const userId = stringToObjectId(req.params.userId);
     res.status(200).json({
-        items: await fetchFavorites(req.params.itemId),
-    });
-});
-
-router.get('/:itemId', async (req, res, next) => {
-    res.status(200).json({
-        item: await fetchFavorite(req.params.itemId),
+        items: await fetchFavoritesByUser(userId),
     });
 });
 

@@ -29,6 +29,7 @@ const fetcher = {
         .then(response => response.json())
         .then(callback)
     },
+
     loginUser(userData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(userData) };
         fetch(`http://localhost:9001/login/` , requestOptions)
@@ -36,12 +37,20 @@ const fetcher = {
         .then(callback)
     },
 
-    getFavorites(callback) {
-        fetch(`http://localhost:9001/favorites/`)
-        .then(response => {
-            return response.json();
-        }).then(callback)
+    getFavorites(userID, callback) {
+        fetch(`http://localhost:9001/favorites/${userID}`)
+        .then(response => response.json())
+        .then(console.log(callback))
+        .then(callback)
     },
+    postFavorite(itemObj, callback) {
+        const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj) };
+        fetch(`http://localhost:9001/favorites/`, requestOptions)
+        .then(response => response.json())
+        .then(console.log(callback))
+        .then(callback)
+    },
+
     getSets(callback) {
         fetch(`http://localhost:9001/sets/`)
         .then(response => {

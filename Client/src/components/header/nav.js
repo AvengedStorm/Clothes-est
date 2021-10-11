@@ -45,9 +45,9 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle">
-                  {currentUser ? <LogoutRoundedIcon onClick={() => dispatch({type: "logout"})} /> : <LoginRoundedIcon onClick={() => window.location = "/login"} />}
-              </IconButton>
+                <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => currentUser ? dispatch({type: "logout"}) : window.location = "/login"} >
+                    {currentUser ? <LogoutRoundedIcon /> : <LoginRoundedIcon />}
+                </IconButton>
               </Toolbar>
           </AppBar>
           <Drawer
