@@ -2,5 +2,5 @@ This project is to be used to keep track of all the clothes i have in my closet,
 the client side would be able to display the current amounts of shirts, pants and socks,
 the server side would be able to act as an api and a database to send the current amounts and current information to the client to display.
 
-Client side is a React app.
-Server side is a Express app.
+Client side is React app.
+Server side is Express app.
