@@ -43,6 +43,17 @@ const deleteItem = async function(itemId) {
         console.log(e);
     }
 };
+// const deleteManyItems = async function(itemIds) {
+//     try {
+//         await client.connect();
+//         const db = client.db('clothest');
+//         const collection = db.collection('clothes');
+        
+//         return await collection.deleteOne({_id: stringToObjectId(itemIds)});
+//     } catch(e) {
+//         console.log(e);
+//     }
+// };
 const postItem = async function(ClothObj) {
     try {
         await client.connect();
@@ -67,7 +78,7 @@ router.get('/', async function(req, res, next) {
 router.get('/:userID', async function(req, res, next) {
     try {
         const userID = req.params.userID
-        console.log(userID);
+        // console.log(userID);
         res.status(200).json({
             items: await fetchItemsByUser(userID)
         });
@@ -93,7 +104,7 @@ router.post('/', async function(req, res, next) {
             type: itemType,
             size: itemSize,
             style: itemStyle,
-            isWashed: itemWashed,
+            isWashed: !!itemWashed,
             addedOn: addedOn,
             image: itemImage,
         };
@@ -102,7 +113,6 @@ router.post('/', async function(req, res, next) {
                 delete ClothObj[key];
             }
         });
-        // console.log(ClothObj);
         res.status(201).json({
             item: await postItem(ClothObj),
             message: console.log("Item Added!"),

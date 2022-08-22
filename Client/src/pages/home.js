@@ -19,6 +19,8 @@ import Box from '@material-ui/core/Box';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
@@ -28,13 +30,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { Drawer } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
-
-// import axios from 'axios';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -67,7 +71,25 @@ function a11yProps(index) {
     };
 }
 
+
 const Home = (props) => {
+
+    const [text, setText] = useState("")
+    const [size, setSize] = useState("");
+    const [style, setStyle] = useState("");
+    const [type, setType] = useState("");
+    const [isWashed, setIsWashed] = useState(true);
+    const [image, setImage] = useState("");
+    const [value, setValue] = useState(0);
+    
+    const [hatsArray, setHatsArray] =  useState([]);
+    const [jacketsArray, setJacketsArray] = useState([]);
+    const [shirtsArray, setShirtsArray] = useState([]);
+    const [jeansArray, setJeansArray] = useState([]);
+    const [footersArray, setFootersArray] = useState([]);
+    const [shortsArray, setShortsArray] = useState([]);
+    const [shoesArray, setShoesArray] = useState([]);
+    
     const dispatch = useDispatch();
 
     const itemObj = useSelector(state => state.items);
@@ -76,15 +98,9 @@ const Home = (props) => {
     const belongsTo = useSelector(state => state.belongsTo);
     const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
-
-    const [hatsArray, setHatsArray] =  useState([]);
-    const [jacketsArray, setJacketsArray] = useState([]);
-    const [shirtsArray, setShirtsArray] = useState([]);
-    const [jeansArray, setJeansArray] = useState([]);
-    const [footersArray, setFootersArray] = useState([]);
-    const [shortsArray, setShortsArray] = useState([]);
-    const [shoesArray, setShoesArray] = useState([]);
-
+    const openDialog = useSelector(state => state.openDialog);
+    
+    
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
             setHatsArray(data.items.filter(el => el.type === "hats"));
@@ -94,16 +110,8 @@ const Home = (props) => {
             setFootersArray(data.items.filter(el => el.type === "footers"));
             setShortsArray(data.items.filter(el => el.type === "shorts"));
             setShoesArray(data.items.filter(el => el.type === "shoes"));
-            });
+        });
     },[belongsTo]);
-
-    const [text, setText] = useState("")
-    const [size, setSize] = useState("");
-    const [style, setStyle] = useState("");
-    const [type, setType] = useState("");
-    const [isWashed, setIsWashed] = useState("")
-    const [image, setImage] = useState("");
-    const [value, setValue] = useState(0);
     
     const itemObject = {
         type,
@@ -147,7 +155,13 @@ const Home = (props) => {
                 height: 150,
                 width: 150,
             },
-        }));
+            form: {
+                // margin: 'auto',
+                display: 'flex',
+                justifyContent: "space-between",
+                alignItems: "center",
+            }
+    }));
     const useStyles2 = makeStyles((theme) => ({
         root: {
             display: 'flex',
@@ -209,27 +223,120 @@ const Home = (props) => {
         reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
     });
-
+    const AddingDialog = () => {
+        const Form = () => {
+            return (
+                <form className={classes3.root} onSubmit={handleItemSubmit}>
+                        <label className="formLabel">Size:</label>
+                        <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size} required>
+                            <option value="Choose Size" disabled>Choose Size</option>
+                            <option value="XXS">XXS</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XXXL">XXXL</option>
+                            <option value="other">Other...</option>
+                        </select>
+                        {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
+                        <br />
+                        <label className="formLabel">Style:</label>
+                        <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style} required>
+                            <option value="Choose Style" disabled>Choose Style</option>
+                            <option value="casual">Casual</option>
+                            <option value="geeky">Geeky</option>
+                            <option value="elegant">Elegant</option>
+                            <option value="sport">Sport</option>
+                            <option value="formal">Formal</option>
+                            <option value="sport elegant">Sport Elegant</option>
+                            <option value="comfort">Comfort</option>
+                            <option value="maternity">Maternity</option>
+                            <option value="hip hop">Hip Hop</option>
+                            <option value="military">Military</option>
+                            <option value="exotic">Exotic</option>
+                            <option value="trendy">Trendy</option>
+                            <option value="ethnic">Ethnic</option>
+                            <option value="gothic">Gothic</option>
+                        </select>
+                        <br />
+                        <label className="formLabel">Type:</label>
+                        <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type} required>
+                            <option value="Choose a type" disabled>Choose a type</option>
+                            <option value="shirts">Hat</option>
+                            <option value="shirts">Shirt</option>
+                            <option value="jackets">Jacket</option>
+                            <option value="footers">Footers</option>
+                            <option value="jeans">Jeans</option>
+                            <option value="shorts">Shorts</option>
+                            <option value="shoes">Shoes</option>
+                        </select>
+                        <br />
+                        <label className="formLabel">Is it clean ?</label>
+                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="Is it clean ?" value={itemObj.isWashed} required>
+                            <option value="Is it clean ?" disabled>Is it clean ?</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                        <br />
+                        <label className="formLabel">File:</label>
+                        <input className="formLabel1" onChange={(e) => {handleFileSelection(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj.image} required/>
+                        <br />
+                        <img src={image} alt="" />
+                        <br />
+                        <Button 
+                        color="secondary"
+                        fullWidth
+                        endIcon={<DoneIcon />}
+                        onClick={(e) => {
+                            if(size && image && type && style) {
+                                fetcher.postClothes(itemObject);
+                                window.location.reload();
+                            } else {
+                                alert('Must Choose all parameters...')
+                            }
+                            }}>
+                            Save Item
+                        </Button>
+                        <Button
+                        color="secondary"
+                        fullWidth
+                        endIcon={<ClearIcon />}
+                        onClick={() => dispatch({type: 'openDialog'})}>
+                            Nevermind
+                        </Button>
+                    </form>
+            )
+        }
+        return (
+            <Dialog open={openDialog} onClose={() => dispatch({type: 'openDialog'})}>
+                <DialogTitle>Add a new item</DialogTitle>
+                <DialogContent className={classes1.form}>
+                    {/* <Typography className={classes1.heading}>Add an item</Typography> */}
+                    <Form />
+                </DialogContent>
+            </Dialog>
+        )
+    }
     const handleFileSelection = (file) => {
         toBase64(file).then(setImage);
     }
     return (
         <div className="body" id="body">
-            <div>
-                <HomeSpeedDial />
-                <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
-            </div>
+            <HomeSpeedDial />
+            <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
             <br />
             <div className={classes1.root}>
                 <AppBar position="static" style={{marginLeft: "3vw"}}>
                     <Tabs value={value} onChange={handleChange} aria-label="type tabs" variant="fullWidth">
-                    <Tab label="Hats" {...a11yProps(0)} />
-                    <Tab label="Jackets" {...a11yProps(1)} />
-                    <Tab label="Shirts" {...a11yProps(2)} />
-                    <Tab label="Jeans" {...a11yProps(3)} />
-                    <Tab label="Footers" {...a11yProps(4)} />
-                    <Tab label="Shorts" {...a11yProps(5)} />
-                    <Tab label="Shoes" {...a11yProps(6)} />
+                        <Tab label="Hats" {...a11yProps(0)} />
+                        <Tab label="Jackets" {...a11yProps(1)} />
+                        <Tab label="Shirts" {...a11yProps(2)} />
+                        <Tab label="Jeans" {...a11yProps(3)} />
+                        <Tab label="Footers" {...a11yProps(4)} />
+                        <Tab label="Shorts" {...a11yProps(5)} />
+                        <Tab label="Shoes" {...a11yProps(6)} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0} disabled={hatsArray.length > 0}>
@@ -497,8 +604,9 @@ const Home = (props) => {
                             <option value="shoes">Shoes</option>
                         </select>
                         <br />
-                        <label>Is it clean ?</label>
-                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="yes" value={itemObj.isWashed} required>
+                        <label className="formLabel">Is it clean ?</label>
+                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="Is it clean ?" value={itemObj.isWashed} required>
+                            <option value="Is it clean ?" disabled>Is it clean ?</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
@@ -509,7 +617,7 @@ const Home = (props) => {
                         <img src={image} alt=""/>
                         <br />
                         <Button 
-                        color="secondary" 
+                        color="secondary"
                         style={{width: "340px"}}
                         onClick={(e) => {
                             fetcher.postClothes(itemObject);
@@ -522,23 +630,22 @@ const Home = (props) => {
             </Accordion>
             <br />
             <Drawer
-                anchor="bottom" 
-                open={clothesDrawer || checkedOut.lenght > 0}
-                onClose={handleDrawerClose} 
-                variant="persistent"
-                >
+            anchor="bottom" 
+            open={clothesDrawer || checkedOut.lenght > 0}
+            onClose={handleDrawerClose} 
+            variant="persistent"
+            >
                 <div>
-                    <br />
                     <Divider />
                     {(checkedOut || []).map(item => {
                         return (
-                            <div key={item._id} style={{display: 'inline-block'}}>
+                            <div key={item._id*Math.random()*100} style={{display: 'inline-block'}}>
                                 <br />
-                                <Card sx={{ maxWidth: 345, display: 'inline-block' }}>
+                                <Card sx={{ maxWidth: 196, display: 'inline-block', marginLeft: "2vw" }}>
                                     <CardMedia
                                     component="img"
-                                    height="196"
-                                    width="196"
+                                    height="128"
+                                    width="128"
                                     image={item.image}
                                     />
                                     <CardContent>
@@ -577,6 +684,7 @@ const Home = (props) => {
                     })}
                 </div>
             </Drawer>
+            <AddingDialog />
         </div>
     )
 }

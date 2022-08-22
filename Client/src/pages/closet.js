@@ -44,6 +44,7 @@ const Closet = (props) => {
             field: 'isWashed',
             headerName: 'Ready to use ?',
             width: 170,
+            renderCell: (params) => (<p>{params.row.isWashed ? 'Yes' : 'No'}</p>)
         },
         {
             field: 'picture',
@@ -59,43 +60,6 @@ const Closet = (props) => {
         setCurrentObj(params.row);
         setOpen(true);
     };
-    // const imageListItemStyle = {
-    //     width: "196px", 
-    //     height: "196px", 
-    //     zIndex: "100",
-    // };
-    // const useStyles = makeStyles((theme) => ({
-    //     root: {
-    //         display: 'flex',
-    //         flexWrap: 'wrap',
-    //         justifyContent: 'space-around',
-    //         overflow: 'hidden',
-    //         backgroundColor: theme.palette.background.paper,
-    //     },
-    //     imageList: {
-    //         display: "flex",
-    //         flexDirection: "row",
-    //         transform: 'translateZ(0)',
-    //     },
-    //     title: {
-    //         color: "white",
-    //     },
-    //     titleBar: {
-    //         background:
-    //         'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-    //     },
-    //     image: {
-    //         width: 196 + "px",
-    //         height: 196 + "px",
-    //     },
-    //     speedDial: {
-    //         position: 'fixed',
-    //         top: "7vh",
-    //         right: "1vw",
-    //     },
-    // }));
-    
-    // const classes = useStyles();
 
     return(
         <div className="closetDiv">

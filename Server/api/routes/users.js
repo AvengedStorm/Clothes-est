@@ -80,10 +80,16 @@ router.get('/', async (req, res, next) => {
         console.log(err)
     }
 });
-router.get('/:userEmail', async (req, res, next) => {
+router.get('/:userDetails', async (req, res, next) => {
+    const params = req.params.userDetails;
+    console.log(params);
+    const userCredentials = await fetchUsers();
+    // console.log(userCredentials);
+    const desiredUser = userCredentials.map(user => console.log(user.email));
+    // console.log(desiredUser);
     try {
         res.status(200).json({
-            user: await fetchUser(req.params.userEmail),
+            user: userCredentials.email,
         });
     } catch (err) {
         console.log(err)

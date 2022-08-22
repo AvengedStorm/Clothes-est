@@ -183,9 +183,38 @@ const Login = () => {
             Sign in
           </Typography>
           <form className={classes.form} >
-            <TextField variant="outlined" margin="normal" onChange={(e) => setEmail(e.target.value)} required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
-            <TextField variant="outlined" margin="normal" onChange={(e) => setPassword(e.target.value)} required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <TextField 
+              variant="outlined" 
+              margin="normal" 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+              fullWidth 
+              id="email" 
+              label="Email Address" 
+              name="email" 
+              autoComplete="email" 
+              autoFocus
+            />
+            <TextField 
+              variant="outlined" 
+              margin="normal" 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+              fullWidth 
+              name="password" 
+              label="Password" 
+              type="password" 
+              id="password" 
+              autoComplete="current-password" 
+            />
+            <FormControlLabel 
+              control={
+                <Checkbox 
+                value="remember" 
+                color="primary" 
+                />} 
+              label="Remember me" 
+            />
             <Button
               type="submit"
               fullWidth
@@ -194,10 +223,12 @@ const Login = () => {
               className={classes.submit}
               onClick={(e) => {
                 e.preventDefault();
+                fetcher.getUser(email, data => console.log(data.user));
+                // fetcher.getUsers(data => data.users.map(user => console.log(user.email)));
                 fetcher.loginUser(userData, (data) => {
-                  const ID = data.userCredentials.userID;
-                  const token = data.userCredentials.token;
-                  // console.log(data);
+                  console.log(data);
+                  const ID = data.userCredentials;
+                  const token = data.userCredentials;
                   if(data.message === "User Verified.") {
                     dispatch({type: "login", payload: {ID: ID, token: token}})
                     window.location = "/home";

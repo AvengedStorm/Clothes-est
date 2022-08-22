@@ -9,6 +9,7 @@ const persistConfig = {
 function reducer(state = {
     items: {},
     openAccordion: false,
+    openDialog: false,
     darkmode: false,
     favorites: [],
     checkedOut: [],
@@ -19,6 +20,12 @@ function reducer(state = {
     belongsTo: "",
     }, action){
       switch (action.type) {
+        case 'openDialog':
+          state = {
+            ...state,
+            openDialog: !state.openDialog
+          }
+        break;
         case 'openAccordion':
           state = {
             ...state,

@@ -1,5 +1,4 @@
 const fetcher = {
-
     getClothes(userIdString, callback) {
         fetch(`http://localhost:9001/items/${userIdString}`, {method: "GET"})
         .then(response => response.json())
@@ -36,18 +35,24 @@ const fetcher = {
         .then(response => response.json())
         .then(callback)
     },
+    getUser(userEmail, userPassword, callback) {
+        fetch(`http://localhost:9001/users/${userEmail}`, {method: "GET"})
+        .then(response => response.json())
+        .then(res => alert(res))
+        .then(callback);
+    },
 
     getFavorites(userID, callback) {
         fetch(`http://localhost:9001/favorites/${userID}`)
         .then(response => response.json())
-        .then(console.log(callback))
+        // .then(console.log(callback))
         .then(callback)
     },
     postFavorite(itemObj, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj) };
         fetch(`http://localhost:9001/favorites/`, requestOptions)
         .then(response => response.json())
-        .then(console.log(callback))
+        // .then(console.log(callback))
         .then(callback)
     },
 

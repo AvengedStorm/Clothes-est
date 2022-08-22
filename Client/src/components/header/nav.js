@@ -64,19 +64,18 @@ const NavBar = (props) => {
           onClose={() => toggleDrawer(false)}
           >
               <div className="drawerButton">
-                      <div className="App" style={{ width: drawerWidth }}>
-                          <Link to="/"><Button onClick={() => toggleDrawer(false)}>Home</Button></Link>
-                          <Link to="/closet"><Button onClick={() => toggleDrawer(false)}>Closet</Button></Link>
-                          <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
-                          <Link to="/login"><Button onClick={() => {
-                            toggleDrawer(false);
-                            if(currentUser || belongsTo) {
-                              dispatch({type: "logout"});
-                            }
-                            }}>{currentUser ? "Logout" : "Login"}</Button></Link>
-                      </div>
-              </div>            
-              <Button onClick={() => toggleDrawer(false)}>Close</Button>
+                <div className="App" style={{ width: drawerWidth }} onMouseLeave={() => toggleDrawer(false)}>
+                  <Link to="/"><Button onClick={() => toggleDrawer(false)}>Home</Button></Link>
+                  <Link to="/closet"><Button onClick={() => toggleDrawer(false)}>Closet</Button></Link>
+                  <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
+                  <Link to="/login"><Button color="secondary" onClick={() => {
+                    toggleDrawer(false);
+                    if(currentUser || belongsTo) {
+                      dispatch({type: "logout"});
+                    }
+                    }}>{currentUser ? "Logout" : "Login"}</Button></Link>
+                </div>
+              </div>
           </Drawer>
       </div>        
   )

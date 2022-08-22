@@ -18,7 +18,18 @@ const fetchUser = async (userCredentials) => {
         console.log(e)
     }
 };
+router.get('/:userID', async function(req, res, next) {
+    try {
+        const userID = req.params.userID
 
+        const USER_ID = await fetchUser(req.body.email.toLowerCase())
+        res.status(200).json({
+            user: await fetchUser(userID)
+        });
+    } catch (e) {
+        console.log(e);
+    }
+});
 router.post('/', async (req, res, next) => {
     try {
         const token = md5(req.body.password).toString() + Math.round(Math.random() * 1000000000000000);
@@ -29,7 +40,7 @@ router.post('/', async (req, res, next) => {
         // console.log(userPassword);
         const USER_ID = await fetchUser(req.body.email.toLowerCase())
         // console.log(USER_ID);
-        const userData = { email: userEmail, token: token, userID: USER_ID._id.toString() };
+        const userData = { email: userEmail, token: token, userID: USER_ID};
         // console.log(userData);
         if (USER_ID) {
             res.status(200).send({ 

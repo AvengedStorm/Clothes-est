@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import BallotIcon from '@material-ui/icons/Ballot';
 import ClearIcon from '@material-ui/icons/Clear';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 const HomeSpeedDial = () => {
     const dispatch = useDispatch();
@@ -23,8 +24,8 @@ const HomeSpeedDial = () => {
             flexGrow: 1,
         },
         speedDial: {
-            position: 'fixed',
-            top: "7vh",
+            position: 'absolute',
+            top: "10vh",
             right: "1vw",
         },
     }));
@@ -46,6 +47,7 @@ const HomeSpeedDial = () => {
         dispatch({ type: 'clothesDrawer' })
     }
     const actions1 = [
+        {icon: <AddIcon />, name: 'Add a new item', func: () => dispatch({type: 'openDialog'})},
         {icon: <SaveIcon />, name: 'Save Selected to Sets', func: handleSetSubmit },
         {icon: <BallotIcon />, name: 'Toggle Drawer', func: drawerToggle },
         {icon: <ClearIcon />, name: "Clear All", func: clearCurrentSet },
@@ -57,24 +59,24 @@ const HomeSpeedDial = () => {
 
     return (
         <SpeedDial
-        ariaLabel="SpeedDial example"
+        ariaLabel="SpeedDial for actions"
         className={classes.speedDial}
         icon={<SpeedDialIcon />}
         onClose={handleClose1}
                 onOpen={handleOpen1}
                 open={open1}
-                direction="down"
+                direction="left"
                 z-index="9999"
-            >
-                {actions1.map((action) => (
-                    <SpeedDialAction
-                    key={action.name}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    onClick={action.func}
-                    />
-                ))}
-            </SpeedDial>
+        >
+            {actions1.map((action) => (
+            <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            onClick={action.func}
+            />
+            ))}
+        </SpeedDial>
     );
 };
 
@@ -86,8 +88,8 @@ const ClosetSpeedDial = () => {
             flexGrow: 1,
         },
         speedDial: {
-            position: 'fixed',
-            top: "7vh",
+            position: 'absolute',
+            bottom: "1vh",
             right: "1vw",
         },
     }));
@@ -109,7 +111,7 @@ const ClosetSpeedDial = () => {
             onClose={handleClose2}
             onOpen={handleOpen2}
             open={open2}
-            direction="down"
+            direction="left"
             z-index="9999"
         >
             {actions2.map((action) => (
