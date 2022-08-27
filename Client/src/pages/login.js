@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import fetcher from '../components/db/fetcher';
-// import md5 from "md5";
+import md5 from "md5";
 
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
@@ -79,10 +79,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(false);
+
   const handleErrorOpen = () => setError(true);
   const handleErrorClose = () => setError(false);
 
   const userData = { email: email, password: password };
+  const hashedUserData = md5(`${userData.email}${userData.password}`)
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -182,7 +184,7 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} >
+          <form className={classes.form}>
             <TextField 
               variant="outlined" 
               margin="normal" 
@@ -226,13 +228,14 @@ const Login = () => {
                 fetcher.getUser(email, data => console.log(data.user));
                 // fetcher.getUsers(data => data.users.map(user => console.log(user.email)));
                 fetcher.loginUser(userData, (data) => {
-                  console.log(data);
-                  const ID = data.userCredentials;
-                  const token = data.userCredentials;
+                  // console.log(data);
                   if(data.message === "User Verified.") {
-                    dispatch({type: "login", payload: {ID: ID, token: token}})
+                    let payload = {email: data.userCredentials.email, token: data.userCredentials.token};
+                    dispatch({type: "login", payload});
+                    localStorage.setItem('loginState', JSON.stringify(payload));
                     window.location = "/home";
                   } else {
+                    localStorage.removeItem('loginState');
                     handleErrorOpen()
                   }
                 });

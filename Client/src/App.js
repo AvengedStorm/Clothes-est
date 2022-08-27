@@ -1,4 +1,5 @@
 import React from 'react';
+// import {useSelector} from 'react-redux'
 
 import './App.css';
 
@@ -17,6 +18,8 @@ import {
 import Login from './pages/login';
 
 function App(props) {
+  // const user = useSelector(state => state.currentUser);
+  
   return (
     <div>
       <CssBaseline />

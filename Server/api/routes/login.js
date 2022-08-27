@@ -32,16 +32,13 @@ router.get('/:userID', async function(req, res, next) {
 });
 router.post('/', async (req, res, next) => {
     try {
-        const token = md5(req.body.password).toString() + Math.round(Math.random() * 1000000000000000);
-        // console.log(token);
+        const token = md5(req.body.password + Math.round(Math.random() * 1000000000000000)).toString();
         const userEmail = req.body.email;
-        // console.log(userEmail);
-        // const userPassword = req.body.password;
-        // console.log(userPassword);
+        console.log(userEmail);
+        const userPassword = req.body.password;
+        console.log(userPassword);
         const USER_ID = await fetchUser(req.body.email.toLowerCase())
-        // console.log(USER_ID);
         const userData = { email: userEmail, token: token, userID: USER_ID};
-        // console.log(userData);
         if (USER_ID) {
             res.status(200).send({ 
                 message: "User Verified.", 

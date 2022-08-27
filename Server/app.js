@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+var cookieParser = require('cookie-parser')
 const itemRouter = require('./api/routes/items');
 const favoritesRouter = require('./api/routes/favorites');
 const setsRouter = require('./api/routes/sets');
@@ -14,6 +15,7 @@ app.use(express.urlencoded({
     extended: true,
     limit: "2mb"
 }));
+app.use(cookieParser());
 app.use(cors());
 app.use(express.static('uploads/'));
 app.use('/login', loginRouter);

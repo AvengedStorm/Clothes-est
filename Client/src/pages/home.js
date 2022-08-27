@@ -73,7 +73,6 @@ function a11yProps(index) {
 
 
 const Home = (props) => {
-
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
@@ -313,7 +312,6 @@ const Home = (props) => {
             <Dialog open={openDialog} onClose={() => dispatch({type: 'openDialog'})}>
                 <DialogTitle>Add a new item</DialogTitle>
                 <DialogContent className={classes1.form}>
-                    {/* <Typography className={classes1.heading}>Add an item</Typography> */}
                     <Form />
                 </DialogContent>
             </Dialog>
@@ -322,6 +320,7 @@ const Home = (props) => {
     const handleFileSelection = (file) => {
         toBase64(file).then(setImage);
     }
+
     return (
         <div className="body" id="body">
             <HomeSpeedDial />

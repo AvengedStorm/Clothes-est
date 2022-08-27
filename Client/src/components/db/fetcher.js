@@ -31,14 +31,13 @@ const fetcher = {
 
     loginUser(userData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(userData) };
-        fetch(`http://localhost:9001/login/` , requestOptions)
+        fetch(`http://localhost:9001/login/`, requestOptions)
         .then(response => response.json())
         .then(callback)
     },
     getUser(userEmail, userPassword, callback) {
         fetch(`http://localhost:9001/users/${userEmail}`, {method: "GET"})
         .then(response => response.json())
-        .then(res => alert(res))
         .then(callback);
     },
 

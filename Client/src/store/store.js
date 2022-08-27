@@ -1,11 +1,12 @@
 import {createStore} from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-}
+//import { persistStore, persistReducer } from 'redux-persist';
+// import storage from 'redux-persist/lib/storage';
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+// }
+
 function reducer(state = {
     items: {},
     openAccordion: false,
@@ -112,13 +113,14 @@ function reducer(state = {
             currentUser: "",
             belongsTo: "",
           };
+          window.location = '/login'
           break;
         default:
         break;
       }
   return state;
 }
-const persistedReducer = persistReducer(persistConfig, reducer)
+// const persistedReducer = persistReducer(persistConfig, reducer)
 
-export const store = createStore(persistedReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-export const persistor = persistStore(store);
+export const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// export const persistor = persistStore(store);

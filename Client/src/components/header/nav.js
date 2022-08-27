@@ -15,11 +15,15 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 
 import './nav.css';
-
+const pathnames = ['/login', '/about']
 let drawerWidth = "240px";
 const NavBar = (props) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector(state => state.currentUser);
+  // let currentUser = localStorage.getItem('loginState');
+  // if(currentUser !== null ) {
+  //   currentUser = JSON.parse(currentUser);
+  // }
+  // console.log(currentUser);
   const belongsTo = useSelector(state => state.belongsTo);
   const [isDrawerOpen, toggleDrawer] = useState(false);
   const useStyles = makeStyles((theme) => ({
@@ -34,7 +38,11 @@ const NavBar = (props) => {
       },
   }));
   const classes = useStyles();
-
+  // TODO: make localStorage key a constant
+  const currentUser = JSON.parse(localStorage.getItem('loginState') || '{}');
+    if(currentUser.email  === undefined && pathnames.indexOf(window.location.pathname) === -1) {
+        window.location = '/login';
+    }
   return (
           <div className={classes.root}>
           <AppBar position="fixed" style={{top: "0px"}} color="primary">
@@ -45,9 +53,14 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-                <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => currentUser ? dispatch({type: "logout"}) : window.location = "/login"} >
-                    {currentUser ? <LogoutRoundedIcon /> : <LoginRoundedIcon />}
-                </IconButton>
+              {currentUser.email ?
+              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => {localStorage.removeItem('loginState'); dispatch({type: 'logout'})}} >
+                <LogoutRoundedIcon />
+              </IconButton>
+              :
+              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => window.location = '/login'}>
+                <LoginRoundedIcon />
+              </IconButton>}
               </Toolbar>
           </AppBar>
           <Drawer
