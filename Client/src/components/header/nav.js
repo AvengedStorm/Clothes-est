@@ -38,11 +38,14 @@ const NavBar = (props) => {
       },
   }));
   const classes = useStyles();
-  // TODO: make localStorage key a constant
-  const currentUser = JSON.parse(localStorage.getItem('loginState') || '{}');
-    if(currentUser.email  === undefined && pathnames.indexOf(window.location.pathname) === -1) {
-        window.location = '/login';
-    }
+
+  const localCurrentUser = localStorage.getItem('loginState')
+  console.log(localCurrentUser);
+
+  if(localCurrentUser === null && pathnames.indexOf(window.location.pathname) === -1) {
+      window.location = '/login';
+  }
+
   return (
           <div className={classes.root}>
           <AppBar position="fixed" style={{top: "0px"}} color="primary">
@@ -53,14 +56,14 @@ const NavBar = (props) => {
               <Typography variant="h6" className={classes.title}>
                   Cloth-est!
               </Typography>
-              {currentUser.email ?
-              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => {localStorage.removeItem('loginState'); dispatch({type: 'logout'})}} >
-                <LogoutRoundedIcon />
-              </IconButton>
-              :
-              <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => window.location = '/login'}>
-                <LoginRoundedIcon />
-              </IconButton>}
+              {localCurrentUser ?
+                <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => {localStorage.removeItem('loginState'); dispatch({type: 'logout'})}} >
+                  <LogoutRoundedIcon />
+                </IconButton>
+                :
+                <IconButton className={classes.titleItemRight} color="inherit" aria-label="Style Toggle" onClick={() => window.location = '/login'}>
+                  <LoginRoundedIcon />
+                </IconButton>}
               </Toolbar>
           </AppBar>
           <Drawer
@@ -83,10 +86,10 @@ const NavBar = (props) => {
                   <Link to="/about"><Button onClick={() => toggleDrawer(false)}>About</Button></Link>
                   <Link to="/login"><Button color="secondary" onClick={() => {
                     toggleDrawer(false);
-                    if(currentUser || belongsTo) {
+                    if(localCurrentUser || belongsTo) {
                       dispatch({type: "logout"});
                     }
-                    }}>{currentUser ? "Logout" : "Login"}</Button></Link>
+                    }}>{localCurrentUser ? "Logout" : "Login"}</Button></Link>
                 </div>
               </div>
           </Drawer>

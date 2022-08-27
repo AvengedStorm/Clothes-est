@@ -25,7 +25,7 @@ const fetchUser = async (userO) => {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
-        const userInput = await collection.findOne({email: userO});
+        const userInput = await collection.findOne({hashedData: userO});
         return userInput
     } catch(e) {
         console.log(e)
@@ -81,16 +81,20 @@ router.get('/', async (req, res, next) => {
     }
 });
 router.get('/:userDetails', async (req, res, next) => {
-    const params = req.params.userDetails;
-    console.log(params);
-    const userCredentials = await fetchUsers();
-    // console.log(userCredentials);
-    const desiredUser = userCredentials.map(user => console.log(user.email));
-    // console.log(desiredUser);
     try {
-        res.status(200).json({
-            user: userCredentials.email,
-        });
+        const hashedData = req.params.userDetails;
+        const fetchedUser = fetchUser(hashedData);
+        if(fetchedUser) {
+            res.status(200).json({
+                user: fetchedUser,
+                message: "User Verified",
+                hashed: hashedData,
+            });
+        } else {
+            res.status(404).json({
+                message: "Invalid data"
+            })
+        }
     } catch (err) {
         console.log(err)
     }
@@ -106,12 +110,18 @@ router.post('/', async (req, res, next) => {
             lastName: req.body.lastName.toLowerCase(),
             email: req.body.email.toLowerCase(), 
             password: md5(req.body.password),
+            hashedData: req.body.hashedData
         }
         const fetchedUser = await fetchUser(userObj);
         if (!fetchedUser) {
             postUser(userData);
+            res.status(200).json({
+                message: 'User created successfully'
+            })
         } else {
-            console.log("Existing account Found!");
+            res.status(404).json({
+                message: "Existing account Found!"
+            })
         }
     } catch (err) {
         console.log(err);

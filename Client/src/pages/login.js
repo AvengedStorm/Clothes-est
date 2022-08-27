@@ -79,12 +79,14 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState(false);
+  
+  // const localCurrentUser = localStorage.getItem('loginState')
 
   const handleErrorOpen = () => setError(true);
   const handleErrorClose = () => setError(false);
 
-  const userData = { email: email, password: password };
-  const hashedUserData = md5(`${userData.email}${userData.password}`)
+  const hashedUserData = md5(`${email}${password}`)
+  const userData = { email, password, hashedUserData };
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -106,7 +108,14 @@ const Login = () => {
     const [lastNameField, setLastNameField] = useState("");
     const [passwordVerificationField, setPasswordVerificationField] = useState("");
     const [display, setDisplay] = useState("none");
-    const userFieldData = { firstName: firstNameField, lastName: lastNameField, email: emailField, password: passwordField };
+    const hashedData = md5(`${emailField}${passwordField}`)
+    const userFieldData = {
+      firstName: firstNameField,
+      lastName: lastNameField,
+      email: emailField,
+      password: passwordField,
+      hashedData
+    };
     const handleUserPost = () => {
       fetcher.postUser(userData);
     }
@@ -225,18 +234,18 @@ const Login = () => {
               className={classes.submit}
               onClick={(e) => {
                 e.preventDefault();
-                fetcher.getUser(email, data => console.log(data.user));
-                // fetcher.getUsers(data => data.users.map(user => console.log(user.email)));
-                fetcher.loginUser(userData, (data) => {
-                  // console.log(data);
+                // console.log(email);
+                // console.log(password);
+                // console.log(hashedUserData);
+                // console.log(userData);
+                // console.log(localCurrentUser);
+                fetcher.loginUser(userData, data => {
                   if(data.message === "User Verified.") {
-                    let payload = {email: data.userCredentials.email, token: data.userCredentials.token};
-                    dispatch({type: "login", payload});
-                    localStorage.setItem('loginState', JSON.stringify(payload));
-                    window.location = "/home";
-                  } else {
-                    localStorage.removeItem('loginState');
-                    handleErrorOpen()
+                    localStorage.setItem('loginState', data.userData);
+                    window.location.pathname = '/home';
+                  }
+                  if(data.message === "User Not Found.") {
+                    handleErrorOpen();
                   }
                 });
             }}

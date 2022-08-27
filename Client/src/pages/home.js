@@ -224,10 +224,28 @@ const Home = (props) => {
     });
     const AddingDialog = () => {
         const Form = () => {
+            const [style1, setStyle1] = useState('');
+            const [size1, setSize1] = useState('');
+            const [text1, setText1] = useState('');
+            const [type1, setType1] = useState('');
+            const [isWashed1, setIsWashed1] = useState(true);
+            const [image1, setImage1] = useState('');
+            const itemObj1 = {
+                type1,
+                style1,
+                size1: (size === "other" ? text1 : size1),
+                isWashed1,
+                image1,
+                belongsTo: belongsTo
+            };
+            const handleFileSelection1 = (file) => {
+                toBase64(file).then(setImage1);
+            }
+
             return (
                 <form className={classes3.root} onSubmit={handleItemSubmit}>
                         <label className="formLabel">Size:</label>
-                        <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size} required>
+                        <select className="formLabel1" onChange={(e) => setSize1(e.target.value)} defaultValue="Choose Size" value={itemObj.size1} required>
                             <option value="Choose Size" disabled>Choose Size</option>
                             <option value="XXS">XXS</option>
                             <option value="XS">XS</option>
@@ -239,10 +257,10 @@ const Home = (props) => {
                             <option value="XXXL">XXXL</option>
                             <option value="other">Other...</option>
                         </select>
-                        {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
+                        {size1 === 'other' ? <input onChange={(e) => {setText1(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
                         <br />
                         <label className="formLabel">Style:</label>
-                        <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style} required>
+                        <select className="formLabel1" onChange={(e) => setStyle1(e.target.value)} defaultValue="Choose Style" value={itemObj1.style} required>
                             <option value="Choose Style" disabled>Choose Style</option>
                             <option value="casual">Casual</option>
                             <option value="geeky">Geeky</option>
@@ -261,7 +279,7 @@ const Home = (props) => {
                         </select>
                         <br />
                         <label className="formLabel">Type:</label>
-                        <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type} required>
+                        <select className="formLabel1" onChange={(e) => setType1(e.target.value)} defaultValue="Choose a type" value={itemObj1.type} required>
                             <option value="Choose a type" disabled>Choose a type</option>
                             <option value="shirts">Hat</option>
                             <option value="shirts">Shirt</option>
@@ -273,24 +291,24 @@ const Home = (props) => {
                         </select>
                         <br />
                         <label className="formLabel">Is it clean ?</label>
-                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="Is it clean ?" value={itemObj.isWashed} required>
+                        <select className="formLabel1" onChange={(e) => setIsWashed1(e.target.value)} defaultValue="Is it clean ?" value={itemObj1.isWashed} required>
                             <option value="Is it clean ?" disabled>Is it clean ?</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
                         <br />
                         <label className="formLabel">File:</label>
-                        <input className="formLabel1" onChange={(e) => {handleFileSelection(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj.image} required/>
+                        <input className="formLabel1" onChange={(e) => {handleFileSelection1(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj1.image} required/>
                         <br />
-                        <img src={image} alt="" />
+                        <img src={image1} alt="" />
                         <br />
-                        <Button 
+                        <Button
                         color="secondary"
                         fullWidth
                         endIcon={<DoneIcon />}
                         onClick={(e) => {
-                            if(size && image && type && style) {
-                                fetcher.postClothes(itemObject);
+                            if(size1 && image1 && type1 && style1) {
+                                fetcher.postClothes(itemObj1);
                                 window.location.reload();
                             } else {
                                 alert('Must Choose all parameters...')

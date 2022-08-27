@@ -35,8 +35,9 @@ const fetcher = {
         .then(response => response.json())
         .then(callback)
     },
-    getUser(userEmail, userPassword, callback) {
-        fetch(`http://localhost:9001/users/${userEmail}`, {method: "GET"})
+    getUser(hashedUserData, callback) {
+        // const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(hashedUserData) };
+        fetch(`http://localhost:9001/users/${hashedUserData}`)
         .then(response => response.json())
         .then(callback);
     },

@@ -94,10 +94,8 @@ function reducer(state = {
         case 'login':
           state = {
             ...state, 
-              currentUser: 
-                action.payload.token, 
-              belongsTo: 
-                action.payload.ID
+              currentUser: action.payload.data, 
+              belongsTo: action.payload.data
               };
           break;
         case 'logout':
