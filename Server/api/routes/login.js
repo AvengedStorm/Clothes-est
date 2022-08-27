@@ -57,8 +57,8 @@ router.post('/', async (req, res, next) => {
                 message: "User Not Found.",
             })
         }
-    } catch (err) {
-        console.log(err);
+    } catch (e) {
+        console.log(e);
     }
 });
 

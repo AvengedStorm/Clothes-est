@@ -43,26 +43,15 @@ const deleteItem = async function(itemId) {
         console.log(e);
     }
 };
-// const deleteManyItems = async function(itemIds) {
-//     try {
-//         await client.connect();
-//         const db = client.db('clothest');
-//         const collection = db.collection('clothes');
-        
-//         return await collection.deleteOne({_id: stringToObjectId(itemIds)});
-//     } catch(e) {
-//         console.log(e);
-//     }
-// };
 const postItem = async function(ClothObj) {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('clothes');
         return await collection.insertOne(ClothObj);
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
+    } catch (e) {
+        console.log(e);
+        return e.response.data;
     }
 };
 
@@ -78,7 +67,6 @@ router.get('/', async function(req, res, next) {
 router.get('/:userID', async function(req, res, next) {
     try {
         const userID = req.params.userID
-        // console.log(userID);
         res.status(200).json({
             items: await fetchItemsByUser(userID)
         });
@@ -115,10 +103,10 @@ router.post('/', async function(req, res, next) {
         });
         res.status(201).json({
             item: await postItem(ClothObj),
-            message: console.log("Item Added!"),
+            message: "Item Added!",
         });
-    } catch (err) {
-        console.log(err);
+    } catch (e) {
+        console.log(e);
     }
 });
 router.patch('/:itemId', async function(req, res, next) {
@@ -136,7 +124,7 @@ router.patch('/:itemId', async function(req, res, next) {
         }
     });
     res.status(202).json({
-        item: await updateItem(itemId, cloth).then(() => console.log("Item Updated!")),
+        item: await updateItem(itemId, cloth),
     });
 });
 router.delete('/:itemId', async function(req, res, next) {

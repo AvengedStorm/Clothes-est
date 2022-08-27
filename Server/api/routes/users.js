@@ -16,8 +16,8 @@ const fetchUsers = async () => {
         const db = client.db('clothest');
         const collection = db.collection('users');
         return await collection.find().toArray();
-    } catch (err) {
-        console.log(err)
+    } catch (e) {
+        console.log(e)
     }
 };
 const fetchUser = async (userO) => {
@@ -66,8 +66,8 @@ const postUser = async (ClothObj) => {
         const collection = db.collection('users');
         const userInput = await collection.insertOne(ClothObj).then(() => client.close());
         return userInput
-    } catch(err) {
-        console.log(err)
+    } catch(e) {
+        console.log(e)
     }
 };
 
@@ -76,8 +76,8 @@ router.get('/', async (req, res, next) => {
         res.status(200).json({
             users: await fetchUsers(req.params.userId),
         });
-    } catch (err) {
-        console.log(err)
+    } catch (e) {
+        console.log(e)
     }
 });
 router.get('/:userDetails', async (req, res, next) => {
@@ -95,8 +95,8 @@ router.get('/:userDetails', async (req, res, next) => {
                 message: "Invalid data"
             })
         }
-    } catch (err) {
-        console.log(err)
+    } catch (e) {
+        console.log(e)
     }
 });
 router.post('/', async (req, res, next) => {
@@ -123,8 +123,8 @@ router.post('/', async (req, res, next) => {
                 message: "Existing account Found!"
             })
         }
-    } catch (err) {
-        console.log(err);
+    } catch (e) {
+        console.log(e);
     }
 });
 router.patch('/:userId', async (req, res, next) => {
@@ -142,12 +142,11 @@ router.patch('/:userId', async (req, res, next) => {
             }
         });
         await updateUser(userId, user);
-        console.log(user);
         res.status(202).json({
             updated: user
         });
-    } catch (err) {
-        console.log(err)
+    } catch (e) {
+        console.log(e)
     }
 });
 router.delete('/:userId', async (req, res, next) => {
@@ -162,8 +161,8 @@ router.delete('/:userId', async (req, res, next) => {
                 message: 'User not found.'
             });
          }
-    } catch (err) {
-        console.log(err);
+    } catch (e) {
+        console.log(e);
     }
 });
 

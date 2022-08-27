@@ -31,7 +31,6 @@ const deleteFavorite = async (itemId) => {
         }
         return null;
     } catch(e) {
-        console.log(e);
         return null;
     }
 };

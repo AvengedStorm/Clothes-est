@@ -15,15 +15,11 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 
 import './nav.css';
+
 const pathnames = ['/login', '/about']
 let drawerWidth = "240px";
 const NavBar = (props) => {
   const dispatch = useDispatch();
-  // let currentUser = localStorage.getItem('loginState');
-  // if(currentUser !== null ) {
-  //   currentUser = JSON.parse(currentUser);
-  // }
-  // console.log(currentUser);
   const belongsTo = useSelector(state => state.belongsTo);
   const [isDrawerOpen, toggleDrawer] = useState(false);
   const useStyles = makeStyles((theme) => ({
@@ -40,7 +36,6 @@ const NavBar = (props) => {
   const classes = useStyles();
 
   const localCurrentUser = localStorage.getItem('loginState')
-  console.log(localCurrentUser);
 
   if(localCurrentUser === null && pathnames.indexOf(window.location.pathname) === -1) {
       window.location = '/login';
@@ -88,6 +83,7 @@ const NavBar = (props) => {
                     toggleDrawer(false);
                     if(localCurrentUser || belongsTo) {
                       dispatch({type: "logout"});
+                      localStorage.removeItem('loginState');
                     }
                     }}>{localCurrentUser ? "Logout" : "Login"}</Button></Link>
                 </div>

@@ -94,7 +94,7 @@ const Home = (props) => {
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const checkedOut = useSelector(state => state.checkedOut);
-    const belongsTo = useSelector(state => state.belongsTo);
+    const belongsTo = localStorage.getItem('loginState');
     const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
     const openDialog = useSelector(state => state.openDialog);
@@ -118,7 +118,7 @@ const Home = (props) => {
         size: (size === "other" ? text : size),
         isWashed,
         image,
-        belongsTo: belongsTo
+        belongsTo
     };
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -658,7 +658,7 @@ const Home = (props) => {
                         return (
                             <div key={item._id*Math.random()*100} style={{display: 'inline-block'}}>
                                 <br />
-                                <Card sx={{ maxWidth: 196, display: 'inline-block', marginLeft: "2vw" }}>
+                                <Card sx={{ maxWidth: 256, display: 'inline-block', marginLeft: "2vw" }}>
                                     <CardMedia
                                     component="img"
                                     height="128"
@@ -685,6 +685,16 @@ const Home = (props) => {
                                             "Add to Favorites"
                                             }
                                         </Button>
+                                        <Button
+                                        size="small"
+                                        alt="Delete item"
+                                        onClick={() => {
+                                            fetcher.deleteClothes(item)
+                                            window.location.reload(false);
+                                        }}
+                                        >
+                                            Delete Item
+                                        </Button>                                        
                                         <Button 
                                         style={{float: "right"}} 
                                         size="small" 

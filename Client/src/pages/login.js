@@ -22,10 +22,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { 
-  useDispatch, 
-} from 'react-redux'
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -72,8 +68,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
-
-  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -234,11 +228,6 @@ const Login = () => {
               className={classes.submit}
               onClick={(e) => {
                 e.preventDefault();
-                // console.log(email);
-                // console.log(password);
-                // console.log(hashedUserData);
-                // console.log(userData);
-                // console.log(localCurrentUser);
                 fetcher.loginUser(userData, data => {
                   if(data.message === "User Verified.") {
                     localStorage.setItem('loginState', data.userData);

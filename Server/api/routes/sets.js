@@ -10,9 +10,9 @@ const postItem = async function(ClothObj) {
         const db = client.db('clothest');
         const collection = db.collection('clothes');
         return await collection.insertOne(ClothObj);
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
+    } catch (e) {
+        console.log(e);
+        return e.response.data;
     }
 };
 

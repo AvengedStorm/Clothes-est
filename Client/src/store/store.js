@@ -38,7 +38,6 @@ function reducer(state = {
         break;
         case "addItem":
           state = {...state, items: [...state.items, action.payload]}
-          console.log(state.items);
         break;
         case 'toggleFavorite':
           if(state.favorites.includes(action.payload)) {

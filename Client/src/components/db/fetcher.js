@@ -45,14 +45,12 @@ const fetcher = {
     getFavorites(userID, callback) {
         fetch(`http://localhost:9001/favorites/${userID}`)
         .then(response => response.json())
-        // .then(console.log(callback))
         .then(callback)
     },
     postFavorite(itemObj, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj) };
         fetch(`http://localhost:9001/favorites/`, requestOptions)
         .then(response => response.json())
-        // .then(console.log(callback))
         .then(callback)
     },
 
