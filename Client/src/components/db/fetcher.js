@@ -12,7 +12,7 @@ const fetcher = {
     },
     deleteClothes(itemData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "DELETE", body: JSON.stringify(itemData) }
-        fetch(`http://localhost:9001/items/${itemData._id}`, requestOptions)
+        fetch(`http://localhost:9001/items`, requestOptions)
         .then(response => response.json())
         .then(callback)
     },
@@ -48,12 +48,17 @@ const fetcher = {
         .then(callback)
     },
     postFavorite(itemObj, callback) {
-        const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj) };
+        const requestOptions = {headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj)};
         fetch(`http://localhost:9001/favorites/`, requestOptions)
         .then(response => response.json())
         .then(callback)
     },
-
+    deleteFavorite(itemObj, callback) {
+        const requestOptions = {headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemObj)};
+        fetch(`http://localhost:9001/favorites/`, requestOptions)
+        .then(response => response.json())
+        .then(callback)
+    },
     getSets(callback) {
         fetch(`http://localhost:9001/sets/`)
         .then(response => {

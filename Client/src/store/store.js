@@ -14,7 +14,7 @@ function reducer(state = {
     darkmode: false,
     favorites: [],
     checkedOut: [],
-    clothesDrawer: true,
+    clothesDrawer: false,
     setSetter: [],
     drawerContent: [],
     currentUser: "",
@@ -54,15 +54,24 @@ function reducer(state = {
         break;
         case 'checkedOut':
           if(state.checkedOut.includes(action.payload)) {
-            state = {
-              ...state, 
-              checkedOut: 
-                [...state.checkedOut.filter(el => el !== action.payload)]}
+            if(state.checkedOut.length >= 1) {
+              state = {
+                ...state, 
+                checkedOut: 
+                  [...state.checkedOut.filter(el => el !== action.payload)]}
+            } else {
+              state = {
+                ...state,
+                clothesDrawer: false
+              }
+            }
           } else {
               state ={
                 ...state, 
                 checkedOut: 
-                  [...state.checkedOut, action.payload]}
+                  [...state.checkedOut, action.payload],
+                clothesDrawer: true
+                }
           }
         break;
         case 'saveSet':
@@ -93,8 +102,8 @@ function reducer(state = {
         case 'login':
           state = {
             ...state, 
-              currentUser: action.payload.data, 
-              belongsTo: action.payload.data
+              currentUser: action.payload, 
+              belongsTo: action.payload
               };
           break;
         case 'logout':

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {useSelector} from 'react-redux';
 import fetcher from "../components/db/fetcher";
 import {ClosetSpeedDial} from "../components/speeddials/speeddials";
 
@@ -11,23 +10,23 @@ import DialogContent from '@material-ui/core/DialogContent';
 
 import Button from '@mui/material/Button';
 import Typography from '@material-ui/core/Typography';
-
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
 
 const Closet = (props) => {
-    const belongsTo = useSelector(state => state.belongsTo);
+    const belongsTo = localStorage.getItem('loginState');
+    const [open, setOpen] = useState(false)
+    const [currentObj, setCurrentObj] = useState({});
+    const [rows, setRows] = useState([]);
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
             setRows(data.items);
         });
     }, [belongsTo]);
-    const [open, setOpen] = useState(false)
-    const [currentObj, setCurrentObj] = useState({});
-    const [rows, setRows] = useState([]);
     const columns = [
         {
             field: 'type',
             headerName: 'Type',
-            type: 'number',
             width: 110,
         },
         {
@@ -63,15 +62,13 @@ const Closet = (props) => {
 
     return(
         <div className="closetDiv">
-            <div>
-                <ClosetSpeedDial />
-            </div>
-            <div style={{ height: 400, width: '100%', marginTop: "10vh" }}>
+            <ClosetSpeedDial />
+            <div style={{ height: 600, width: '100%', marginTop: "10vh" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
                     pageSize={5}
-                    rowsPerPageOptions={[5]}ת
+                    rowsPerPageOptions={[5]}
                     getRowId={(row) => row['_id']}
                     disableSelectionOnClick
                 />
@@ -79,13 +76,18 @@ const Closet = (props) => {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Image & Info</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
-                    <img src={currentObj.image} alt="" style={{maxWidth: "250px", maxHeight: "250px"}} />
-                    <br />
-                    <Typography>Item Style: {currentObj.style}</Typography>
-                    <Typography>Item Size: {currentObj.size}</Typography>
+                    <Divider  />
+                    <img src={currentObj.image} alt="selected item" style={{maxWidth: "250px", maxHeight: "250px"}} />
+                    <Divider style={{margin: "2vh 0"}}>
+                        <Chip size="small" label="Attributes" variant="outlined" />
+                    </Divider>
+                    <Typography>Style: {currentObj.style}</Typography>
+                    <Typography>Size: {currentObj.size}</Typography>
                     <Typography>Is it Clean ? {currentObj.isWashed ? "Yes" : "No"}</Typography>
-                    <br />
-                    <Typography>Item Added on: {currentObj.addedOn}</Typography>
+                    <Divider style={{margin: "2vh 0"}}>
+                        <Chip size="small" label="Added on" variant="outlined" />
+                    </Divider>
+                    <Typography>{currentObj.addedOn}</Typography>
                 </DialogContent>
             </Dialog>
         </div>

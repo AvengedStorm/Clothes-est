@@ -16,7 +16,10 @@ app.use(express.urlencoded({
     limit: "2mb"
 }));
 app.use(cookieParser());
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000'
+  }));
 app.use(express.static('uploads/'));
 app.use('/login', loginRouter);
 app.use('/items', itemRouter);

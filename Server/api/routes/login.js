@@ -6,12 +6,17 @@ const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 const md5 = require('md5');
 
-const fetchUser = async (hashedUser) => {
+const fetchUser = async (hashedUser, token) => {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('users');
         const res = collection.findOne({hashedData: hashedUser});
+        collection.updateOne({ hashedData: hashedUser },
+        {
+          $set: { token },
+          $currentDate: { lastUpdated: true }
+        })
         const res1 = await res;
         return res1;
     } catch(e) {
@@ -41,11 +46,9 @@ router.get('/:userID', async function(req, res, next) {
 });
 router.post('/', async (req, res, next) => {
     try {
-        const userEmail = req.body.email;
-        const userPassword = req.body.password;
-        const hashedUserPassword = md5(userPassword);
         const hashedUserData = req.body.hashedUserData;
-        const userIdentifier = await fetchUser(hashedUserData);
+        const token = `${hashedUserData}${Math.round(Math.random() * 1000000000000000)}`;
+        const userIdentifier = await fetchUser(hashedUserData, token);
         const belongsTo = userIdentifier?.hashedData;
         if (userIdentifier) {
             res.status(200).send({ 

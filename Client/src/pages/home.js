@@ -70,6 +70,7 @@ function a11yProps(index) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
 }
+let drawerWidth = "320px";
 
 
 const Home = (props) => {
@@ -94,11 +95,11 @@ const Home = (props) => {
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
     const checkedOut = useSelector(state => state.checkedOut);
-    const belongsTo = localStorage.getItem('loginState');
-    const clothesDrawer = useSelector(state => state.clothesDrawer);
+    // const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
     const openDialog = useSelector(state => state.openDialog);
-    
+    const belongsTo = localStorage.getItem('loginState');
+    const localBelongTo = belongsTo;
     
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
@@ -109,8 +110,9 @@ const Home = (props) => {
             setFootersArray(data.items.filter(el => el.type === "footers"));
             setShortsArray(data.items.filter(el => el.type === "shorts"));
             setShoesArray(data.items.filter(el => el.type === "shoes"));
+            favorites.push(data.items.filter(i => i.favorite));
         });
-    },[belongsTo]);
+    },[belongsTo, favorites]);
     
     const itemObject = {
         type,
@@ -190,14 +192,27 @@ const Home = (props) => {
         root: {
             '& > *': {
                 margin: theme.spacing(1),
-                width: '25ch',
+                width: '25vh',
             },
         },
     }));
     const handleDrawerClose = () => {
         dispatch({type: "clothesDrawer", payload: false });
     };
-    
+    const [error, setError] = useState(false);
+    const ErrorDialog = () => {
+        return (
+            <Dialog open={error} onClose={() => setError(false)}>
+                <DialogTitle>Error!</DialogTitle>
+                <DialogContent>
+                    <Typography>All parameters are required</Typography>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+    if(!localBelongTo) {
+        dispatch({type: "login", payload: belongsTo});
+    }
     const classes1 = useStyles1();
     const classes2 = useStyles2();
     const classes3 = useStyles3();
@@ -236,7 +251,7 @@ const Home = (props) => {
                 size1: (size === "other" ? text1 : size1),
                 isWashed1,
                 image1,
-                belongsTo: belongsTo
+                belongsTo
             };
             const handleFileSelection1 = (file) => {
                 toBase64(file).then(setImage1);
@@ -338,7 +353,42 @@ const Home = (props) => {
     const handleFileSelection = (file) => {
         toBase64(file).then(setImage);
     }
-
+    const renderArray = (item) => {
+        return (
+            <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
+                {renderCheckbox(item)}
+                <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
+                <ImageListItemBar
+                title={item.size + " | " + item.style}
+                classes={{
+                    root: classes2.titleBar,
+                    title: classes2.title,
+                }}
+                actionIcon={
+                    <IconButton
+                    onClick={(ev) => {
+                        if(favorites.indexOf(item._id) === -1) {
+                            fetcher.postFavorite(item)
+                            dispatch({type: "toggleFavorite", payload: item._id})
+                        } else {
+                            fetcher.deleteFavorite(item)
+                            dispatch({type: "toggleFavorite", payload: item._id})
+                        }
+                        console.log(favorites)
+                    }}
+                    aria-label={`star ${item.size}`}
+                    >
+                        {(item.favorite || favorites.indexOf(item._id) !== -1) ? (
+                            <StarIcon />
+                            ) : (
+                            <StarBorderIcon />
+                            )}
+                    </IconButton>
+                }
+                />
+            </ImageListItem>
+            )
+    }
     return (
         <div className="body" id="body">
             <HomeSpeedDial />
@@ -359,212 +409,59 @@ const Home = (props) => {
                 <TabPanel value={value} index={0} disabled={hatsArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {hatsArray.map((item) => (
-                            <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                {renderCheckbox(item)}
-                                <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                <ImageListItemBar
-                                title={item.size + " | " + item.style}
-                            
-                                classes={{
-                                    root: classes2.titleBar,
-                                    title: classes2.title,
-                                }}
-                                actionIcon={
-                                    <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                        {favorites.filter((e) => item._id) ? (
-                                            <StarIcon />
-                                            ) : (
-                                            <StarBorderIcon />
-                                            )}
-                                    </IconButton>
-                                }
-                                />
-                            </ImageListItem>
-                            ))}
+                            {hatsArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={1} disabled={jacketsArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {jacketsArray.map((item) => (
-                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {jacketsArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={2} disabled={shirtsArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {shirtsArray.map((item) => (
-                            <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {shirtsArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={3} disabled={jeansArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {jeansArray.map((item) => (
-                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {jeansArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={4} disabled={footersArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {footersArray.map((item) => (
-                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {footersArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={5} disabled={shortsArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {shortsArray.map((item) => (
-                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {shortsArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
                 <TabPanel value={value} index={6} disabled={shoesArray.length > 0}>
                     <div className={classes2.root}>
                         <ImageList className={classes2.imageList} cols={2.5}>
-                            {shoesArray.map((item) => (
-                                <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
-                                    {renderCheckbox(item)}
-                                    <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
-                                    <ImageListItemBar
-                                    title={item.size + " | " + item.style}
-                                
-                                    classes={{
-                                        root: classes2.titleBar,
-                                        title: classes2.title,
-                                    }}
-                                    actionIcon={
-                                        <IconButton onClick={(ev) => dispatch({type: "toggleFavorite", payload: item._id})} aria-label={`star ${item.size}`}>
-                                            {favorites.filter((e) => item._id) ? (
-                                                <StarIcon />
-                                                ) : (
-                                                <StarBorderIcon />
-                                                )}
-                                        </IconButton>
-                                    }
-                                    />
-                            </ImageListItem>
-                            ))}
+                            {shoesArray.map(renderArray)}
                         </ImageList>
                     </div>
                 </TabPanel>
             </div>
             <br />
             <Accordion 
-                id="3" 
-                expanded={openAccordion}
-                >
+            id="3" 
+            expanded={openAccordion}
+            TransitionProps={{ unmountOnExit: true }}
+            >
                 <AccordionSummary
                 onClick={() => dispatch({type: 'openAccordion'})}
                 expandIcon={<ExpandMoreIcon/>}
@@ -574,89 +471,140 @@ const Home = (props) => {
                     <Typography className={classes1.heading}>Add an item</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <form className={classes3.root} onSubmit={handleItemSubmit}>
-                        <label className="formLabel">Size:</label>
-                        <select className="formLabel1" onChange={(e) => setSize(e.target.value)} defaultValue="Choose Size" value={itemObj.size} required>
-                            <option value="Choose Size" disabled>Choose Size</option>
-                            <option value="XXS">XXS</option>
-                            <option value="XS">XS</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                            <option value="XXXL">XXXL</option>
-                            <option value="other">Other...</option>
-                        </select>
-                        {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
-                        <br />
-                        <label className="formLabel">Style:</label>
-                        <select className="formLabel1" onChange={(e) => setStyle(e.target.value)} defaultValue="Choose Style" value={itemObj.style} required>
-                            <option value="Choose Style" disabled>Choose Style</option>
-                            <option value="casual">Casual</option>
-                            <option value="geeky">Geeky</option>
-                            <option value="elegant">Elegant</option>
-                            <option value="sport">Sport</option>
-                            <option value="formal">Formal</option>
-                            <option value="sport elegant">Sport Elegant</option>
-                            <option value="comfort">Comfort</option>
-                            <option value="maternity">Maternity</option>
-                            <option value="hip hop">Hip Hop</option>
-                            <option value="military">Military</option>
-                            <option value="exotic">Exotic</option>
-                            <option value="trendy">Trendy</option>
-                            <option value="ethnic">Ethnic</option>
-                            <option value="gothic">Gothic</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">Type:</label>
-                        <select className="formLabel1" onChange={(e) => setType(e.target.value)} defaultValue="Choose a type" value={itemObj.type} required>
-                            <option value="Choose a type" disabled>Choose a type</option>
-                            <option value="shirts">Hat</option>
-                            <option value="shirts">Shirt</option>
-                            <option value="jackets">Jacket</option>
-                            <option value="footers">Footers</option>
-                            <option value="jeans">Jeans</option>
-                            <option value="shorts">Shorts</option>
-                            <option value="shoes">Shoes</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">Is it clean ?</label>
-                        <select className="formLabel1" onChange={(e) => setIsWashed(e.target.value)} defaultValue="Is it clean ?" value={itemObj.isWashed} required>
-                            <option value="Is it clean ?" disabled>Is it clean ?</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                        <br />
-                        <label className="formLabel">File:</label>
-                        <input className="formLabel1" onChange={(e) => {handleFileSelection(e.target.files[0]);}} type="file" id="myFile" name="filename" value={itemObj.image} required/>
-                        <br />
+                    <div style={{margin: 'auto'}}>
+                        <form className={classes3.root} onSubmit={handleItemSubmit}>
+                            <label className="formLabel">Size:</label>
+                            <select 
+                                className="formLabel1" 
+                                onChange={(e) => setSize(e.target.value)} 
+                                defaultValue="Choose Size" 
+                                value={itemObj.size} 
+                                required
+                            >
+                                <option value="Choose Size" disabled>Choose Size</option>
+                                <option value="XXS">XXS</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="XXXL">XXXL</option>
+                                <option value="other">Other...</option>
+                            </select>
+                            {size === 'other' ? <input onChange={(e) => {setText(e.target.value)}} className="formLabel1" placeholder="Enter a Size"/> : <></>}
+                            <br />
+                            <label className="formLabel">Style:</label>
+                            <select 
+                                className="formLabel1" 
+                                onChange={(e) => setStyle(e.target.value)} 
+                                defaultValue="Choose Style" 
+                                value={itemObj.style}
+                                required
+                            >
+                                <option value="Choose Style" disabled>Choose Style</option>
+                                <option value="casual">Casual</option>
+                                <option value="geeky">Geeky</option>
+                                <option value="elegant">Elegant</option>
+                                <option value="sport">Sport</option>
+                                <option value="formal">Formal</option>
+                                <option value="sport elegant">Sport Elegant</option>
+                                <option value="comfort">Comfort</option>
+                                <option value="maternity">Maternity</option>
+                                <option value="hip hop">Hip Hop</option>
+                                <option value="military">Military</option>
+                                <option value="exotic">Exotic</option>
+                                <option value="trendy">Trendy</option>
+                                <option value="ethnic">Ethnic</option>
+                                <option value="gothic">Gothic</option>
+                            </select>
+                            <br />
+                            <label className="formLabel">Type:</label>
+                            <select 
+                                className="formLabel1" 
+                                onChange={(e) => setType(e.target.value)} 
+                                defaultValue="Choose a type" 
+                                value={itemObj.type} 
+                                required
+                            >
+                                <option value="Choose a type" disabled>Choose a type</option>
+                                <option value="hats">Hat</option>
+                                <option value="jackets">Jacket</option>
+                                <option value="shirts">Shirt</option>
+                                <option value="jeans">Jeans</option>
+                                <option value="footers">Footers</option>
+                                <option value="shorts">Shorts</option>
+                                <option value="shoes">Shoes</option>
+                            </select>
+                            <br />
+                            <label className="formLabel">Is it clean ?</label>
+                            <select
+                                className="formLabel1"
+                                onChange={(e) => setIsWashed(e.target.value)}
+                                defaultValue="Is it clean ?"
+                                value={itemObj.isWashed}
+                                required
+                            >
+                                <option value="Is it clean ?" disabled>Is it clean ?</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                            <br />
+                            <label className="formLabel">File:</label>
+                            <input
+                                className="formLabel1"
+                                onChange={(e) => {handleFileSelection(e.target.files[0]);}}
+                                type="file"
+                                id="myFile"
+                                name="filename"
+                                value={itemObj.image}
+                                required
+                                accept="image/png, image/jpeg"
+                            />
+                            <br />
+                            <Button 
+                                color="secondary"
+                                style={{width: "340px"}}
+                                onClick={(e) => {
+                                    if(type && style && size && isWashed && image) {
+                                        fetcher.postClothes(itemObject);
+                                        window.location.reload();
+                                    } else {
+                                        return (
+                                            setError(true)
+                                            )
+                                        }
+                                    }}>
+                                Save Item
+                            </Button>
+                        </form>
+                    </div>
+                    <div style={{margin: 'auto', display: image ? 'block' : 'none'}}>
                         <img src={image} alt=""/>
-                        <br />
-                        <Button 
-                        color="secondary"
-                        style={{width: "340px"}}
-                        onClick={(e) => {
-                            fetcher.postClothes(itemObject);
-                            window.location.reload();
-                            }}>
-                            Save Item
-                        </Button>
-                    </form>
+                    </div>
                 </AccordionDetails>
             </Accordion>
             <br />
             <Drawer
-            anchor="bottom" 
-            open={clothesDrawer || checkedOut.lenght > 0}
-            onClose={handleDrawerClose} 
-            variant="persistent"
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                      width: drawerWidth,
+                      boxSizing: 'border-box',
+                    },
+                  }}
+                z-index="1"
+                anchor="left" 
+                open={checkedOut.length > 0}
+                onClose={handleDrawerClose} 
+                variant="persistent"
             >
-                <div>
-                    <Divider />
+                <div style={{ width: drawerWidth }}>
+                    {/* <Divider /> */}
                     {(checkedOut || []).map(item => {
                         return (
-                            <div key={item._id*Math.random()*100} style={{display: 'inline-block'}}>
+                            <div key={item._id*Math.random()*100} style={{display: 'block', marginBottom: '2vh'}}>
                                 <br />
                                 <Card sx={{ maxWidth: 256, display: 'inline-block', marginLeft: "2vw" }}>
                                     <CardMedia
@@ -700,7 +648,7 @@ const Home = (props) => {
                                         size="small" 
                                         alt="Remove from Set" 
                                         onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>
-                                            Remove from Set
+                                            Remove selection
                                         </Button>
                                     </CardActions>
                                 </Card>
@@ -712,6 +660,7 @@ const Home = (props) => {
                 </div>
             </Drawer>
             <AddingDialog />
+            <ErrorDialog />
         </div>
     )
 }

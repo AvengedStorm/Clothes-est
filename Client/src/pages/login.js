@@ -74,8 +74,6 @@ const Login = () => {
 
   const [error, setError] = useState(false);
   
-  // const localCurrentUser = localStorage.getItem('loginState')
-
   const handleErrorOpen = () => setError(true);
   const handleErrorClose = () => setError(false);
 
@@ -170,7 +168,19 @@ const Login = () => {
     return (
       <Dialog open={error} style={{textAlign: 'center'}} onClose={handleErrorClose}>
         <DialogTitle>Error!</DialogTitle>
-        <DialogContent>A user containing this email does not exist.</DialogContent>
+        <DialogContent>
+          <p>It seems you don't have an account yet!</p>
+          <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => {
+            handleErrorClose();
+            handleOpen();
+          }}
+          >
+            Click me to get started
+          </Button>
+        </DialogContent>
       </Dialog>
     )
   }
@@ -230,7 +240,7 @@ const Login = () => {
                 e.preventDefault();
                 fetcher.loginUser(userData, data => {
                   if(data.message === "User Verified.") {
-                    localStorage.setItem('loginState', data.userData);
+                    localStorage.setItem('loginState', data.userData, 604800000);
                     window.location.pathname = '/home';
                   }
                   if(data.message === "User Not Found.") {

@@ -5,7 +5,13 @@ const ObjectId = require('mongodb').ObjectId;
 const url = 'mongodb://localhost:27017';
 const client = new MongoClient(url);
 
-const stringToObjectId = str => ObjectId.createFromHexString(str);
+const stringToObjectId = str => {
+    try {
+        return ObjectId.createFromHexString(str)
+    } catch(ex) {
+        console.log(ex);
+    }
+}
 const fetchItemsByUser = async function(USER_ID) {
     await client.connect();
     const db = client.db('clothest');
@@ -43,6 +49,17 @@ const deleteItem = async function(itemId) {
         console.log(e);
     }
 };
+// const deleteItems = async function(itemIds) {
+//     try {
+//         await client.connect();
+//         const db = client.db('clothest');
+//         const collection = db.collection('clothes');
+//         const myQuery = {_id: { $in: itemIds}}
+//         return await collection.deleteMany(myQuery);
+//     } catch(e) {
+//         console.log(e);
+//     }
+// };
 const postItem = async function(ClothObj) {
     try {
         await client.connect();
@@ -77,12 +94,23 @@ router.get('/:userID', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
     try {
         const today = new Date();
-        const newDate = { year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate() }
+        const newDate = { 
+            year: today.getFullYear(), 
+            month: today.getMonth() + 1, 
+            day: today.getDate() 
+        }
         const addedOn = `${newDate.day}/${newDate.month}/${newDate.year}`
         const itemType = req.body.type;
         const itemSize = req.body.size;
         const itemStyle = req.body.style;
-        const itemWashed = req.body.isWashed;
+        let itemWashed;
+        if(req.body.isWashed === 'yes') {
+            itemWashed = true;
+            // console.log(itemWashed);
+        } else {
+            itemWashed = false;
+            // console.log(itemWashed);
+        };
         const itemImage = req.body.image;
         const belongsTo = req.body.belongsTo;
 
@@ -92,7 +120,7 @@ router.post('/', async function(req, res, next) {
             type: itemType,
             size: itemSize,
             style: itemStyle,
-            isWashed: !!itemWashed,
+            isWashed: itemWashed,
             addedOn: addedOn,
             image: itemImage,
         };
@@ -126,6 +154,32 @@ router.patch('/:itemId', async function(req, res, next) {
     res.status(202).json({
         item: await updateItem(itemId, cloth),
     });
+});
+router.delete('/', async function(req, res, next) {
+    // console.log(req.body);
+    const body = req.body;
+    // console.log(body);
+    // const type = typeof body;
+    // console.log(type);
+    // const itemsToDelete = stringToObjectId(body.);
+    // console.log(body);
+    // var ids = req.body.map(id => {
+    //     return id._id;
+    // });
+    // console.log(ids);
+    // const objectIdArray = ids.map(el => stringToObjectId(el));
+    // console.log(objectIdArray);
+    
+
+    //  if (await deleteItems(ids)) {
+    //      res.status(202).json({
+    //          message: 'Handled DELETE requests succesfully'
+    //      });
+    //  } else {
+    //     res.status(404).json({
+    //         message: 'Item not found.'
+    //     });
+    //  }
 });
 router.delete('/:itemId', async function(req, res, next) {
     const itemIdentifier = req.body[0]._id;

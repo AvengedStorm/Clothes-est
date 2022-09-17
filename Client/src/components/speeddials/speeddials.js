@@ -16,7 +16,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const HomeSpeedDial = () => {
     const dispatch = useDispatch();
-    const checkedOut = useSelector(state => state.checkedOut);
+    const checkedOut = useSelector(state => state.checkedOut) || [];
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -25,7 +25,7 @@ const HomeSpeedDial = () => {
         },
         speedDial: {
             position: 'absolute',
-            top: "10vh",
+            bottom: "1vh",
             right: "1vw",
         },
     }));
@@ -59,14 +59,14 @@ const HomeSpeedDial = () => {
 
     return (
         <SpeedDial
+        z-index='9999'
         ariaLabel="SpeedDial for actions"
         className={classes.speedDial}
         icon={<SpeedDialIcon />}
         onClose={handleClose1}
-                onOpen={handleOpen1}
-                open={open1}
-                direction="left"
-                z-index="9999"
+        onOpen={handleOpen1}
+        open={open1}
+        direction="left"
         >
             {actions1.map((action) => (
             <SpeedDialAction
@@ -98,6 +98,7 @@ const ClosetSpeedDial = () => {
     const handleOpen2 = () => setOpen2(true);
     const handleClose2 = () => setOpen2(false);
     const actions2 = [
+        {icon: <AddIcon />, name: 'Add a new item', func: () => dispatch({type: 'openDialog'})},
         {icon: <SaveIcon />, name: 'Save current set', func: () => console.log("Save Current Set")},
         {icon: <BallotIcon />, name: 'Drawer', func: () => dispatch({type: "clothesDrawer"})},
         {icon: <ClearIcon />, name: "Clear All", func: () => dispatch({type: "clearDrawer"})},
