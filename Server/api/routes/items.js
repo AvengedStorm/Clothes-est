@@ -49,17 +49,18 @@ const deleteItem = async function(itemId) {
         console.log(e);
     }
 };
-// const deleteItems = async function(itemIds) {
-//     try {
-//         await client.connect();
-//         const db = client.db('clothest');
-//         const collection = db.collection('clothes');
-//         const myQuery = {_id: { $in: itemIds}}
-//         return await collection.deleteMany(myQuery);
-//     } catch(e) {
-//         console.log(e);
-//     }
-// };
+const deleteItems = async function(itemIds) {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('clothes');
+        // console.log(itemIds);
+        const myQuery = {_id: { $in: itemIds.map(stringToObjectId)}}
+        return await collection.deleteMany(myQuery);
+    } catch(e) {
+        console.log(e);
+    }
+};
 const postItem = async function(ClothObj) {
     try {
         await client.connect();
@@ -156,30 +157,15 @@ router.patch('/:itemId', async function(req, res, next) {
     });
 });
 router.delete('/', async function(req, res, next) {
-    // console.log(req.body);
     const body = req.body;
-    // console.log(body);
-    // const type = typeof body;
-    // console.log(type);
-    // const itemsToDelete = stringToObjectId(body.);
-    // console.log(body);
-    // var ids = req.body.map(id => {
-    //     return id._id;
-    // });
+    const ids = []
+    body.map(i => ids.push(i._id));
     // console.log(ids);
-    // const objectIdArray = ids.map(el => stringToObjectId(el));
-    // console.log(objectIdArray);
-    
-
-    //  if (await deleteItems(ids)) {
-    //      res.status(202).json({
-    //          message: 'Handled DELETE requests succesfully'
-    //      });
-    //  } else {
-    //     res.status(404).json({
-    //         message: 'Item not found.'
-    //     });
-    //  }
+    // body.forEach(item => console.log(item._id));
+    await deleteItems(ids);
+    res.status(200).json({
+        message: 'Delete request handled successfully'
+    })
 });
 router.delete('/:itemId', async function(req, res, next) {
     const itemIdentifier = req.body[0]._id;

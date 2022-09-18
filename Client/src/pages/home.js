@@ -94,6 +94,7 @@ const Home = (props) => {
 
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
+    console.log(favorites);
     const checkedOut = useSelector(state => state.checkedOut);
     // const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);

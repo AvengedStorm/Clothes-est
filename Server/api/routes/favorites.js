@@ -60,12 +60,10 @@ router.post('/', async (req, res, next) => {
             res.status(200).json({
                 item: await deleteFavorite(itemId)
             });
-            console.log('Removed');
         } else {
             res.status(200).json({
                 item: await updateItem(itemId)
             });
-            console.log('Added');
         }
     } catch (e) {
         console.log(e)
