@@ -16,12 +16,21 @@ const fetcher = {
         .then(response => response.json())
         .then(callback)
     },
-
-    getUsers(callback) {
-        fetch(`http://localhost:9001/users/`)
+    deleteCloth(itemData, callback) {
+        const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "DELETE", body: JSON.stringify(itemData) }
+        fetch(`http://localhost:9001/items/${itemData._id}`, requestOptions)
         .then(response => response.json())
         .then(callback)
     },
+    updateCloth(itemData, callback) {
+        const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemData) }
+        fetch(`http://localhost:9001/items/${itemData._id}`, requestOptions)
+        .then(response => response.json())
+        .then(callback)
+    },
+
+
+
     postUser(userData, callback) {
         const requestOptions = { headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(userData) }
         fetch(`http://localhost:9001/users/`, requestOptions)
@@ -42,6 +51,8 @@ const fetcher = {
         .then(callback);
     },
 
+
+
     getFavorites(userID, callback) {
         fetch(`http://localhost:9001/favorites/${userID}`)
         .then(response => response.json())
@@ -59,12 +70,18 @@ const fetcher = {
         .then(response => response.json())
         .then(callback)
     },
+
+
+
     getSets(callback) {
         fetch(`http://localhost:9001/sets/`)
         .then(response => {
             return response.json();
         }).then(callback)
     },
+
+
+    
 }
 
 export default fetcher;

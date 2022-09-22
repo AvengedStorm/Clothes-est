@@ -24,11 +24,7 @@ const deleteFavorite = async (itemId) => {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('clothes');
-        console.log(itemId);
-        return await collection.updateOne({
-            _id: stringToObjectId(itemId)},
-            { $unset: { favorite: "" } }
-        );
+        return await collection.updateOne({_id: stringToObjectId(itemId)}, {$set: {'favorite': false}});
     } catch(ex) {
         return ex;
     }

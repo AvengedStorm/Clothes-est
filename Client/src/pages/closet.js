@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import {useSelector, useDispatch} from 'react-redux'
+
 import fetcher from "../components/db/fetcher";
-import {ClosetSpeedDial} from "../components/speeddials/speeddials";
+// import {ClosetSpeedDial} from "../components/speeddials/speeddials";
 
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -13,11 +15,22 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
+
+
 const Closet = (props) => {
     const belongsTo = localStorage.getItem('loginState');
     const [open, setOpen] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
     const [rows, setRows] = useState([]);
+    const favorites = useSelector(state => state.favorites);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
             setRows(data.items);
@@ -27,29 +40,30 @@ const Closet = (props) => {
         {
             field: 'type',
             headerName: 'Type',
-            width: 110,
+            width: window.innerWidth / 5,
         },
         {
             field: 'size',
             headerName: 'Size:',
-            width: 110,
+            width: window.innerWidth / 5,
         },
         {
             field: 'style',
             headerName: 'Style',
-            width: 120,
+            width: window.innerWidth / 5,
         },
         {
             field: 'isWashed',
-            headerName: 'Ready to use ?',
-            width: 170,
-            renderCell: (params) => (<p>{params.row.isWashed ? 'Yes' : 'No'}</p>)
+            headerName: 'Clean ?',
+            width: window.innerWidth / 5,
+            renderCell: (params) => (<p>{params?.row?.isWashed ? 'Yes' : 'No'}</p>),
+            // onCellDoubleClick: (params) => 
         },
         {
             field: 'picture',
             headerName: 'Picture',
-            width: 200,
-            renderCell: (params) => (<Button onClick={handleOpen.bind(null, params)}>Open image & info</Button>)
+            width: window.innerWidth / 5,
+            renderCell: (params) => (<Button style={{margin: 'auto'}} onClick={handleOpen.bind(null, params)}><VisibilityIcon /></Button>)
         }
     ];
     const handleClose = () => {
@@ -62,8 +76,8 @@ const Closet = (props) => {
 
     return(
         <div className="closetDiv">
-            <ClosetSpeedDial />
-            <div style={{ height: 600, width: '100%', marginTop: "10vh" }}>
+            {/* <ClosetSpeedDial /> */}
+            <div style={{ width: '100%', marginTop: "10vh" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
@@ -71,6 +85,9 @@ const Closet = (props) => {
                     rowsPerPageOptions={[5]}
                     getRowId={(row) => row['_id']}
                     disableSelectionOnClick
+                    autoHeight={true}
+                    density='comfortable'
+                    loading={!rows}
                 />
             </div>
             <Dialog open={open} onClose={handleClose}>
@@ -88,6 +105,46 @@ const Closet = (props) => {
                         <Chip size="small" label="Added on" variant="outlined" />
                     </Divider>
                     <Typography>{currentObj.addedOn}</Typography>
+                    <Divider style={{margin: "2vh 0"}} />
+                    <div style={{display: 'flex', justifyContent: "space-evenly"}}>
+                        <IconButton
+                        onClick={(ev) => {
+                            if(favorites.indexOf(currentObj._id) === -1) {
+                                fetcher.postFavorite(currentObj)
+                                dispatch({type: "toggleFavorite", payload: currentObj._id})
+                            } else {
+                                fetcher.deleteFavorite(currentObj)
+                                dispatch({type: "toggleFavorite", payload: currentObj._id})
+                            }
+                            window.location.reload();
+                        }}
+                        aria-label={`star ${currentObj.size}`}
+                        >
+                            {(currentObj.favorite || favorites.indexOf(currentObj._id) !== -1) ? (
+                                <StarIcon />
+                                ) : (
+                                <StarBorderIcon />
+                                )}
+                        </IconButton>
+                        <Divider orientation="vertical" flexItem />
+                        <IconButton
+                        onClick={() => {
+                            fetcher.deleteCloth(currentObj);
+                            window.location.reload();
+                        }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                        <Divider orientation="vertical" flexItem />
+                        <IconButton
+                        onClick={() => {
+                            fetcher.updateCloth(currentObj);
+                            window.location.reload();
+                        }}
+                        >
+                            <LocalLaundryServiceIcon />
+                        </IconButton>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

@@ -28,15 +28,24 @@ const fetchItems = async function() {
         return null;   
     }
 };
-const updateItem = async function(itemId, itemObject) {
+const updateItemToClean = async function(itemId, itemObject) {
     try {
         await client.connect();
         const db = client.db('clothest');
         const collection = db.collection('clothes');
-        return await collection.updateOne({_id: stringToObjectId(itemId)},{'$set': itemObject});
-    } catch(e) {
-        console.log(e);
-        return null;
+        return await collection.updateOne({_id: stringToObjectId(itemId)}, {$set: {'isWashed': true}});
+    } catch(ex) {
+        return ex;
+    }
+};
+const updateItemToDirty = async function(itemId, itemObject) {
+    try {
+        await client.connect();
+        const db = client.db('clothest');
+        const collection = db.collection('clothes');
+        return await collection.updateOne({_id: stringToObjectId(itemId)}, {$set: {'isWashed': false}});
+    } catch(ex) {
+        return ex;
     }
 };
 const deleteItem = async function(itemId) {
@@ -138,37 +147,18 @@ router.post('/', async function(req, res, next) {
         console.log(e);
     }
 });
-router.patch('/:itemId', async function(req, res, next) {
+router.post('/:itemId', async function(req, res, next) {
     const itemId = req.params.itemId;
-    const cloth = {
-            type: req.body.type,
-            size: req.body.size,
-            style: req.body.style,
-            isWashed: req.body.isWashed,
-            image: req.body.image,
-        };
-    Object.keys(cloth).forEach(key => {
-        if(!cloth[key]) {
-            delete cloth[key];
-        }
-    });
-    res.status(202).json({
-        item: await updateItem(itemId, cloth),
-    });
-});
-router.delete('/', async function(req, res, next) {
-    const body = req.body;
-    const ids = []
-    body.map(i => ids.push(i._id));
-    // console.log(ids);
-    // body.forEach(item => console.log(item._id));
-    await deleteItems(ids);
-    res.status(200).json({
-        message: 'Delete request handled successfully'
-    })
+    const cloth = req.body;
+
+    if(cloth.isWashed) {
+        await updateItemToDirty(itemId)
+    } else {
+        await updateItemToClean(itemId)
+    }
 });
 router.delete('/:itemId', async function(req, res, next) {
-    const itemIdentifier = req.body[0]._id;
+    const itemIdentifier = req.body._id;
      if (await deleteItem(itemIdentifier)) {
          res.status(202).json({
              message: 'Handled DELETE request succesfully'

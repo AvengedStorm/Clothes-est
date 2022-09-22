@@ -94,7 +94,7 @@ const Home = (props) => {
 
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
-    console.log(favorites);
+    // console.log(favorites);
     const checkedOut = useSelector(state => state.checkedOut);
     // const clothesDrawer = useSelector(state => state.clothesDrawer);
     const openAccordion = useSelector(state => state.openAccordion);
@@ -232,6 +232,19 @@ const Home = (props) => {
             />
             )
     }
+    const renderDeletionBox = (item) => {
+        return (
+            <IconButton
+            style={{float: `right`}}
+            onClick={() => {
+                fetcher.deleteCloth(item);
+                window.location.reload();
+            }}
+            >
+                <ClearIcon />
+            </IconButton>
+        )
+    }
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -358,6 +371,7 @@ const Home = (props) => {
         return (
             <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
                 {renderCheckbox(item)}
+                {renderDeletionBox(item)}
                 <img src={item.image} alt={item.type + " | " + item.size} style={{width: "196px", height: "196px"}} />
                 <ImageListItemBar
                 title={item.size + " | " + item.style}
@@ -375,7 +389,6 @@ const Home = (props) => {
                             fetcher.deleteFavorite(item)
                             dispatch({type: "toggleFavorite", payload: item._id})
                         }
-                        console.log(favorites)
                     }}
                     aria-label={`star ${item.size}`}
                     >
