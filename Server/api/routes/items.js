@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const Router = require('express');
 const router = Router();
 const MongoClient = require('mongodb').MongoClient;
@@ -153,8 +154,14 @@ router.post('/:itemId', async function(req, res, next) {
 
     if(cloth.isWashed) {
         await updateItemToDirty(itemId)
+        res.status(200),json({
+            message: "Item Updated"
+        })
     } else {
         await updateItemToClean(itemId)
+        res.status(200),json({
+            message: "Item Updated"
+        })
     }
 });
 router.delete('/:itemId', async function(req, res, next) {
@@ -168,6 +175,13 @@ router.delete('/:itemId', async function(req, res, next) {
             message: 'Item not found.'
         });
      }
+});
+router.delete('/', async function(req, res, next) {
+    const ids = [];
+    const itemIdentifiers = req.body;
+    itemIdentifiers.map(item => ids.push(item._id) )
+    // console.log(ids);
+    ids.forEach((id) => deleteItem(id));
 });
 
 module.exports = router;

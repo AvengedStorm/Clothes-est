@@ -9,7 +9,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 
 import SaveIcon from '@material-ui/icons/Save';
-import BallotIcon from '@material-ui/icons/Ballot';
+// import BallotIcon from '@material-ui/icons/Ballot';
 import ClearIcon from '@material-ui/icons/Clear';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 const HomeSpeedDial = () => {
     const dispatch = useDispatch();
     const checkedOut = useSelector(state => state.checkedOut) || [];
+    const belongsTo = localStorage.getItem('loginState');
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -26,7 +27,7 @@ const HomeSpeedDial = () => {
         speedDial: {
             position: 'absolute',
             bottom: "1vh",
-            right: "1vw",
+            left: "1vw",
         },
     }));
     const classes = useStyles();
@@ -40,21 +41,23 @@ const HomeSpeedDial = () => {
         dispatch({ type:'clearDrawer' })
     };
     const handleSetSubmit = () => {
-        const submittedSet = checkedOut;
+        const submittedSet = {
+            belongsTo: belongsTo,
+            items: checkedOut
+        };
         dispatch({type: "saveSet", payload: submittedSet});
+        fetcher.postSet(submittedSet)
+        window.location.reload(true);
     };
-    const drawerToggle = () => {
-        dispatch({ type: 'clothesDrawer' })
-    }
+    const handleDeletion = () => {
+        fetcher.deleteClothes(checkedOut);
+        window.location.reload(true);
+    } 
     const actions1 = [
         {icon: <AddIcon />, name: 'Add a new item', func: () => dispatch({type: 'openDialog'})},
         {icon: <SaveIcon />, name: 'Save Selected to Sets', func: handleSetSubmit },
-        {icon: <BallotIcon />, name: 'Toggle Drawer', func: drawerToggle },
         {icon: <ClearIcon />, name: "Clear All", func: clearCurrentSet },
-        {icon: <DeleteIcon />, name: "Delete Selected Items", func: () => {
-            fetcher.deleteClothes(checkedOut);
-            window.location.reload();
-        } },
+        {icon: <DeleteIcon />, name: "Delete Selected Items", func: handleDeletion },
     ];
 
     return (
@@ -66,7 +69,7 @@ const HomeSpeedDial = () => {
         onClose={handleClose1}
         onOpen={handleOpen1}
         open={open1}
-        direction="left"
+        direction="right"
         >
             {actions1.map((action) => (
             <SpeedDialAction

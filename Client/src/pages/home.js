@@ -40,6 +40,9 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 
+import Snackbar from '@mui/material/Snackbar';
+
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -81,6 +84,7 @@ const Home = (props) => {
     const [isWashed, setIsWashed] = useState(true);
     const [image, setImage] = useState("");
     const [value, setValue] = useState(0);
+    const [openSnackbar, setSnackbar] = useState(false);
     
     const [hatsArray, setHatsArray] =  useState([]);
     const [jacketsArray, setJacketsArray] = useState([]);
@@ -101,7 +105,7 @@ const Home = (props) => {
     const openDialog = useSelector(state => state.openDialog);
     const belongsTo = localStorage.getItem('loginState');
     const localBelongTo = belongsTo;
-    
+    let message;
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
             setHatsArray(data.items.filter(el => el.type === "hats"));
@@ -138,31 +142,22 @@ const Home = (props) => {
         }
         dispatch({type: "addItem", payload: item});
     };
+    const handleSnackClose = () => {
+        setSnackbar(false);
+    };
+    const handleSnackOpen = () => {
+        setSnackbar(true);
+    };
     const imageListItemStyle = {
         width: "200px", 
         height: "200px", 
         zIndex: "100",
     };
-    const useStyles1 = makeStyles((theme) => (
-        {
-            root: {
-                width: '93vw',
-                paddingLeft: 0,
-            },
-            heading: {
-                fontSize: theme.typography.pxToRem(15),
-                fontWeight: theme.typography.fontWeightRegular,
-            },
-            media: {
-                height: 150,
-                width: 150,
-            },
-            form: {
-                // margin: 'auto',
-                display: 'flex',
-                justifyContent: "space-between",
-                alignItems: "center",
-            }
+    const useStyles1 = makeStyles((theme) => ({
+            root: { width: '11vw', paddingLeft: 0, display: 'flex' },
+            heading: { fontSize: theme.typography.pxToRem(15), fontWeight: theme.typography.fontWeightRegular },
+            media: { height: 150, width: 150 },
+            form: { display: 'flex', justifyContent: "space-between", alignItems: "center" }
     }));
     const useStyles2 = makeStyles((theme) => ({
         root: {
@@ -238,7 +233,7 @@ const Home = (props) => {
             style={{float: `right`}}
             onClick={() => {
                 fetcher.deleteCloth(item);
-                window.location.reload();
+                window.location.reload(true);
             }}
             >
                 <ClearIcon />
@@ -338,7 +333,7 @@ const Home = (props) => {
                         onClick={(e) => {
                             if(size1 && image1 && type1 && style1) {
                                 fetcher.postClothes(itemObj1);
-                                window.location.reload();
+                                window.location.reload(true);
                             } else {
                                 alert('Must Choose all parameters...')
                             }
@@ -409,66 +404,70 @@ const Home = (props) => {
             <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
             <br />
             <div className={classes1.root}>
-                <AppBar position="static" style={{marginLeft: "3vw"}}>
-                    <Tabs value={value} onChange={handleChange} aria-label="type tabs" variant="fullWidth">
-                        <Tab label="Hats" {...a11yProps(0)} />
-                        <Tab label="Jackets" {...a11yProps(1)} />
-                        <Tab label="Shirts" {...a11yProps(2)} />
-                        <Tab label="Jeans" {...a11yProps(3)} />
-                        <Tab label="Footers" {...a11yProps(4)} />
-                        <Tab label="Shorts" {...a11yProps(5)} />
-                        <Tab label="Shoes" {...a11yProps(6)} />
-                    </Tabs>
-                </AppBar>
-                <TabPanel value={value} index={0} disabled={hatsArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {hatsArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={1} disabled={jacketsArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {jacketsArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={2} disabled={shirtsArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {shirtsArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={3} disabled={jeansArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {jeansArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={4} disabled={footersArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {footersArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={5} disabled={shortsArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {shortsArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={6} disabled={shoesArray.length > 0}>
-                    <div className={classes2.root}>
-                        <ImageList className={classes2.imageList} cols={2.5}>
-                            {shoesArray.map(renderArray)}
-                        </ImageList>
-                    </div>
-                </TabPanel>
+                <Box sx={{ bgcolor: 'background.paper', display: 'flex', height: 224 }}>    
+                    <AppBar position="static" style={{marginLeft: "3vw"}}>
+                        <Tabs value={value} onChange={handleChange} aria-label="type tabs" orientation="vertical" variant="scrollable">
+                            <Tab label="Hats" {...a11yProps(0)} />
+                            <Tab label="Jackets" {...a11yProps(1)} />
+                            <Tab label="Shirts" {...a11yProps(2)} />
+                            <Tab label="Jeans" {...a11yProps(3)} />
+                            <Tab label="Footers" {...a11yProps(4)} />
+                            <Tab label="Shorts" {...a11yProps(5)} />
+                            <Tab label="Shoes" {...a11yProps(6)} />
+                        </Tabs>
+                    </AppBar>
+                </Box>
+                <Box style={{paddingLeft: '2vw'}}>
+                    <TabPanel value={value} index={0} disabled={hatsArray.length > 0 ? true : false}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {hatsArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={1} disabled={jacketsArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {jacketsArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={2} disabled={shirtsArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {shirtsArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={3} disabled={jeansArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {jeansArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={4} disabled={footersArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {footersArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={5} disabled={shortsArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {shortsArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                    <TabPanel value={value} index={6} disabled={shoesArray.length > 0}>
+                        <div className={classes2.root}>
+                            <ImageList className={classes2.imageList} cols={2.5}>
+                                {shoesArray.map(renderArray)}
+                            </ImageList>
+                        </div>
+                    </TabPanel>
+                </Box>
             </div>
             <br />
             <Accordion 
@@ -487,6 +486,24 @@ const Home = (props) => {
                 <AccordionDetails>
                     <div style={{margin: 'auto'}}>
                         <form className={classes3.root} onSubmit={handleItemSubmit}>
+                            <label className="formLabel">Type:</label>
+                            <select 
+                                className="formLabel1" 
+                                onChange={(e) => setType(e.target.value)} 
+                                defaultValue="Choose a type" 
+                                value={itemObj.type} 
+                                required
+                            >
+                                <option value="Choose a type" disabled>Choose a type</option>
+                                <option value="hats">Hat</option>
+                                <option value="jackets">Jacket</option>
+                                <option value="shirts">Shirt</option>
+                                <option value="jeans">Jeans</option>
+                                <option value="footers">Footers</option>
+                                <option value="shorts">Shorts</option>
+                                <option value="shoes">Shoes</option>
+                            </select>
+                            <br />
                             <label className="formLabel">Size:</label>
                             <select 
                                 className="formLabel1" 
@@ -533,24 +550,7 @@ const Home = (props) => {
                                 <option value="gothic">Gothic</option>
                             </select>
                             <br />
-                            <label className="formLabel">Type:</label>
-                            <select 
-                                className="formLabel1" 
-                                onChange={(e) => setType(e.target.value)} 
-                                defaultValue="Choose a type" 
-                                value={itemObj.type} 
-                                required
-                            >
-                                <option value="Choose a type" disabled>Choose a type</option>
-                                <option value="hats">Hat</option>
-                                <option value="jackets">Jacket</option>
-                                <option value="shirts">Shirt</option>
-                                <option value="jeans">Jeans</option>
-                                <option value="footers">Footers</option>
-                                <option value="shorts">Shorts</option>
-                                <option value="shoes">Shoes</option>
-                            </select>
-                            <br />
+                            
                             <label className="formLabel">Is it clean ?</label>
                             <select
                                 className="formLabel1"
@@ -582,7 +582,7 @@ const Home = (props) => {
                                 onClick={(e) => {
                                     if(type && style && size && isWashed && image) {
                                         fetcher.postClothes(itemObject);
-                                        window.location.reload();
+                                        window.location.reload(true);
                                     } else {
                                         return (
                                             setError(true)
@@ -594,7 +594,7 @@ const Home = (props) => {
                         </form>
                     </div>
                     <div style={{margin: 'auto', display: image ? 'block' : 'none'}}>
-                        <img src={image} alt=""/>
+                        <img src={image} alt="" style={{width: "200px", height: "200px"}}/>
                     </div>
                 </AccordionDetails>
             </Accordion>
@@ -609,7 +609,7 @@ const Home = (props) => {
                     },
                   }}
                 z-index="1"
-                anchor="left" 
+                anchor="right" 
                 open={checkedOut.length > 0}
                 onClose={handleDrawerClose} 
                 variant="persistent"
@@ -652,7 +652,7 @@ const Home = (props) => {
                                         alt="Delete item"
                                         onClick={() => {
                                             fetcher.deleteClothes(item)
-                                            window.location.reload(false);
+                                            window.location.reload(true);
                                         }}
                                         >
                                             Delete Item
@@ -675,6 +675,13 @@ const Home = (props) => {
             </Drawer>
             <AddingDialog />
             <ErrorDialog />
+            <Snackbar
+            open={openSnackbar}
+            onClose={handleSnackClose}
+            TransitionComponent='down'
+            message={message}
+            // key={transition ? transition.name : ''}
+            />
         </div>
     )
 }

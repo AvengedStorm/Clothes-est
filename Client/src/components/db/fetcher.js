@@ -79,6 +79,12 @@ const fetcher = {
             return response.json();
         }).then(callback)
     },
+    postSet(itemArray, callback) {
+        const requestOptions = {headers: { "Content-Type" : "application/json"}, method: "POST", body: JSON.stringify(itemArray)};
+        fetch(`http://localhost:9001/sets/`, requestOptions)
+        .then(response => response.json())
+        .then(callback)
+    }
 
 
     

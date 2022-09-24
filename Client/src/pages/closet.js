@@ -28,8 +28,10 @@ const Closet = (props) => {
     const [open, setOpen] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
     const [rows, setRows] = useState([]);
+    const [selected, setSelected] = useState({});
     const favorites = useSelector(state => state.favorites);
     const dispatch = useDispatch();
+    const tableWidth = (window.innerWidth / 3) * 2
 
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
@@ -40,29 +42,34 @@ const Closet = (props) => {
         {
             field: 'type',
             headerName: 'Type',
-            width: window.innerWidth / 5,
+            width: tableWidth / 6,
         },
         {
             field: 'size',
             headerName: 'Size:',
-            width: window.innerWidth / 5,
+            width: tableWidth / 6,
         },
         {
             field: 'style',
             headerName: 'Style',
-            width: window.innerWidth / 5,
+            width: tableWidth / 6,
         },
         {
             field: 'isWashed',
             headerName: 'Clean ?',
-            width: window.innerWidth / 5,
+            width: tableWidth / 6,
             renderCell: (params) => (<p>{params?.row?.isWashed ? 'Yes' : 'No'}</p>),
-            // onCellDoubleClick: (params) => 
+        },
+        {
+            field: 'favorite',
+            headerName: 'Favorited ?',
+            width: tableWidth / 6,
+            renderCell: (params) => (<p>{params?.row?.favorite ? 'Yes' : 'No'}</p>),
         },
         {
             field: 'picture',
             headerName: 'Picture',
-            width: window.innerWidth / 5,
+            width: tableWidth / 6,
             renderCell: (params) => (<Button style={{margin: 'auto'}} onClick={handleOpen.bind(null, params)}><VisibilityIcon /></Button>)
         }
     ];
@@ -77,17 +84,19 @@ const Closet = (props) => {
     return(
         <div className="closetDiv">
             {/* <ClosetSpeedDial /> */}
-            <div style={{ width: '100%', marginTop: "10vh" }}>
+            <div style={{marginLeft: '2vw' ,width: tableWidth, marginTop: "10vh" }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[5]}
+                    pageSize={rows.length}
+                    // rowsPerPageOptions={[5]}
                     getRowId={(row) => row['_id']}
                     disableSelectionOnClick
                     autoHeight={true}
                     density='comfortable'
                     loading={!rows}
+                    stickyHeader
+                    isRowSelectable={true}
                 />
             </div>
             <Dialog open={open} onClose={handleClose}>
@@ -116,7 +125,7 @@ const Closet = (props) => {
                                 fetcher.deleteFavorite(currentObj)
                                 dispatch({type: "toggleFavorite", payload: currentObj._id})
                             }
-                            window.location.reload();
+                            window.location.reload(true);
                         }}
                         aria-label={`star ${currentObj.size}`}
                         >
@@ -130,7 +139,7 @@ const Closet = (props) => {
                         <IconButton
                         onClick={() => {
                             fetcher.deleteCloth(currentObj);
-                            window.location.reload();
+                            window.location.reload(true);
                         }}
                         >
                             <DeleteIcon />
@@ -139,7 +148,7 @@ const Closet = (props) => {
                         <IconButton
                         onClick={() => {
                             fetcher.updateCloth(currentObj);
-                            window.location.reload();
+                            window.location.reload(true);
                         }}
                         >
                             <LocalLaundryServiceIcon />

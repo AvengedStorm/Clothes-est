@@ -20,8 +20,8 @@
     padding: 0 0 0 10px;
 }
 
-.body, .navBar, .footer {
-    font-family: 'Indie Flower', cursive;
+html, .body, .navBar, .footer {
+    font-family: 'VictorMono-ThinOblique', cursive;
     font-weight: bold;
 }
 .homeTitle {
