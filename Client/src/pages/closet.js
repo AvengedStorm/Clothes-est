@@ -28,7 +28,7 @@ const Closet = (props) => {
     const [open, setOpen] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
     const [rows, setRows] = useState([]);
-    const [selected, setSelected] = useState({});
+    // const [selected, setSelected] = useState({});
     const favorites = useSelector(state => state.favorites);
     const dispatch = useDispatch();
     const tableWidth = (window.innerWidth / 3) * 2

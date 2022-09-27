@@ -21,6 +21,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
@@ -41,7 +42,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 
 import Snackbar from '@mui/material/Snackbar';
-
+import MuiAlert from '@mui/material/Alert';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -75,6 +76,9 @@ function a11yProps(index) {
 }
 let drawerWidth = "320px";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Home = (props) => {
     const [text, setText] = useState("")
@@ -84,7 +88,6 @@ const Home = (props) => {
     const [isWashed, setIsWashed] = useState(true);
     const [image, setImage] = useState("");
     const [value, setValue] = useState(0);
-    const [openSnackbar, setSnackbar] = useState(false);
     
     const [hatsArray, setHatsArray] =  useState([]);
     const [jacketsArray, setJacketsArray] = useState([]);
@@ -98,16 +101,17 @@ const Home = (props) => {
 
     const itemObj = useSelector(state => state.items);
     const favorites = useSelector(state => state.favorites);
-    // console.log(favorites);
     const checkedOut = useSelector(state => state.checkedOut);
-    // const clothesDrawer = useSelector(state => state.clothesDrawer);
-    const openAccordion = useSelector(state => state.openAccordion);
     const openDialog = useSelector(state => state.openDialog);
+    const openAccordion = useSelector(state => state.openAccordion);
+
     const belongsTo = localStorage.getItem('loginState');
     const localBelongTo = belongsTo;
-    let message;
+    const [shouldReload,setShouldReload] = useState(false);
+
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
+            console.log(shouldReload);
             setHatsArray(data.items.filter(el => el.type === "hats"));
             setJacketsArray(data.items.filter(el => el.type === "jackets"));
             setShirtsArray(data.items.filter(el => el.type === "shirts"));
@@ -117,7 +121,9 @@ const Home = (props) => {
             setShoesArray(data.items.filter(el => el.type === "shoes"));
             favorites.push(data.items.filter(i => i.favorite));
         });
-    },[belongsTo, favorites]);
+        setImage('');
+        setShouldReload(false);
+    },[belongsTo, favorites, shouldReload]);
     
     const itemObject = {
         type,
@@ -142,16 +148,9 @@ const Home = (props) => {
         }
         dispatch({type: "addItem", payload: item});
     };
-    const handleSnackClose = () => {
-        setSnackbar(false);
-    };
-    const handleSnackOpen = () => {
-        setSnackbar(true);
-    };
     const imageListItemStyle = {
         width: "200px", 
-        height: "200px", 
-        zIndex: "100",
+        height: "200px",
     };
     const useStyles1 = makeStyles((theme) => ({
             root: { width: '11vw', paddingLeft: 0, display: 'flex' },
@@ -196,6 +195,7 @@ const Home = (props) => {
         dispatch({type: "clothesDrawer", payload: false });
     };
     const [error, setError] = useState(false);
+
     const ErrorDialog = () => {
         return (
             <Dialog open={error} onClose={() => setError(false)}>
@@ -206,13 +206,17 @@ const Home = (props) => {
             </Dialog>
         )
     }
+
     if(!localBelongTo) {
         dispatch({type: "login", payload: belongsTo});
     }
+
     const classes1 = useStyles1();
     const classes2 = useStyles2();
     const classes3 = useStyles3();
     
+    // rendering action boxes
+
     const renderCheckbox = (item) => {
         let isCheckedOut = checkedOut.includes(item);
         return (
@@ -220,32 +224,37 @@ const Home = (props) => {
             onClick={(e) => dispatch({type: "checkedOut", payload: item})}
             inputProps={{ 'aria-label': 'primary checkbox' }}
             color="primary"
-            z-index="9999"
             position="absolute"
             label={isCheckedOut ? "Remove me from set" : "Add me to the set"}
             checked={isCheckedOut} 
             />
             )
     }
+
     const renderDeletionBox = (item) => {
         return (
             <IconButton
             style={{float: `right`}}
             onClick={() => {
                 fetcher.deleteCloth(item);
-                window.location.reload(true);
+                setShouldReload(true);
+                onLoad('Item deleted successfully!')
             }}
             >
                 <ClearIcon />
             </IconButton>
         )
     }
+
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
     });
+
+    // adding dialog
+
     const AddingDialog = () => {
         const Form = () => {
             const [style1, setStyle1] = useState('');
@@ -332,8 +341,9 @@ const Home = (props) => {
                         endIcon={<DoneIcon />}
                         onClick={(e) => {
                             if(size1 && image1 && type1 && style1) {
-                                fetcher.postClothes(itemObj1);
-                                window.location.reload(true);
+                                fetcher.postClothes(itemObj1, handleClick());
+                                setMessage('Item Added!')
+                                setTimeout(reload, 2000);
                             } else {
                                 alert('Must Choose all parameters...')
                             }
@@ -359,9 +369,13 @@ const Home = (props) => {
             </Dialog>
         )
     }
+
     const handleFileSelection = (file) => {
         toBase64(file).then(setImage);
     }
+
+    // rendering each item with its title
+    
     const renderArray = (item) => {
         return (
             <ImageListItem id="imageList" key={item._id} style={imageListItemStyle}>
@@ -380,9 +394,13 @@ const Home = (props) => {
                         if(favorites.indexOf(item._id) === -1) {
                             fetcher.postFavorite(item)
                             dispatch({type: "toggleFavorite", payload: item._id})
+                            setShouldReload(true);
+                            onLoad('Favorite added!')
                         } else {
                             fetcher.deleteFavorite(item)
                             dispatch({type: "toggleFavorite", payload: item._id})
+                            setShouldReload(true);
+                            onLoad('Favorite removed!')
                         }
                     }}
                     aria-label={`star ${item.size}`}
@@ -398,12 +416,57 @@ const Home = (props) => {
             </ImageListItem>
             )
     }
+
+    // Snackbars
+
+    const reload = () => {
+        sessionStorage.setItem("reloading", "true");
+        window.location.reload(true);
+    }
+    const onLoad = (message) => {
+        setMessage(message);
+        handleClick();
+    };
+    const [open, setOpen] = React.useState(false);
+    const [message, setMessage] = React.useState('')
+    const handleClick = () => {
+      setOpen(true);
+    };
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+    const action = (
+        <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
+
+    function SimpleSnackbar() {
+        return (
+          <div>
+            <Snackbar open={open} action={action} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <Alert onClose={handleClose} severity="info">
+                    {message}
+                </Alert>
+            </Snackbar>
+          </div>
+        );
+    }
+
+    // render function
+
     return (
         <div className="body" id="body">
             <HomeSpeedDial />
             <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
             <br />
-            <div className={classes1.root}>
+            <div className={classes1.root} style={{zIndex: 100}}>
                 <Box sx={{ bgcolor: 'background.paper', display: 'flex', height: 224 }}>    
                     <AppBar position="static" style={{marginLeft: "3vw"}}>
                         <Tabs value={value} onChange={handleChange} aria-label="type tabs" orientation="vertical" variant="scrollable">
@@ -582,12 +645,12 @@ const Home = (props) => {
                                 onClick={(e) => {
                                     if(type && style && size && isWashed && image) {
                                         fetcher.postClothes(itemObject);
-                                        window.location.reload(true);
+                                        setShouldReload(true);
+                                        onLoad('Item added successfully!')
+                                        dispatch({type: 'openAccordion'})
                                     } else {
-                                        return (
-                                            setError(true)
-                                            )
-                                        }
+                                        setError(true)    
+                                    }
                                     }}>
                                 Save Item
                             </Button>
@@ -608,7 +671,6 @@ const Home = (props) => {
                       boxSizing: 'border-box',
                     },
                   }}
-                z-index="1"
                 anchor="right" 
                 open={checkedOut.length > 0}
                 onClose={handleDrawerClose} 
@@ -651,8 +713,9 @@ const Home = (props) => {
                                         size="small"
                                         alt="Delete item"
                                         onClick={() => {
-                                            fetcher.deleteClothes(item)
-                                            window.location.reload(true);
+                                            fetcher.deleteClothes(item);
+                                            setShouldReload(true);
+                                            onLoad('Item deleted successfully!')
                                         }}
                                         >
                                             Delete Item
@@ -675,13 +738,7 @@ const Home = (props) => {
             </Drawer>
             <AddingDialog />
             <ErrorDialog />
-            <Snackbar
-            open={openSnackbar}
-            onClose={handleSnackClose}
-            TransitionComponent='down'
-            message={message}
-            // key={transition ? transition.name : ''}
-            />
+            <SimpleSnackbar />
         </div>
     )
 }

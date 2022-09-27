@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
-const Closet = (props) => {
+
+const About = (props) => {
     return <h1>Closet</h1>;
 }
-export default connect(state => state)(Closet)
+
+export default connect(state => state)(About)
