@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {useSelector, useDispatch} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux';
+import Carousel from '../components/Carousel/Carousel';
 
 import fetcher from "../components/db/fetcher";
 // import {ClosetSpeedDial} from "../components/speeddials/speeddials";
@@ -20,15 +21,22 @@ import StarIcon from '@material-ui/icons/Star';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
 import LocalLaundryServiceIcon from '@mui/icons-material/LocalLaundryService';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+import backgroundImage from './pictures/bgimage.jpeg';
 
 const Closet = (props) => {
+
     const belongsTo = localStorage.getItem('loginState');
-    const [open, setOpen] = useState(false)
+    const [open1, setOpen1] = useState(false)
     const [currentObj, setCurrentObj] = useState({});
     const [rows, setRows] = useState([]);
-    // const [selected, setSelected] = useState({});
+    const [shouldReload,setShouldReload] = useState(false);
+    
     const favorites = useSelector(state => state.favorites);
     const dispatch = useDispatch();
     const tableWidth = (window.innerWidth / 3) * 2
@@ -37,7 +45,8 @@ const Closet = (props) => {
         fetcher.getClothes(belongsTo, (data) => {
             setRows(data.items);
         });
-    }, [belongsTo]);
+        setShouldReload(false);
+    }, [belongsTo, shouldReload]);
     const columns = [
         {
             field: 'type',
@@ -58,48 +67,100 @@ const Closet = (props) => {
             field: 'isWashed',
             headerName: 'Clean ?',
             width: tableWidth / 6,
-            renderCell: (params) => (<p>{params?.row?.isWashed ? 'Yes' : 'No'}</p>),
+            renderCell: (params) => (<p style={{margin: '0'}}>{params?.row?.isWashed ? 'Yes' : 'No'}</p>),
         },
         {
             field: 'favorite',
             headerName: 'Favorited ?',
             width: tableWidth / 6,
-            renderCell: (params) => (<p>{params?.row?.favorite ? 'Yes' : 'No'}</p>),
+            renderCell: (params) => (<p style={{margin: '0'}}>{params?.row?.favorite ? 'Yes' : 'No'}</p>),
         },
         {
             field: 'picture',
             headerName: 'Picture',
             width: tableWidth / 6,
-            renderCell: (params) => (<Button style={{margin: 'auto'}} onClick={handleOpen.bind(null, params)}><VisibilityIcon /></Button>)
+            renderCell: (params) => (<Button onClick={handleOpen1.bind(null, params)}><VisibilityIcon /></Button>)
         }
     ];
-    const handleClose = () => {
-        setOpen(false);
+    const handleClose1 = () => {
+        setOpen1(false);
     };
-    const handleOpen = (params) => {
+    const handleOpen1 = (params) => {
         setCurrentObj(params.row);
-        setOpen(true);
+        setOpen1(true);
     };
 
+    const styles = {
+        container: {
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            width: '100vw',
+            height: '100vh',
+            position: 'fixed',
+        }
+    };
+
+    //? Snackbars
+
+    const Alert = React.forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
+
+    const onLoad = (message) => {
+        setMessage(message);
+        handleClick();
+    };
+    const [open, setOpen] = React.useState(false);
+    const [message, setMessage] = React.useState('')
+    const handleClick = () => {
+      setOpen(true);
+    };
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+    const action = (
+        <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </React.Fragment>
+    );
+
+    function SimpleSnackbar() {
+        return (
+          <div>
+            <Snackbar open={open} action={action} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                <Alert onClose={handleClose} severity="info">
+                    {message}
+                </Alert>
+            </Snackbar>
+          </div>
+        );
+    }
+
     return(
-        <div className="closetDiv">
-            {/* <ClosetSpeedDial /> */}
-            <div style={{marginLeft: '2vw' ,width: tableWidth, marginTop: "10vh" }}>
+        <div className="closetDiv" style={styles.container}>
+            <div style={{marginLeft: '2vw' ,width: tableWidth, marginTop: "10vh", display: 'inline-block' }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}
                     pageSize={rows.length}
-                    // rowsPerPageOptions={[5]}
                     getRowId={(row) => row['_id']}
                     disableSelectionOnClick
                     autoHeight={true}
                     density='comfortable'
                     loading={!rows}
                     stickyHeader
-                    isRowSelectable={true}
+                    rowHeight={40}
                 />
             </div>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open1} onClose={handleClose1}>
                 <DialogTitle>Image & Info</DialogTitle>
                 <DialogContent style={{textAlign: "center"}}>
                     <Divider  />
@@ -109,7 +170,7 @@ const Closet = (props) => {
                     </Divider>
                     <Typography>Style: {currentObj.style}</Typography>
                     <Typography>Size: {currentObj.size}</Typography>
-                    <Typography>Is it Clean ? {currentObj.isWashed ? "Yes" : "No"}</Typography>
+                    <Typography>Ready to use ? {currentObj.isWashed ? "Yes" : "No"}</Typography>
                     <Divider style={{margin: "2vh 0"}}>
                         <Chip size="small" label="Added on" variant="outlined" />
                     </Divider>
@@ -121,11 +182,14 @@ const Closet = (props) => {
                             if(favorites.indexOf(currentObj._id) === -1) {
                                 fetcher.postFavorite(currentObj)
                                 dispatch({type: "toggleFavorite", payload: currentObj._id})
+                                setShouldReload(true);
+                                onLoad('Favorite added!')
                             } else {
                                 fetcher.deleteFavorite(currentObj)
                                 dispatch({type: "toggleFavorite", payload: currentObj._id})
+                                setShouldReload(true);
+                                onLoad('Favorite removed!')
                             }
-                            window.location.reload(true);
                         }}
                         aria-label={`star ${currentObj.size}`}
                         >
@@ -139,7 +203,8 @@ const Closet = (props) => {
                         <IconButton
                         onClick={() => {
                             fetcher.deleteCloth(currentObj);
-                            window.location.reload(true);
+                            setShouldReload(true);
+                            onLoad('Item deleted successfully!')
                         }}
                         >
                             <DeleteIcon />
@@ -148,7 +213,10 @@ const Closet = (props) => {
                         <IconButton
                         onClick={() => {
                             fetcher.updateCloth(currentObj);
-                            window.location.reload(true);
+                            setShouldReload(true);
+                            onLoad('Item updated successfully!')
+                            setOpen1(false);
+                            setOpen1(true);
                         }}
                         >
                             <LocalLaundryServiceIcon />
@@ -156,6 +224,8 @@ const Closet = (props) => {
                     </div>
                 </DialogContent>
             </Dialog>
+            <SimpleSnackbar />
+            <Carousel />
         </div>
     )
 }

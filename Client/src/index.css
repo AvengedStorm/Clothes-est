@@ -12,8 +12,32 @@ code {
     monospace;
 }
 @font-face {
-  font-family: "VictorMono-ThinOblique";
-  src: local("VictorMono-ThinOblique"),
-   url("./fonts/VictorMonoAll/TTF/VictorMono-ThinOblique.ttf") format("truetype");
+  font-family: "VictorMono-Oblique";
+  src: local("VictorMono-Oblique"),
+   url("./fonts/VictorMonoAll/TTF/VictorMono-Oblique.ttf") format("truetype");
   font-weight: bold;
+}
+
+/* div .MuiBox-root-16 {
+  background: rgb(255, 255, 255, 0) !important;
+} */
+
+div .MuiAccordionSummary-content {
+  background: rgb(255, 255, 255, 0) !important;
+}
+div .MuiAccordionContent-root {
+  background: rgb(255, 255, 255, 0) !important;
+}
+div .MuiImageListItem-item {
+  background: rgb(255, 255, 255, 0) !important;
+}
+div .homeTitle {
+  color: rgb(255, 255, 255);
+}
+/* div .MuiBox-root-25 {
+  color: rgb(255, 255, 255, 0);
+} */
+
+html {
+  color: rgb(255, 255, 255, 0) !important;
 }

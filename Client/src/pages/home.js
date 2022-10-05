@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux'
+import Carousel from '../components/Carousel/Carousel'
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -44,6 +45,8 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
+import backgroundImage from './pictures/bgimage.jpeg';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -81,6 +84,22 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 const Home = (props) => {
+    //? styles for containers
+    const styles = {
+        container: {
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            width: '100vw',
+            height: '100vh',
+            position: 'fixed',
+            // justifyContent: 'center',
+            // alignItems: 'center',
+            // textAlign: 'center',
+        }
+    };
+
     const [text, setText] = useState("")
     const [size, setSize] = useState("");
     const [style, setStyle] = useState("");
@@ -103,7 +122,6 @@ const Home = (props) => {
     const favorites = useSelector(state => state.favorites);
     const checkedOut = useSelector(state => state.checkedOut);
     const openDialog = useSelector(state => state.openDialog);
-    const openAccordion = useSelector(state => state.openAccordion);
 
     const belongsTo = localStorage.getItem('loginState');
     const localBelongTo = belongsTo;
@@ -111,7 +129,6 @@ const Home = (props) => {
 
     useEffect(() => {
         fetcher.getClothes(belongsTo, (data) => {
-            console.log(shouldReload);
             setHatsArray(data.items.filter(el => el.type === "hats"));
             setJacketsArray(data.items.filter(el => el.type === "jackets"));
             setShirtsArray(data.items.filter(el => el.type === "shirts"));
@@ -137,7 +154,6 @@ const Home = (props) => {
         setValue(newValue);
     };
     const handleItemSubmit = (evt) => {
-        // evt.preventDefault();
         const sizeDecider = size === "other" ? text : size;
         let item = {
             size: sizeDecider,
@@ -159,37 +175,14 @@ const Home = (props) => {
             form: { display: 'flex', justifyContent: "space-between", alignItems: "center" }
     }));
     const useStyles2 = makeStyles((theme) => ({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            overflow: 'hidden',
-            backgroundColor: theme.palette.background.paper,
-        },
-        imageList: {
-            flexWrap: 'nowrap',
-            // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-            transform: 'translateZ(0)',
-        },
-        title: {
-            color: "white",
-        },
-        titleBar: {
-            background:
-            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
-        },
-        image: {
-            width: 196 + "px",
-            height: 196 + "px",
-        },
+        root: { display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', overflow: 'hidden', backgroundColor: theme.palette.background.paper },
+        imageList: { flexWrap: 'nowrap', transform: 'translateZ(0)' },
+        title: { color: "white" },
+        titleBar: { background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)' },
+        image: { width: 196 + "px", height: 196 + "px" },
     }));
     const useStyles3 = makeStyles((theme) => ({
-        root: {
-            '& > *': {
-                margin: theme.spacing(1),
-                width: '25vh',
-            },
-        },
+        root: { '& > *': { margin: theme.spacing(1), width: '25vh' } },
     }));
     const handleDrawerClose = () => {
         dispatch({type: "clothesDrawer", payload: false });
@@ -215,7 +208,7 @@ const Home = (props) => {
     const classes2 = useStyles2();
     const classes3 = useStyles3();
     
-    // rendering action boxes
+    //? rendering action boxes
 
     const renderCheckbox = (item) => {
         let isCheckedOut = checkedOut.includes(item);
@@ -253,7 +246,7 @@ const Home = (props) => {
         reader.onerror = error => reject(error);
     });
 
-    // adding dialog
+    //? adding dialog
 
     const AddingDialog = () => {
         const Form = () => {
@@ -341,9 +334,9 @@ const Home = (props) => {
                         endIcon={<DoneIcon />}
                         onClick={(e) => {
                             if(size1 && image1 && type1 && style1) {
-                                fetcher.postClothes(itemObj1, handleClick());
+                                fetcher.postClothes(itemObj1);
+                                setShouldReload(true);
                                 setMessage('Item Added!')
-                                setTimeout(reload, 2000);
                             } else {
                                 alert('Must Choose all parameters...')
                             }
@@ -374,7 +367,7 @@ const Home = (props) => {
         toBase64(file).then(setImage);
     }
 
-    // rendering each item with its title
+    //? rendering each item with its title
     
     const renderArray = (item) => {
         return (
@@ -417,12 +410,8 @@ const Home = (props) => {
             )
     }
 
-    // Snackbars
+    //? Snackbars
 
-    const reload = () => {
-        sessionStorage.setItem("reloading", "true");
-        window.location.reload(true);
-    }
     const onLoad = (message) => {
         setMessage(message);
         handleClick();
@@ -459,15 +448,15 @@ const Home = (props) => {
         );
     }
 
-    // render function
+    //! render function
 
     return (
-        <div className="body" id="body">
+        <div className="body" id="body" style={styles.container}>
             <HomeSpeedDial />
             <h3 className="homeTitle" style={{marginTop: "10vh", marginLeft: "2vw"}}>Welcome to your closet! What would you like to do?</h3>
             <br />
-            <div className={classes1.root} style={{zIndex: 100}}>
-                <Box sx={{ bgcolor: 'background.paper', display: 'flex', height: 224 }}>    
+            <div className={classes1.root}>
+                <Box sx={{ bgcolor: 'rgb(255,255,255,0)', display: 'flex', height: 224 }}>    
                     <AppBar position="static" style={{marginLeft: "3vw"}}>
                         <Tabs value={value} onChange={handleChange} aria-label="type tabs" orientation="vertical" variant="scrollable">
                             <Tab label="Hats" {...a11yProps(0)} />
@@ -535,19 +524,22 @@ const Home = (props) => {
             <br />
             <Accordion 
             id="3" 
-            expanded={openAccordion}
+            // expanded={openAccordion}
             TransitionProps={{ unmountOnExit: true }}
+            style={{width: '50vw'}}
+            square={false}
             >
                 <AccordionSummary
                 onClick={() => dispatch({type: 'openAccordion'})}
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
+                sx={{bgcolor: 'rgb(255,255,255,0)'}}
                 >
                     <Typography className={classes1.heading}>Add an item</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <div style={{margin: 'auto'}}>
+                    <div style={{margin: 'auto', background: 'transparent'}}>
                         <form className={classes3.root} onSubmit={handleItemSubmit}>
                             <label className="formLabel">Type:</label>
                             <select 
@@ -661,7 +653,6 @@ const Home = (props) => {
                     </div>
                 </AccordionDetails>
             </Accordion>
-            <br />
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -676,7 +667,7 @@ const Home = (props) => {
                 onClose={handleDrawerClose} 
                 variant="persistent"
             >
-                <div style={{ width: drawerWidth }}>
+                <div style={{ width: drawerWidth, marginTop: '10vh' }}>
                     {/* <Divider /> */}
                     {(checkedOut || []).map(item => {
                         return (
@@ -697,18 +688,6 @@ const Home = (props) => {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button 
-                                        style={{float: "left"}} 
-                                        size="small" 
-                                        alt="Add to Favorites" 
-                                        onClick={(ev) => dispatch({type: "toggleFavorite", payload: item.id})}>
-                                            {favorites.includes(item.id) 
-                                            ?
-                                            "Remove from Favorites" 
-                                            : 
-                                            "Add to Favorites"
-                                            }
-                                        </Button>
                                         <Button
                                         size="small"
                                         alt="Delete item"
@@ -721,7 +700,6 @@ const Home = (props) => {
                                             Delete Item
                                         </Button>                                        
                                         <Button 
-                                        style={{float: "right"}} 
                                         size="small" 
                                         alt="Remove from Set" 
                                         onClick={(ev) => dispatch({type: "checkedOut", payload: item})}>
@@ -730,7 +708,7 @@ const Home = (props) => {
                                     </CardActions>
                                 </Card>
                                 <br />
-                                <Divider />
+                                <Divider style={{marginTop: '2vh'}}/>
                             </div>
                         )
                     })}
@@ -739,6 +717,7 @@ const Home = (props) => {
             <AddingDialog />
             <ErrorDialog />
             <SimpleSnackbar />
+            <Carousel />
         </div>
     )
 }
