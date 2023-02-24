@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import backgroundImage from './pictures/bgimage.jpeg';
-import Carousel from '../components/Carousel/Carousel'
+// import Carousel from '../components/Carousel/Carousel'
 
 const About = (props) => {
     const styles = {
@@ -101,7 +101,7 @@ const About = (props) => {
                     <></>}
                 </aside>
             </div>
-            <Carousel />
+            {/* <Carousel /> */}
         </div>
     )
 }

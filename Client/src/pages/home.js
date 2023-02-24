@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux'
-import Carousel from '../components/Carousel/Carousel'
+// import Carousel from '../components/Carousel/Carousel'
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -457,7 +457,7 @@ const Home = (props) => {
             <br />
             <div className={classes1.root}>
                 <Box sx={{ bgcolor: 'rgb(255,255,255,0)', display: 'flex', height: 224 }}>    
-                    <AppBar position="static" style={{marginLeft: "3vw"}}>
+                    <AppBar position="static" style={{marginLeft: "3vw"}} color="secondary">
                         <Tabs value={value} onChange={handleChange} aria-label="type tabs" orientation="vertical" variant="scrollable">
                             <Tab label="Hats" {...a11yProps(0)} />
                             <Tab label="Jackets" {...a11yProps(1)} />
@@ -717,7 +717,7 @@ const Home = (props) => {
             <AddingDialog />
             <ErrorDialog />
             <SimpleSnackbar />
-            <Carousel />
+            {/* <Carousel /> */}
         </div>
     )
 }

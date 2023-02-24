@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import Carousel from '../components/Carousel/Carousel';
+// import Carousel from '../components/Carousel/Carousel';
 
 import fetcher from "../components/db/fetcher";
 // import {ClosetSpeedDial} from "../components/speeddials/speeddials";
@@ -225,7 +225,7 @@ const Closet = (props) => {
                 </DialogContent>
             </Dialog>
             <SimpleSnackbar />
-            <Carousel />
+            {/* <Carousel /> */}
         </div>
     )
 }

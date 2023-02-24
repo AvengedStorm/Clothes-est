@@ -43,7 +43,7 @@ const NavBar = (props) => {
 
   return (
           <div className={classes.root}>
-          <AppBar position="fixed" style={{top: "0px"}} color="primary">
+          <AppBar position="fixed" style={{top: "0px"}} color="secondary">
               <Toolbar>
                   <IconButton edge="start" onClick={() => toggleDrawer(true)} onMouseOver={() => toggleDrawer(true)} className={classes.menuButton} color="inherit" aria-label="menu">
                       <MenuIcon />

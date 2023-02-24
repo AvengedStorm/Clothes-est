@@ -1,5 +1,4 @@
 import React from 'react';
-// import {useSelector} from 'react-redux'
 
 import './App.css';
 
@@ -9,7 +8,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Closet from './pages/closet';
 import Home from './pages/home';
-import About from './pages/about'
+import About from './pages/about';
+import Carousel from './components/Carousel/Carousel.js';
+
 import {
   Switch,
   Route
@@ -18,12 +19,11 @@ import {
 import Login from './pages/login';
 
 function App(props) {
-  // const user = useSelector(state => state.currentUser);
   
   return (
     <div>
       <CssBaseline />
-      <Navbar />
+      {window.location.pathname !== '/login' ? <Navbar /> : <></>}
       <Switch>
         <Route path="/about">
           <About />
@@ -38,6 +38,7 @@ function App(props) {
           <Home />
         </Route>
       </Switch>
+      {window.location.pathname !== '/login' ? <Carousel /> : <></>}
     </div>
   );
 }
